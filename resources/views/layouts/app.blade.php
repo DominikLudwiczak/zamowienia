@@ -18,6 +18,9 @@
 
     <!-- Styles -->
     <link href="{{ asset('/public/css/app.css') }}" rel="stylesheet">
+
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 </head>
 <body>
     <div id="app">
@@ -35,7 +38,6 @@
                     <ul class="navbar-nav mr-auto">
 
                     </ul>
-
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
@@ -71,9 +73,20 @@
                 </div>
             </div>
         </nav>
-        <main class="py-4">
-            @yield('content')
-        </main>
+        @guest
+            <main class='py-4'>
+                @yield('content')
+            </main>
+        @else
+            <div class="row">
+                <div class='col-md-2'>
+                    <x-nav-left/>
+                </div>
+                <div class='col-md-10'>
+                    @yield('content')
+                </div>
+            </div>
+        @endguest
     </div>
 </body>
 </html>

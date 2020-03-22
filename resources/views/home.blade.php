@@ -1,9 +1,9 @@
-<x-nav-left/>
 @extends('layouts.app')
 
 @section('title', '- home')
 
 @section('content')
+<main class='py-4'>
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card">
@@ -21,4 +21,5 @@
         </div>
     </div>
 </div>
+</main>
 @endsection
