@@ -1,3 +1,4 @@
+<x-nav-left/>
 @extends('layouts.app')
 
 @section('content')
