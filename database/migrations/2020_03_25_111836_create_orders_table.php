@@ -17,6 +17,7 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->bigInteger('supplier_id')->unsigned();
             $table->bigInteger('product_id')->unsigned();
+            $table->integer('ammount');
             $table->bigInteger('user_id')->unsigned();
             $table->timestamps();
         });
