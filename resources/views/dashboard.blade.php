@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', '- home')
+@section('title', '- główna')
 
 @section('content')
 <main class='py-4'>
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card">
-            <div class="card-header">Dashboard</div>
+            <div class="card-header">Strona główna</div>
 
             <div class="card-body">
                 @if (session('status'))
@@ -16,7 +16,7 @@
                     </div>
                 @endif
 
-                You are logged in!
+                Jesteś zalogowany!
             </div>
         </div>
     </div>

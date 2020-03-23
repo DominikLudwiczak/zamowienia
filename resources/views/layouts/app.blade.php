@@ -18,22 +18,19 @@
 
     <!-- Styles -->
     <link href="{{ asset('/public/css/app.css') }}" rel="stylesheet">
-
-    <!-- jquery -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 </head>
-<body>
+<body onload="active()">
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}" onclick="change_sidebar()">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="collapse navbar-collapse navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
 
@@ -73,20 +70,38 @@
                 </div>
             </div>
         </nav>
-        @guest
-            <main class='py-4'>
-                @yield('content')
-            </main>
-        @else
-            <div class="row">
-                <div class='col-md-2'>
+        @auth
+            <div class='container-fluid'>
+                <div class="row">
                     <x-nav-left/>
-                </div>
-                <div class='col-md-10'>
-                    @yield('content')
+                    <div class='col-md-9'>
+                        @include('includes.messages')
+                        @yield('content')
+                    </div>
                 </div>
             </div>
-        @endguest
+        @else
+            <main class='py-4'>
+                @include('includes.messages')
+                @yield('content')
+            </main>
+        @endauth
     </div>
+    <script type='text/javascript'>
+        function change_sidebar()
+        {
+            var sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('w-100');
+            sidebar.classList.toggle('vh-100');
+        }
+
+        function active()
+        {
+            var route = "{{Route::getCurrentRoute()->getName()}}";
+            var item = document.getElementById(route);
+            if(item)
+                item.style.textDecoration = "underline";
+        }
+    </script>
 </body>
 </html>

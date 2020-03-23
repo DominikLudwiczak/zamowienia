@@ -19,6 +19,13 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/dashboard', 'Controller@index')->name('dashboard');
+Route::get('/dashboard', function()
+{
+    return view('dashboard');
+})->middleware('auth')->name('dashboard');
 
-Route::get('/orders', '');
+Route::get('/orders', 'Controller@orders')->name('orders');
+
+Route::get('/suppliers', 'Controller@suppliers')->name('suppliers');
+
+Route::get('/products', 'Controller@products')->name('products');
