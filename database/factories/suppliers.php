@@ -2,13 +2,13 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Model;
+use App\suppliers;
 use Faker\Generator as Faker;
 
-$factory->define(Model::class, function (Faker $faker) {
+$factory->define(suppliers::class, function (Faker $faker) {
     return [
         'nazwa' => $faker->name,
         'email' => $faker->unique()->safeEmail,
-        'phone' => $faker->phone,
+        'phone' => rand(pow(10,8), pow(10,9)-1)
     ];
 });

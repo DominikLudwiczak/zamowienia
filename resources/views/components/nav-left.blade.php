@@ -1,4 +1,4 @@
-<nav class="navbar sidebar d-md-flex vh-100 collapse sidebar-collapse navbarSupportedContent shadow align-text-top" id='sidebar' style='background-color: #1D65B7;'>
+<nav class="navbar sidebar d-md-flex collapse sidebar-collapse navbarSupportedContent shadow" id='sidebar' style='background-color: #1D65B7; min-height:100vh';>
     <div class="sidebar-sticky">
         <ul class="nav flex-column" style='font-size: 0.9rem;'>
             <li class="nav-item">

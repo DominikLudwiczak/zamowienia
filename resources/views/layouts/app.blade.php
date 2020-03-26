@@ -11,6 +11,8 @@
 
     <!-- Scripts -->
     <script src="{{ asset('/public/js/app.js') }}" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src='/public/js/script.js' type='text/javascript'></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -87,21 +89,28 @@
             </main>
         @endauth
     </div>
-    <script type='text/javascript'>
-        function change_sidebar()
-        {
-            var sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('w-100');
-            sidebar.classList.toggle('vh-100');
-        }
-
+    
+    <script>
         function active()
         {
             var route = "{{Route::getCurrentRoute()->getName()}}";
+            if(route.includes('order'))
+                route = 'orders';
+            else if(route.includes('supplier'))
+                route = 'suppliers';
+            else if(route.includes('product'))
+                route = 'products';
+            else
+                route = 'dashboard';
+
             var item = document.getElementById(route);
             if(item)
                 item.style.textDecoration = "underline";
         }
+
+        $(document).ready(function(){
+            $('.toast').toast('show');
+        });
     </script>
 </body>
 </html>
