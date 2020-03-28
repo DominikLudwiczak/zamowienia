@@ -8,11 +8,17 @@
         <select name='supplier' class="custom-select" onchange="selectRedirect(this.value)">
             <option value="{{session('supplier')->name ?? ''}}" selected>{{session('supplier')->name ?? 'Dostawca...'}}</option>
             @foreach($suppliers as $supplier)
-                <option value="{{$supplier->name}}">{{$supplier->name}}</option>
+                @if(session('supplier'))
+                    @if($supplier->name != session('supplier')->name)
+                        <option value="{{$supplier->name}}">{{$supplier->name}}</option>
+                    @endif
+                @else
+                    <option value="{{$supplier->name}}">{{$supplier->name}}</option>
+                @endif
             @endforeach
         </select>
     </div>
-    @if(isset($products))
+    @if($products)
         <hr/>
         <div class='row align-items-center'>
             <h3 class='col-md-7'>{{session('supplier')->name ?? ''}}</h3>

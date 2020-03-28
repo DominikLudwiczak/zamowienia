@@ -121,47 +121,6 @@ background-color: #f6f6f6;
                                             <table class="invoice" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; text-align: left; width: 80%; margin: 40px auto;">
                                                 <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
                                                     <td style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 5px 0;" valign="top">
-                                                        {{Auth::user()->name}}<br style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;" />
-                                                        {{date("d-m-Y")}}
-                                                        ( 
-                                                            <?php
-                                                                $day = date("D");
-                                                                switch($day)
-                                                                {
-                                                                    case "Mon":
-                                                                        echo "Poniedziałek";
-                                                                        break;
-
-                                                                    case "Tue":
-                                                                        echo "Wtorek";
-                                                                        break;
-
-                                                                    case "Wed":
-                                                                        echo "Środa";
-                                                                        break;
-
-                                                                    case "Thu":
-                                                                        echo "Czwartek";
-                                                                        break;
-
-                                                                    case "Fri":
-                                                                        echo "Piątek";
-                                                                        break;
-
-                                                                    case "Sat":
-                                                                        echo "Sobota";
-                                                                        break;
-
-                                                                    case "Sun":
-                                                                        echo "Niedziela";
-                                                                        break;
-                                                                }
-                                                            ?>
-                                                        )
-                                                    </td>
-                                                </tr>
-                                                <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
-                                                    <td style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 5px 0;" valign="top">
                                                         <table class="invoice-items" cellpadding="0" cellspacing="0" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; margin: 0; text-align:center;">
                                                             <thead>
                                                                 <tr>

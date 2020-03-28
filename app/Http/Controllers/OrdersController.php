@@ -111,14 +111,13 @@ class OrdersController extends Controller
         session(['msg' => $request->msg]);
         try
         {
-            //zmienic maila na maila dostawcy
-            // wyczytywanie zamówień
             Mail::send('emails.order', $data, function($message){
-                $message->from(Auth::user()->email, 'PHU Marta')->to('ludek088@gmail.com')->Subject('Zamówienie '.date('d.m.Y'));
+                $message->from(env('mail_username'), 'PHU Marta')->to(session('supplier')->email)->Subject('Zamówienie '.date('d.m.Y'));
             });
             $order_id = rand(19982, 18927946);
             for($i=0; $i < count(session('order')); $i++)
             {
+                //sprawdzenie czy order id jest wolny
                 $zamowienie = [
                     'order_id' => $order_id,
                     'supplier_id' => session('supplier')->id,
@@ -129,7 +128,7 @@ class OrdersController extends Controller
                 $save=orders::create($zamowienie);
             }
             Session::forget(['order', 'supplier', 'msg']);
-            return redirect('dashboard')->with('succes', 'Zamówienie zostało wysłane');
+            return redirect( route('dashboard'))->with('succes', 'Zamówienie zostało wysłane');
         }catch(Exception $ex)
         {
             return redirect(route('new_order'))->with('failed', 'Nie udało się wysłać zamówienia, spróbuj ponownie później');
