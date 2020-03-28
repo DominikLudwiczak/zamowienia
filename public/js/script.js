@@ -4,7 +4,14 @@ function change_sidebar()
     sidebar.classList.toggle('w-100');
 }
 
-function test()
+function selectRedirect(val)
 {
-    var form = document.querySelector("#new_order_choosen").submit();
+    var route = "/orders/new/"+val;
+    window.location.href = route;
 }
+
+$(document).ready(function($) {
+    $(".table-row").click(function() {
+        window.document.location = $(this).data("href");
+    });
+});

@@ -10,11 +10,11 @@
         <button class="btn btn-outline-success" type="submit">Szukaj</button>
     </div>
 </div>
-<form action="{{ route('new_order') }}" class='pt-3'>
+<form action="{{ route('new_order', ['supplier_name' => session('supplier')->name ?? '']) }}" class='pt-3'>
     <button class='btn btn-success float-right'>Stwórz nowe</button>
 </form>
 
-<table class="table table-striped table-responsive-sm text-center">
+<table class="table table-striped table-responsive-sm text-center table-hover">
     <thead class='thead-dark'>
         <tr>
             <th scope="col">#</th>
@@ -27,12 +27,12 @@
         <?php $x=0; ?>
         @for($i=0; $i < count($orders); $i++)
             <?php $x++; ?>
-            <tr>
+            <tr class='table-row' data-href="{{ route('order_details',['order_id' => $orders[$i]['order_id']]) }}">
                 <th scope="row">{{$x}}</th>
-                <td>{{$orders[$i]['supplier_id']}}</td>
-                <td>{{$orders[$i]['user_id']}}</td>
+                <td>{{$orders[$i]['supplier']}}</td>
+                <td>{{$orders[$i]['user']}}</td>
                 <td>{{$orders[$i]['created_at']}}</td>
-            </tr>
+</tr>
         @endfor
     </tbody>
 </table>

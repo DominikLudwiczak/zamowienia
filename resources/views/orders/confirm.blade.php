@@ -38,12 +38,9 @@
                 <textarea class='form-control col-md-6 ml-auto' rows='3' name='msg' placeholder='Dodatkowe uwagi dla dostawcy'>@if(session('msg')) {{session('msg')}} @endif</textarea>
             </div>
         </form>
-        <form method='post' action="{{ route('new_order_choosen') }}">
-        @csrf
-            <div class='row col float-right'>
-                <button class='btn btn-primary ml-auto' name='supplier' value="{{session('supplier')->id}}">Cofnij</button>
-                <button class='btn btn-success ml-2' form='send'>Wyślij</button>
-            </div>
-        </form>
+        <div class='row col float-right'>
+            <button class='btn btn-primary ml-auto' name='supplier' value="{{session('supplier')->name}}" onclick="selectRedirect(this.value)">Cofnij</button>
+            <button class='btn btn-success ml-2' form='send'>Wyślij</button>
+        </div>
     @endif
 @endsection

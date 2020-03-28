@@ -4,17 +4,14 @@
 
 @section('content')
     <h1 class='pt-3 col-md-12 text-md-left text-center' style='text-decoration: underline;'>Nowe zamówienie</h1>
-    <form method='post' action="{{ route('new_order_choosen') }}" id='new_order_choosen'>
-    @csrf
-        <div class="d-flex p-3 col-sm-12 col-md-6 mx-auto">
-            <select name='supplier' class="custom-select" onchange="test()">
-                <option value="{{session('supplier')->id ?? ''}}" selected>{{session('supplier')->name ?? 'Dostawca...'}}</option>
-                @foreach($suppliers as $supplier)
-                    <option value="{{$supplier->id}}">{{$supplier->name}}</option>
-                @endforeach
-            </select>
-        </div>
-    </form>
+    <div class="d-flex p-3 col-sm-12 col-md-6 mx-auto">
+        <select name='supplier' class="custom-select" onchange="selectRedirect(this.value)">
+            <option value="{{session('supplier')->name ?? ''}}" selected>{{session('supplier')->name ?? 'Dostawca...'}}</option>
+            @foreach($suppliers as $supplier)
+                <option value="{{$supplier->name}}">{{$supplier->name}}</option>
+            @endforeach
+        </select>
+    </div>
     @if(isset($products))
         <hr/>
         <div class='row align-items-center'>

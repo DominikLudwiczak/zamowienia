@@ -31,9 +31,9 @@ Route::get('/products', 'Controller@products')->name('products');
 Route::prefix('orders')->group(function(){
     Route::get('/', 'OrdersController@orders')->name('orders');
 
-    Route::get('/new', 'OrdersController@new_order_suppliers')->name('new_order');
-    
-    Route::post('/news', 'OrdersController@new_order_choosen')->name('new_order_choosen');
+    Route::get('/{order_id}', 'OrdersController@order_details')->name('order_details');
+
+    Route::get('/new/{supplier_name?}', 'OrdersController@new_order_suppliers')->name('new_order');
     
     Route::post('/confirm', 'OrdersController@confirm')->name('new_order_confirm');
     

@@ -23,50 +23,61 @@ class OrdersController extends Controller
 
     public function orders()
     {
-        $orders = orders::all()->toArray();
+        $orders_all = orders::select('order_id')->groupBy('order_id')->get();
         $suppliers = suppliers::all();
         $users = user::all();
-        for($i=0; $i < count($orders); $i++)
+        $orders = array();
+        $i = 0 ;
+        foreach($orders_all as $order)
         {
+            $order_detail = orders::whereOrder_id($order->order_id)->first();
+            $orders[$i]['order_id'] = $order->order_id;
             foreach($suppliers as $supplier)
-                if($orders[$i]['supplier_id'] == $supplier->id)
-                    $orders[$i]['supplier_id'] = $supplier->name;
+                if($order_detail->supplier_id == $supplier->id)
+                    $orders[$i]['supplier'] = $supplier->name;
             foreach($users as $user)
-                if($orders[$i]['user_id'] == $user->id)
-                    $orders[$i]['user_id'] = $user->name;
-            $orders[$i]['created_at'] = Carbon::parse($orders[$i]['created_at'])->diffForHumans();
+                if($order_detail->user_id == $user->id)
+                    $orders[$i]['user'] = $user->name;
+            $orders[$i]['created_at'] = Carbon::parse($order_detail->created_at)->diffForHumans();
+            $i++;
         }
         return view('orders.orders')->with('orders', $orders);
     }
 
 
-    public function new_order_suppliers()
+
+    public function order_details($order_id)
     {
-        if(session('supplier'))
-        {
-            $request = new Request;
-            return $this->new_order_choosen($request);
-        }
-        $suppliers = suppliers::all();
-        return view('orders.new_order')->with('suppliers', $suppliers);
+        $order = orders::whereOrder_id($order_id)->get();
+        $supplier = suppliers::findOrFail($order[0]['supplier_id']);
+        $products = products::whereSupplier_id($supplier->id)->get();
+        $produkty = array();
+        $i = 0;
+        foreach($order as $row)
+            foreach($products as $product)
+                if($row->product_id == $product->id)
+                {
+                    $produkty[$i]['name'] = $product->name;
+                    $produkty[$i]['ammount'] = $row->ammount;
+                    $i++;
+                }
+        return view('orders.details')->with('products', $produkty)->with('supplier', $supplier->name)->with('order_id', $order_id);
     }
 
-    public function new_order_choosen(Request $request)
+
+    public function new_order_suppliers($supplier_name = null)
     {
-        if($request->supplier == '' && !session('supplier'))
-            return redirect(route('new_order'))->with('failed', 'Wybierz dostawcę');
-        else if($request->has('supplier'))
-        {
-            $supplier = $request->supplier;
-            session(['supplier' => suppliers::findOrFail($supplier)]);
-        }
-        else if(session('supplier'))
-            $supplier = session('supplier')->id;
-        else
-            return redirect(route('new_order'))->with('failed', 'Wystąpił nieoczekiwany błąd');
         $suppliers = suppliers::all();
-        $products = products::whereSupplier_id($supplier)->get();
-        return view('orders.new_order')->with('suppliers', $suppliers)->with('products', $products);
+        $supplier = suppliers::whereName($supplier_name)->first();
+        if($supplier_name == null || !$supplier)
+            return view('orders.new_order')->with('suppliers', $suppliers);
+        else
+        {
+            session(['supplier' => $supplier]);
+            $products = products::whereSupplier_id($supplier->id)->get();
+            return view('orders.new_order')->with('suppliers', $suppliers)->with('products', $products);
+        }
+        return redirect(route('new_order'))->with('failed', 'Wystąpił nieoczekiwany błąd');
     }
 
 
@@ -76,7 +87,7 @@ class OrdersController extends Controller
         $order = array();
         $j=0;
         if(count($products) == 0)
-            return redirect(route('new_order'))->with('failed', 'Brak towarów dla tego dostawcy');
+            return redirect(route('new_order', ['supplier_name' => session('supplier')->name]))->with('failed', 'Brak towarów dla tego dostawcy');
         for($i = $products[0]['id']; $i <= $products[count($products)-1]['id']; $i++)
             if($request->has("product_".$i))
                 if($request['product_'.$i] > 0)
@@ -87,7 +98,7 @@ class OrdersController extends Controller
                     $j++;
                 }
         if(count($order) == 0)
-            return redirect(route('new_order'))->with('failed', 'Wybierz towary, które chcesz zamówić');
+            return redirect(route('new_order', ['supplier_name' => session('supplier')->name]))->with('failed', 'Wybierz towary, które chcesz zamówić');
         session(['order' => $order]);
         return view('orders.confirm');
     }
@@ -100,7 +111,8 @@ class OrdersController extends Controller
         session(['msg' => $request->msg]);
         try
         {
-            zmienic maila na maila dostawcy
+            //zmienic maila na maila dostawcy
+            // wyczytywanie zamówień
             Mail::send('emails.order', $data, function($message){
                 $message->from(Auth::user()->email, 'PHU Marta')->to('ludek088@gmail.com')->Subject('Zamówienie '.date('d.m.Y'));
             });

@@ -453,6 +453,10 @@ h6,
   font-size: 0.9rem;
 }
 
+.table-row{
+  cursor:pointer;
+  }
+
 .lead {
   font-size: 1.125rem;
   font-weight: 300;
@@ -10660,6 +10664,10 @@ button.bg-dark:focus {
 
   .text-md-center {
     text-align: center !important;
+  }
+
+  #sidebar {
+    min-height: 100vh;
   }
 }
 
