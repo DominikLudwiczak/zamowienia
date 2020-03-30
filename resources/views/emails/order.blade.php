@@ -107,11 +107,11 @@ background-color: #f6f6f6;
                                             </h1>
                                         </td>
                                     </tr>
-                                    @if(array_key_exists('msg', $data ?? []))
+                                    @if(session('msg'))
                                         <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
                                             <td class="content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
                                                 <p class="aligncenter" style="font-family: 'Helvetica Neue',Helvetica,Arial,'Lucida Grande',sans-serif; box-sizing: border-box; font-size: 15px; color: #000; line-height: 1.2em; font-weight: 350; text-align: center; margin: 40px 0 0;" item-align="center">
-                                                    {{$data['msg'] }}
+                                                    {{session('msg')}}
                                                 </p>
                                             </td>
                                         </tr>

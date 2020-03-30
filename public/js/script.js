@@ -2,6 +2,11 @@ function change_sidebar()
 {
     var sidebar = document.getElementById('sidebar');
     sidebar.classList.toggle('w-100');
+    var hr = document.getElementById('linia');
+    if(hr.style.display == 'none')
+        hr.style.display = "block";
+    else
+        hr.style.display = "none";
 }
 
 function selectRedirect(val)

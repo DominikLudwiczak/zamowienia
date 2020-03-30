@@ -31,7 +31,7 @@ Route::get('/products', 'Controller@products')->name('products');
 Route::prefix('orders')->group(function(){
     Route::get('/', 'OrdersController@orders')->name('orders');
 
-    Route::get('/{order_id}', 'OrdersController@order_details')->name('order_details');
+    Route::get('/details/{order_id}', 'OrdersController@order_details')->name('order_details');
 
     Route::get('/new/{supplier_name?}', 'OrdersController@new_order_suppliers')->name('new_order');
     

@@ -6,9 +6,13 @@
     <h1 class='pt-3 col-md-12 text-md-left text-center' style='text-decoration: underline;'>Nowe zamówienie</h1>
     <div class="d-flex p-3 col-sm-12 col-md-6 mx-auto">
         <select name='supplier' class="custom-select" onchange="selectRedirect(this.value)">
-            <option value="{{session('supplier')->name ?? ''}}" selected>{{session('supplier')->name ?? 'Dostawca...'}}</option>
+            @if(isset($products))
+                <option value="{{session('supplier')->name ?? ''}}" selected>{{session('supplier')->name ?? 'Dostawca...'}}</option>
+            @else
+                <option value="" selected>Dostawca...</option>
+            @endif
             @foreach($suppliers as $supplier)
-                @if(session('supplier'))
+                @if(isset($products))
                     @if($supplier->name != session('supplier')->name)
                         <option value="{{$supplier->name}}">{{$supplier->name}}</option>
                     @endif
@@ -18,7 +22,7 @@
             @endforeach
         </select>
     </div>
-    @if($products)
+    @if(isset($products))
         <hr/>
         <div class='row align-items-center'>
             <h3 class='col-md-7'>{{session('supplier')->name ?? ''}}</h3>

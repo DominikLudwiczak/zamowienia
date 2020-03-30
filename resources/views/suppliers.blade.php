@@ -20,7 +20,12 @@
         </tr>
     </thead>
     <tbody>
-        <?php $x=0; ?>
+        <?php 
+            if($_REQUEST)
+                $x = $_REQUEST['page']*15-15; 
+            else
+                $x=0;
+        ?>
         @foreach($suppliers as $supplier)
             <?php $x++; ?>
             <tr>
@@ -32,4 +37,5 @@
         @endforeach
     </tbody>
 </table>
+{{$suppliers->render()}}
 @endsection

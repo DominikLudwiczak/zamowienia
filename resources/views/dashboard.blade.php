@@ -4,22 +4,22 @@
 
 @section('content')
 <main class='py-4'>
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">Strona główna</div>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Strona główna</div>
 
-            <div class="card-body">
-                @if (session('status'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('status') }}
-                    </div>
-                @endif
+                <div class="card-body">
+                    @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
+                    @endif
 
-                Jesteś zalogowany!
+                    Jesteś zalogowany!
+                </div>
             </div>
         </div>
     </div>
-</div>
 </main>
 @endsection

@@ -23,7 +23,7 @@ class Controller extends BaseController
 
     public function suppliers()
     {
-        $suppliers = suppliers::all();
+        $suppliers = suppliers::orderBy('name')->paginate(15);
         return view('suppliers')->with('suppliers', $suppliers);
     }
 
@@ -31,7 +31,7 @@ class Controller extends BaseController
 
     public function products()
     {
-        $products = products::all()->toArray();
+        $products = products::paginate(15);
         $suppliers = suppliers::all();
         for($i=0; $i < count($products); $i++)
             foreach($suppliers as $supplier)

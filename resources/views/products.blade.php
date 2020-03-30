@@ -10,7 +10,7 @@
         <button class="btn btn-outline-success" type="submit">Szukaj</button>
     </div>
 </div>
-<table class="table table-striped table-responsive-sm text-center mt-4">
+<table class="table table-striped text-center mt-4">
     <thead class='thead-dark'>
         <tr>
             <th scope="col">#</th>
@@ -19,7 +19,12 @@
         </tr>
     </thead>
     <tbody>
-        <?php $x=0; ?>
+        <?php 
+            if($_REQUEST)
+                $x = $_REQUEST['page']*15-15; 
+            else
+                $x=0;
+        ?>
         @for($i=0; $i < count($products); $i++)
             <?php $x++; ?>
             <tr>
@@ -30,4 +35,5 @@
         @endfor
     </tbody>
 </table>
+{{$products->render()}}
 @endsection

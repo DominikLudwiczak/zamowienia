@@ -14,7 +14,7 @@
     <button class='btn btn-success float-right'>Stwórz nowe</button>
 </form>
 
-<table class="table table-striped table-responsive-sm text-center table-hover">
+<table class="table table-striped text-center table-hover">
     <thead class='thead-dark'>
         <tr>
             <th scope="col">#</th>
@@ -24,7 +24,12 @@
         </tr>
     </thead>
     <tbody>
-        <?php $x=0; ?>
+        <?php 
+            if($_REQUEST)
+                $x = $_REQUEST['page']*15-15; 
+            else
+                $x=0;
+        ?>
         @for($i=0; $i < count($orders); $i++)
             <?php $x++; ?>
             <tr class='table-row' data-href="{{ route('order_details',['order_id' => $orders[$i]['order_id']]) }}">
@@ -32,8 +37,9 @@
                 <td>{{$orders[$i]['supplier']}}</td>
                 <td>{{$orders[$i]['user']}}</td>
                 <td>{{$orders[$i]['created_at']}}</td>
-</tr>
+            </tr>
         @endfor
     </tbody>
 </table>
+    {{$paginate->render()}}
 @endsection

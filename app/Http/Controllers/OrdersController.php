@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Session;
 use Auth;
+use hash;
 
 class OrdersController extends Controller
 {
@@ -23,7 +24,7 @@ class OrdersController extends Controller
 
     public function orders()
     {
-        $orders_all = orders::select('order_id')->groupBy('order_id')->get();
+        $orders_all = orders::select('order_id')->groupBy('order_id')->OrderBy('created_at', 'desc')->paginate(15);
         $suppliers = suppliers::all();
         $users = user::all();
         $orders = array();
@@ -41,7 +42,7 @@ class OrdersController extends Controller
             $orders[$i]['created_at'] = Carbon::parse($order_detail->created_at)->diffForHumans();
             $i++;
         }
-        return view('orders.orders')->with('orders', $orders);
+        return view('orders.orders')->with('orders', $orders)->with('paginate', $orders_all);
     }
 
 
@@ -69,15 +70,15 @@ class OrdersController extends Controller
     {
         $suppliers = suppliers::all();
         $supplier = suppliers::whereName($supplier_name)->first();
-        if($supplier_name == null || !$supplier)
+        if(!$supplier_name || !$supplier)
             return view('orders.new_order')->with('suppliers', $suppliers);
-        else
+        else if($supplier)
         {
             session(['supplier' => $supplier]);
             $products = products::whereSupplier_id($supplier->id)->get();
             return view('orders.new_order')->with('suppliers', $suppliers)->with('products', $products);
         }
-        return redirect(route('new_order'))->with('failed', 'Wystąpił nieoczekiwany błąd');
+        return redirect(route('orders'))->with('failed', 'Wystąpił nieoczekiwany błąd');
     }
 
 
@@ -103,21 +104,43 @@ class OrdersController extends Controller
         return view('orders.confirm');
     }
 
+    private function order_id_generate()
+    {
+        do
+        {
+            $last_id = orders::orderBy('id', 'desc')->first()->id;
+            $order_id = '';
+            if(strlen($last_id) < 10)
+            {
+                for($i=0; $i <= (10-strlen($last_id)); $i++)
+                    if($i == 4)
+                        $order_id = $order_id.$last_id;
+                    else
+                        $order_id = $order_id.mt_rand(0, 9);
+            }
+            else
+            {
+                $hashed = hash::make($last_id);
+                $order_id = substr($hashed, 25, 35);
+            }
+            $check_order_id = orders::whereOrder_id($order_id)->first();
+        } while($check_order_id);
+        return $order_id;
+    }
+    
+
     public function send(Request $request)
     {
-        $data=[
-            'msg' => $request->msg,
-        ];
         session(['msg' => $request->msg]);
         try
         {
+            $data=array();
             Mail::send('emails.order', $data, function($message){
-                $message->from(env('mail_username'), 'PHU Marta')->to(session('supplier')->email)->Subject('Zamówienie '.date('d.m.Y'));
+                $message->from('restauracja.divaldo@gmail.com', 'PHU Marta')->to(session('supplier')->email)->Subject('Zamówienie '.date('d.m.Y'));
             });
-            $order_id = rand(19982, 18927946);
+            $order_id = $this->order_id_generate();
             for($i=0; $i < count(session('order')); $i++)
             {
-                //sprawdzenie czy order id jest wolny
                 $zamowienie = [
                     'order_id' => $order_id,
                     'supplier_id' => session('supplier')->id,
@@ -128,7 +151,7 @@ class OrdersController extends Controller
                 $save=orders::create($zamowienie);
             }
             Session::forget(['order', 'supplier', 'msg']);
-            return redirect( route('dashboard'))->with('succes', 'Zamówienie zostało wysłane');
+            return redirect(route('dashboard'))->with('success', 'Zamówienie zostało wysłane');
         }catch(Exception $ex)
         {
             return redirect(route('new_order'))->with('failed', 'Nie udało się wysłać zamówienia, spróbuj ponownie później');

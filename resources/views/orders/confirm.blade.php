@@ -35,7 +35,7 @@
         <form method='post' action="{{ route('new_order_send') }}" id ='send'>
         @csrf
             <div class="row col float-right pb-3"> 
-                <textarea class='form-control col-md-6 ml-auto' rows='3' name='msg' placeholder='Dodatkowe uwagi dla dostawcy'>@if(session('msg')) {{session('msg')}} @endif</textarea>
+                <textarea class='form-control col-md-6 ml-auto' rows='3' name='msg' style="resize:none;" placeholder='Dodatkowe uwagi dla dostawcy'>@if(session('msg')) {{session('msg')}} @endif</textarea>
             </div>
         </form>
         <div class='row col float-right'>

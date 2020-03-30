@@ -7,7 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(suppliers::class, function (Faker $faker) {
     return [
-        'nazwa' => $faker->name,
+        'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'phone' => rand(pow(10,8), pow(10,9)-1)
     ];
