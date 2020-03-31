@@ -10,6 +10,9 @@
         <button class="btn btn-outline-success" type="submit">Szukaj</button>
     </div>
 </div>
+<form action="{{ route('new_supplier') }}" class='pt-3'>
+    <button class='btn btn-success float-right'>Dodaj dostawcę</button>
+</form>
 <table class="table table-striped table-responsive-sm text-center mt-4">
     <thead class='thead-dark'>
         <tr>

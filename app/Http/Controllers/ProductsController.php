@@ -43,9 +43,9 @@ class ProductsController extends Controller
         try
         {
             products::create($product);
-        }catch(Exception $ex){
+        }catch(\Illuminate\Database\QueryException $ex){
             return redirect(route('products'))->with('failed', 'Wystąpił błąd podczas dodawania produktu');
         }
-        return redirect(route('products'))->with('success', 'Nowy produkt został dodany');
+        return redirect(route('products'))->with('success', 'Dodano nowy produkt');
     }
 }

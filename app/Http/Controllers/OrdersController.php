@@ -148,8 +148,9 @@ class OrdersController extends Controller
             }
             Session::forget(['order', 'supplier', 'msg']);
             return redirect(route('dashboard'))->with('success', 'Zamówienie zostało wysłane');
-        }catch(Exception $ex)
-        {
+        }catch(\Illuminate\Database\QueryException $ex){
+            return redirect(route('new_order'))->with('failed', 'Nie udało się wysłać zamówienia, spróbuj ponownie później');
+        }catch(Exception $ex){
             return redirect(route('new_order'))->with('failed', 'Nie udało się wysłać zamówienia, spróbuj ponownie później');
         }
     }
