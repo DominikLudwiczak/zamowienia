@@ -10,6 +10,7 @@
                     <div class="toast-body">
                         {{ $error }}
                     </div>
+                </div>
             </div>
         </div>
     @endforeach
@@ -25,6 +26,7 @@
                 <div class="toast-body">
                     {{ session('success') }}
                 </div>
+            </div>
         </div>
     </div>
 @endif
@@ -39,6 +41,7 @@
                 <div class="toast-body">
                     {{ session('failed') }}
                 </div>
+            </div>
         </div>
     </div>
 @endif

@@ -58,7 +58,7 @@ class OrdersController extends Controller
     }
 
 
-    public function new_order_suppliers($supplier_name = null)
+    public function new_order($supplier_name = null)
     {
         $suppliers = suppliers::all();
         $supplier = suppliers::whereName($supplier_name)->first();

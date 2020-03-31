@@ -25,15 +25,22 @@ Route::get('/dashboard', function()
 })->middleware('auth')->name('dashboard');
 
 Route::get('/suppliers', 'SuppliersController@suppliers')->name('suppliers');
+
+Route::prefix('products')->group(function(){
     
-Route::get('/products', 'ProductsController@products')->name('products');
+    Route::get('/', 'ProductsController@products')->name('products');
+
+    Route::get('/new', 'ProductsController@new_product')->name('new_product');
+
+    Route::post('/new', 'ProductsController@add_product')->middleware('CheckProduct')->name('add_product');
+});
 
 Route::prefix('orders')->group(function(){
     Route::get('/', 'OrdersController@orders')->name('orders');
 
     Route::get('/details/{order_id}', 'OrdersController@order_details')->name('order_details');
 
-    Route::get('/new/{supplier_name?}', 'OrdersController@new_order_suppliers')->name('new_order');
+    Route::get('/new/{supplier_name?}', 'OrdersController@new_order')->name('new_order');
     
     Route::post('/confirm', 'OrdersController@confirm')->name('new_order_confirm');
     
