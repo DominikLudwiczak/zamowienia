@@ -24,9 +24,9 @@ Route::get('/dashboard', function()
     return view('dashboard');
 })->middleware('auth')->name('dashboard');
 
-Route::get('/suppliers', 'Controller@suppliers')->name('suppliers');
+Route::get('/suppliers', 'SuppliersController@suppliers')->name('suppliers');
     
-Route::get('/products', 'Controller@products')->name('products');
+Route::get('/products', 'ProductsController@products')->name('products');
 
 Route::prefix('orders')->group(function(){
     Route::get('/', 'OrdersController@orders')->name('orders');

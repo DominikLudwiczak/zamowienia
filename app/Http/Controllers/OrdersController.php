@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\products;
 use App\orders;
+use App\orderDetails;
 use App\suppliers;
 use App\user;
 use Carbon\Carbon;
@@ -24,22 +25,15 @@ class OrdersController extends Controller
 
     public function orders()
     {
-        $orders_all = orders::select('order_id')->groupBy('order_id')->OrderBy('created_at', 'desc')->paginate(15);
-        $suppliers = suppliers::all();
-        $users = user::all();
+        $orders_all = orders::OrderBy('created_at', 'desc')->paginate(15);
         $orders = array();
         $i = 0 ;
         foreach($orders_all as $order)
         {
-            $order_detail = orders::whereOrder_id($order->order_id)->first();
             $orders[$i]['order_id'] = $order->order_id;
-            foreach($suppliers as $supplier)
-                if($order_detail->supplier_id == $supplier->id)
-                    $orders[$i]['supplier'] = $supplier->name;
-            foreach($users as $user)
-                if($order_detail->user_id == $user->id)
-                    $orders[$i]['user'] = $user->name;
-            $orders[$i]['created_at'] = Carbon::parse($order_detail->created_at)->diffForHumans();
+            $orders[$i]['supplier'] = suppliers::findOrFail($order->supplier_id)->name;
+            $orders[$i]['user'] = user::findOrFail($order->user_id)->name;
+            $orders[$i]['created_at'] = Carbon::parse($order->created_at)->diffForHumans();
             $i++;
         }
         return view('orders.orders')->with('orders', $orders)->with('paginate', $orders_all);
@@ -49,19 +43,17 @@ class OrdersController extends Controller
 
     public function order_details($order_id)
     {
-        $order = orders::whereOrder_id($order_id)->get();
-        $supplier = suppliers::findOrFail($order[0]['supplier_id']);
-        $products = products::whereSupplier_id($supplier->id)->get();
+        $order = orders::whereOrder_id($order_id)->first();
+        $order_details = orderDetails::whereOrder_id($order_id)->get();
+        $supplier = suppliers::findOrFail($order->supplier_id);
         $produkty = array();
         $i = 0;
-        foreach($order as $row)
-            foreach($products as $product)
-                if($row->product_id == $product->id)
-                {
-                    $produkty[$i]['name'] = $product->name;
-                    $produkty[$i]['ammount'] = $row->ammount;
-                    $i++;
-                }
+        foreach($order_details as $row)
+        {
+            $produkty[$i]['name'] = products::findOrFail($row->product_id)->name;
+            $produkty[$i]['ammount'] = $row->ammount;
+            $i++;
+        }
         return view('orders.details')->with('products', $produkty)->with('supplier', $supplier->name)->with('order_id', $order_id);
     }
 
@@ -139,16 +131,20 @@ class OrdersController extends Controller
                 $message->from('restauracja.divaldo@gmail.com', 'PHU Marta')->to(session('supplier')->email)->Subject('Zamówienie '.date('d.m.Y'));
             });
             $order_id = $this->order_id_generate();
+            $order = [
+                'order_id' => $order_id,
+                'supplier_id' => session('supplier')->id,
+                'user_id' => Auth::user()->id
+            ];
+            orders::create($order);
             for($i=0; $i < count(session('order')); $i++)
             {
-                $zamowienie = [
+                $order_details = [
                     'order_id' => $order_id,
-                    'supplier_id' => session('supplier')->id,
                     'product_id' => session('order')[$i]['id'],
-                    'ammount' => session('order')[$i]['ammount'],
-                    'user_id' => Auth::user()->id,
+                    'ammount' => session('order')[$i]['ammount']
                 ];
-                $save=orders::create($zamowienie);
+                orderDetails::create($order_details);
             }
             Session::forget(['order', 'supplier', 'msg']);
             return redirect(route('dashboard'))->with('success', 'Zamówienie zostało wysłane');

@@ -5,9 +5,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 class orders extends Model
-{
+{   
     protected $fillable = [
-        'order_id', 'supplier_id', 'product_id', 'user_id', 'ammount'
+        'order_id', 'supplier_id', 'user_id'
     ];
 
     protected $dates = [
@@ -19,13 +19,13 @@ class orders extends Model
         return $this->belongsTo('App\suppliers');
     }
 
-    public function products()
-    {
-        return $this->hasMany('App\products');
-    }
-
     public function users()
     {
         return $this->belongsTo('App\users');
+    }
+
+    public function order_id()
+    {
+        return $this->hasMany('App\orderDetails');
     }
 }

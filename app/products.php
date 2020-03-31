@@ -17,6 +17,6 @@ class products extends Model
 
     public function orders()
     {
-        return $this->belongsTo('App\orders');
+        return $this->belongsTo('App\orderDetails');
     }
 }

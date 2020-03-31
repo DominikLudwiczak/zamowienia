@@ -17,8 +17,6 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->string('order_id')->unique();
             $table->bigInteger('supplier_id')->unsigned();
-            $table->bigInteger('product_id')->unsigned();
-            $table->integer('ammount');
             $table->bigInteger('user_id')->unsigned();
             $table->timestamps();
         });
@@ -27,10 +25,6 @@ class CreateOrdersTable extends Migration
             $table->foreign('supplier_id')
                 ->references('id')
                 ->on('suppliers');
-
-            $table->foreign('product_id')
-                ->references('id')
-                ->on('products');
 
             $table->foreign('user_id')
                 ->references('id')
