@@ -80,7 +80,7 @@ class OrdersController extends Controller
         $order = array();
         $j=0;
         if(count($products) == 0)
-            return redirect(route('new_order', ['supplier_name' => session('supplier')->name]))->with('failed', 'Brak towarów dla tego dostawcy');
+            return redirect()->back()->with('failed', 'Brak towarów dla tego dostawcy');
         for($i = $products[0]['id']; $i <= $products[count($products)-1]['id']; $i++)
             if($request->has("product_".$i))
                 if($request['product_'.$i] > 0)
@@ -91,7 +91,7 @@ class OrdersController extends Controller
                     $j++;
                 }
         if(count($order) == 0)
-            return redirect(route('new_order', ['supplier_name' => session('supplier')->name]))->with('failed', 'Wybierz towary, które chcesz zamówić');
+            return redirect()->back()->with('failed', 'Wybierz towary, które chcesz zamówić');
         session(['order' => $order]);
         return view('orders.confirm');
     }
@@ -149,9 +149,9 @@ class OrdersController extends Controller
             Session::forget(['order', 'supplier', 'msg']);
             return redirect(route('dashboard'))->with('success', 'Zamówienie zostało wysłane');
         }catch(\Illuminate\Database\QueryException $ex){
-            return redirect(route('new_order'))->with('failed', 'Nie udało się wysłać zamówienia, spróbuj ponownie później');
+            return redirect()->back()->with('failed', 'Nie udało się wysłać zamówienia, spróbuj ponownie później');
         }catch(Exception $ex){
-            return redirect(route('new_order'))->with('failed', 'Nie udało się wysłać zamówienia, spróbuj ponownie później');
+            return redirect()->back()->with('failed', 'Nie udało się wysłać zamówienia, spróbuj ponownie później');
         }
     }
 }
