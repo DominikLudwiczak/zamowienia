@@ -48,4 +48,23 @@ class ProductsController extends Controller
         }
         return redirect(route('products'))->with('success', 'Dodano nowy produkt');
     }
+
+
+    public function edit($id)
+    {
+        $product = products::findOrFail($id);
+        return view('products.edit_product')->with('product', $product);
+    }
+
+
+    public function delete(Request $request)
+    {
+        try
+        {
+            products::findOrFail($request->id)->delete();
+        }catch(\Illuminate\Database\QueryException $ex){
+            return redirect()->back()->with('failed', 'Wystąpił błąd podczas usuwania produktu');
+        }
+        return redirect()->back()->with('success', 'Produkt został usunięty');
+    }
 }

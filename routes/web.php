@@ -34,6 +34,10 @@ Route::prefix('suppliers')->group(function(){
     })->middleware('auth')->name('new_supplier');
 
     Route::post('/new', 'SuppliersController@add_supplier')->middleware('CheckSupplier')->name('add_supplier');
+
+    Route::get('/edit/{id}', 'SuppliersController@edit')->name('edit_supplier');
+
+    Route::post('/delete', 'SuppliersController@delete')->name('delete_supplier');
 });
 
 //Products
@@ -44,6 +48,10 @@ Route::prefix('products')->group(function(){
     Route::get('/new', 'ProductsController@new_product')->name('new_product');
 
     Route::post('/new', 'ProductsController@add_product')->middleware('CheckProduct')->name('add_product');
+
+    Route::get('/edit/{id}', 'ProductsController@edit')->name('edit_product');
+
+    Route::post('/delete', 'ProductsController@delete')->name('delete_product');
 });
 
 //Orders

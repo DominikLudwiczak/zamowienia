@@ -16,16 +16,12 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('order_id')->unique();
-            $table->bigInteger('supplier_id')->unsigned();
+            $table->string('supplier');
             $table->bigInteger('user_id')->unsigned();
             $table->timestamps();
         });
 
         Schema::table('orders', function (Blueprint $table){
-            $table->foreign('supplier_id')
-                ->references('id')
-                ->on('suppliers');
-
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users');

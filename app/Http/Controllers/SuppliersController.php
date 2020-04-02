@@ -38,4 +38,24 @@ class SuppliersController extends Controller
         }
         return redirect(route('suppliers'))->with('success', 'Dodano nowego dostawcę');
     }
+
+
+    public function edit($id)
+    {
+        $supplier = suppliers::findOrFail($id);
+        return view('suppliers.edit_supplier')->with('supplier', $supplier);
+    }
+
+
+    public function delete(Request $request)
+    {
+        try
+        {
+            products::whereSupplier_id($request->id)->delete();
+            suppliers::findOrFail($request->id)->delete();
+        }catch(\Illuminate\Database\QueryException $ex){
+            return redirect()->back()->with('failed', 'Wystąpił błąd podczas usuwania dostawcy');
+        }
+        return redirect()->back()->with('success', 'Dostawca został usunięty');
+    }
 }

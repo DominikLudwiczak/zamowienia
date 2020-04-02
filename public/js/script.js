@@ -55,6 +55,14 @@ function telephone(event, id)
     input.value = last_value;
 }
 
+function modal_delete(id)
+{
+    document.getElementById("delete_button").value = id;
+    $('#myModal').on('shown.bs.modal', function () {
+        $('#myInput').trigger('focus');
+    })
+}
+
 $(document).ready(function($) {
     $(".table-row").click(function() {
         window.document.location = $(this).data("href");

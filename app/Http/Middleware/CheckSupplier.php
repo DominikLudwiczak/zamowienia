@@ -18,7 +18,7 @@ class CheckSupplier
         $request->validate([
             'nazwa' => 'required|max:255',
             'email' => 'required|email',
-            'telefon' => 'required|max:11|min:9'
+            'telefon' => 'required|max:11|min:11'
         ]);
         return $next($request);
     }

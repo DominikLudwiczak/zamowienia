@@ -31,7 +31,7 @@ class OrdersController extends Controller
         foreach($orders_all as $order)
         {
             $orders[$i]['order_id'] = $order->order_id;
-            $orders[$i]['supplier'] = suppliers::findOrFail($order->supplier_id)->name;
+            $orders[$i]['supplier'] = $order->supplier;
             $orders[$i]['user'] = user::findOrFail($order->user_id)->name;
             $orders[$i]['created_at'] = Carbon::parse($order->created_at)->diffForHumans();
             $i++;
@@ -45,16 +45,16 @@ class OrdersController extends Controller
     {
         $order = orders::whereOrder_id($order_id)->first();
         $order_details = orderDetails::whereOrder_id($order_id)->get();
-        $supplier = suppliers::findOrFail($order->supplier_id);
+        $supplier = $order->supplier;
         $produkty = array();
         $i = 0;
         foreach($order_details as $row)
         {
-            $produkty[$i]['name'] = products::findOrFail($row->product_id)->name;
+            $produkty[$i]['name'] = $row->product;
             $produkty[$i]['ammount'] = $row->ammount;
             $i++;
         }
-        return view('orders.details')->with('products', $produkty)->with('supplier', $supplier->name)->with('order_id', $order_id);
+        return view('orders.details')->with('products', $produkty)->with('supplier', $supplier)->with('order_id', $order_id);
     }
 
 
@@ -85,7 +85,6 @@ class OrdersController extends Controller
             if($request->has("product_".$i))
                 if($request['product_'.$i] > 0)
                 {
-                    $order[$j]['id'] = $products[$j]['id'];
                     $order[$j]['name'] = $products[$j]['name'];
                     $order[$j]['ammount'] = $request['product_'.$i];
                     $j++;
@@ -100,7 +99,10 @@ class OrdersController extends Controller
     {
         do
         {
-            $last_id = orders::orderBy('id', 'desc')->first()->id;
+            if($last_id = orders::orderBy('id', 'desc')->first())
+                $last_id = $last_id->id;
+            else
+                $last_id = 0;
             $order_id = '';
             if(strlen($last_id) < 10)
             {
@@ -133,7 +135,7 @@ class OrdersController extends Controller
             $order_id = $this->order_id_generate();
             $order = [
                 'order_id' => $order_id,
-                'supplier_id' => session('supplier')->id,
+                'supplier' => session('supplier')->name,
                 'user_id' => Auth::user()->id
             ];
             orders::create($order);
@@ -141,7 +143,7 @@ class OrdersController extends Controller
             {
                 $order_details = [
                     'order_id' => $order_id,
-                    'product_id' => session('order')[$i]['id'],
+                    'product' => session('order')[$i]['name'],
                     'ammount' => session('order')[$i]['ammount']
                 ];
                 orderDetails::create($order_details);
