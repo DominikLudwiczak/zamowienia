@@ -53,7 +53,7 @@ class ProductsController extends Controller
         else
         {
             $supplier = suppliers::findOrfail($request->dostawca)->name;
-            return redirect(route('products'))->with('failed', $request->nazwa.' juz jest dodany do '.$supplier);
+            return redirect()->back()->with('failed', $request->nazwa.' juz jest dodany do '.$supplier);
         }
     }
 
@@ -61,7 +61,29 @@ class ProductsController extends Controller
     public function edit($id)
     {
         $product = products::findOrFail($id);
-        return view('products.edit_product')->with('product', $product);
+        $suppliers = suppliers::all();
+        return view('products.edit_product')->with('product', $product)->with('suppliers', $suppliers);
+    }
+
+    
+    public function edit_product_save(Request $request, $id)
+    {
+        if(products::whereSupplier_id($request->dostawca)->whereName($request->nazwa)->first())
+        {
+            $supplier = suppliers::findOrFail($request->dostawca)->name;
+            return redirect()->back()->with('failed', $request->nazwa.' juz jest dodany do '.$supplier);
+        }
+        try
+        {
+            $product = products::findOrFail($id);
+            $product->name = $request->nazwa;
+            $product->supplier_id = $request->dostawca;
+            $product->save();
+        }
+        catch(\Illuminate\Database\QueryException $ex){
+            return redirect(route('products'))->with('failed', 'Modyfikacja nie powiodła się');
+        }
+        return redirect(route('products'))->with('success', 'Zmodyfikowano produkt');
     }
 
 

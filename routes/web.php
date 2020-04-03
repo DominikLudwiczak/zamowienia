@@ -53,6 +53,8 @@ Route::prefix('products')->group(function(){
 
     Route::get('/edit/{id}', 'ProductsController@edit')->name('edit_product');
 
+    Route::post('/edit/{id}', 'ProductsController@edit_product_save')->middleware('CheckProduct')->name('edit_product_save');
+
     Route::post('/delete', 'ProductsController@delete')->name('delete_product');
 });
 

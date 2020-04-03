@@ -14,7 +14,7 @@
                 @csrf
                     <div class="input-group pt-3 pb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">nazwa</span>
+                            <span class="input-group-text" id="basic-addon1">Nazwa</span>
                         </div>
                         <input type="text" class="form-control" placeholder="Nazwa dostawcy" name="nazwa" aria-label="Username" aria-describedby="basic-addon1">
                     </div>
