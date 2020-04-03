@@ -51,6 +51,22 @@ class SuppliersController extends Controller
     }
 
 
+    public function edit_save(Request $request, $id)
+    {
+        try
+        {
+            $supplier = suppliers::findOrFail($id);
+            $supplier->name = $request->nazwa;
+            $supplier->email = $request->email;
+            $supplier->phone = $request->telefon;
+            $supplier->save();
+        }catch(\Illuminate\Database\QueryException $ex){
+            return redirect()->back()->with('failed', 'Modyfikacja nie powiodła się');
+        }
+        return redirect(route('suppliers'))->with('success', 'Zmodyfikowano dostawcę');
+    }
+
+
     public function delete(Request $request)
     {
         try

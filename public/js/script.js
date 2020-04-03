@@ -18,8 +18,15 @@ function selectRedirect(val)
 var num_of_nums = 0;
 var last_value = '';
 var last_type;
-function telephone(event, id)
+var check = true;
+function telephone(event, id, value = null)
 {
+    if(value != null && check == true)
+    {
+        last_value = value;
+        num_of_nums = 9;
+        check = false;
+    }
     var input = document.getElementById(id);
     if(event.inputType == 'insertText' || event.inputType == 'deleteContentBackward')
     {
@@ -51,7 +58,6 @@ function telephone(event, id)
             }
         }
     }
-    console.log(num_of_nums);
     input.value = last_value;
 }
 

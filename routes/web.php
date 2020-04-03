@@ -37,6 +37,8 @@ Route::prefix('suppliers')->group(function(){
 
     Route::get('/edit/{id}', 'SuppliersController@edit')->name('edit_supplier');
 
+    Route::post('/edit/{id}', 'SuppliersController@edit_save')->middleware('CheckSupplier')->name('edit_supplier_save');
+
     Route::post('/delete', 'SuppliersController@delete')->name('delete_supplier');
 });
 
