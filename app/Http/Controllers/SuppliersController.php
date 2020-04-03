@@ -30,13 +30,17 @@ class SuppliersController extends Controller
             'phone' => $request->telefon
         ];
 
-        try
+        if(!suppliers::whereName($request->nazwa)->first())
         {
-            suppliers::create($supplier);
-        }catch(\Illuminate\Database\QueryException $ex){
-            return redirect(route('suppliers'))->with('failed', 'Wystapił błąd podczas dodawania dostawcy');
+            try
+            {
+                suppliers::create($supplier);
+            }catch(\Illuminate\Database\QueryException $ex){
+                return redirect(route('suppliers'))->with('failed', 'Wystapił błąd podczas dodawania dostawcy');
+            }
+            return redirect(route('suppliers'))->with('success', 'Dodano nowego dostawcę');
         }
-        return redirect(route('suppliers'))->with('success', 'Dodano nowego dostawcę');
+        return redirect(route('suppliers'))->with('failed', 'dostawca '.$request->nazwa.' juz istnieje');
     }
 
 

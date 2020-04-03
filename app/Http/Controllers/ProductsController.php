@@ -40,13 +40,21 @@ class ProductsController extends Controller
             'supplier_id' => $request->dostawca,
             'name' => $request->nazwa,
         ];
-        try
+        if(!products::whereSupplier_id($request->dostawca)->whereName($request->nazwa)->first())
         {
-            products::create($product);
-        }catch(\Illuminate\Database\QueryException $ex){
-            return redirect(route('products'))->with('failed', 'Wystąpił błąd podczas dodawania produktu');
+            try
+            {
+                products::create($product);
+            }catch(\Illuminate\Database\QueryException $ex){
+                return redirect(route('products'))->with('failed', 'Wystąpił błąd podczas dodawania produktu');
+            }
+            return redirect(route('products'))->with('success', 'Dodano nowy produkt');
         }
-        return redirect(route('products'))->with('success', 'Dodano nowy produkt');
+        else
+        {
+            $supplier = suppliers::findOrfail($request->dostawca)->name;
+            return redirect(route('products'))->with('failed', $request->nazwa.' juz jest dodany do '.$supplier);
+        }
     }
 
 
