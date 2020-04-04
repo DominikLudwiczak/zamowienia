@@ -44,11 +44,6 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Zaloguj się') }}</a>
                             </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Rejestracja') }}</a>
-                                </li>
-                            @endif
                         @else
                             <li class="nav-item dropdown">
                                 <hr id='linia' style='display:none;'/>
@@ -62,6 +57,8 @@
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Wyloguj się') }}
                                     </a>
+
+                                    <a class='dropdown-item' href="{{ route('password.change') }}">Zmień hasło</a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf

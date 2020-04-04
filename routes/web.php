@@ -12,17 +12,27 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/', function () {
     return redirect(route('dashboard'));
 });
-
-Auth::routes();
 
 Route::get('/dashboard', function()
 {
     return view('dashboard');
 })->middleware('auth')->name('dashboard');
+
+
+Auth::routes(['register' => false, 'reset' => false, 'confirm' => false]);
+
+//Password reset
+Route::prefix('password/reset')->group(function(){
+    Route::get('/', function()
+    {
+        return view('auth.passwords.reset');
+    })->name('password.change');
+
+    Route::post('/', '\App\Http\Controllers\Auth\ResetPasswordController@change')->middleware('CheckPasswordChange')->name('password.changing');
+});
 
 //Suppliers
 Route::prefix('suppliers')->group(function(){
