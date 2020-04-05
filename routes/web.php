@@ -22,7 +22,7 @@ Route::get('/dashboard', function()
 })->middleware('auth')->name('dashboard');
 
 
-Auth::routes(['register' => false, 'reset' => false, 'confirm' => false]);
+Auth::routes(['register' => true, 'reset' => false, 'confirm' => false]);
 
 //Password reset
 Route::prefix('password/reset')->group(function(){

@@ -130,7 +130,7 @@ class OrdersController extends Controller
         {
             $data=array();
             Mail::send('emails.order', $data, function($message){
-                $message->from('restauracja.divaldo@gmail.com', 'PHU Marta')->to(session('supplier')->email)->Subject('Zamówienie '.date('d.m.Y'));
+                $message->from('phumarta.sklep@gmail.com', 'PHU Marta')->to(session('supplier')->email)->Subject('Zamówienie '.date('d.m.Y'));
             });
             $order_id = $this->order_id_generate();
             $order = [
