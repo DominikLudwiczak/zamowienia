@@ -39,6 +39,8 @@ Route::prefix('suppliers')->group(function(){
 
     Route::get('/', 'SuppliersController@suppliers')->name('suppliers');
 
+    Route::get('/search', 'SuppliersController@search')->name('suppliers_search');
+
     Route::get('/new', function(){
         return view('suppliers.new_supplier');
     })->middleware('auth')->name('new_supplier');
@@ -57,6 +59,8 @@ Route::prefix('products')->group(function(){
     
     Route::get('/', 'ProductsController@products')->name('products');
 
+    Route::get('/search', 'ProductsController@search')->name('products_search');
+
     Route::get('/new', 'ProductsController@new_product')->name('new_product');
 
     Route::post('/new', 'ProductsController@add_product')->middleware('CheckProduct')->name('add_product');
@@ -71,6 +75,8 @@ Route::prefix('products')->group(function(){
 //Orders
 Route::prefix('orders')->group(function(){
     Route::get('/', 'OrdersController@orders')->name('orders');
+
+    Route::get('/search', 'OrdersController@search')->name('orders_search');
 
     Route::get('/details/{order_id}', 'OrdersController@order_details')->name('order_details');
 
