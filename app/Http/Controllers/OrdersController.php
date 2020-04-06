@@ -85,7 +85,7 @@ class OrdersController extends Controller
         {
             if($request->has("product_".$i) && $request['product_'.$i] > 0)
             {
-                $order[$j]['name'] = $products[$i]['name'];
+                $order[$j]['name'] = products::findOrFail($i)->name;
                 $order[$j]['ammount'] = $request['product_'.$i];
                 $j++;
             }
