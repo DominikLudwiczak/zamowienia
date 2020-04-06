@@ -82,13 +82,14 @@ class OrdersController extends Controller
         if(count($products) == 0)
             return redirect()->back()->with('failed', 'Brak towarów dla tego dostawcy');
         for($i = $products[0]['id']; $i <= $products[count($products)-1]['id']; $i++)
-            if($request->has("product_".$i))
-                if($request['product_'.$i] > 0)
-                {
-                    $order[$j]['name'] = $products[$j]['name'];
-                    $order[$j]['ammount'] = $request['product_'.$i];
-                    $j++;
-                }
+        {
+            if($request->has("product_".$i) && $request['product_'.$i] > 0)
+            {
+                $order[$j]['name'] = $products[$j]['name'];
+                $order[$j]['ammount'] = $request['product_'.$i];
+                $j++;
+            }
+        }
         if(count($order) == 0)
             return redirect()->back()->with('failed', 'Wybierz towary, które chcesz zamówić');
         session(['order' => $order]);
