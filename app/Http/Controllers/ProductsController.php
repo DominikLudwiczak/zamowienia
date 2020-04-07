@@ -55,7 +55,7 @@ class ProductsController extends Controller
                 $x = $products->count();
                 foreach($suppliers_search as $supp)
                 {
-                    $products_supp = products::whereSupplier_id($supp->id)->get();
+                    $products_supp = products::whereSupplier_id($supp->id)->orderBy('name')->get();
                     foreach($products_supp as $row)
                     {
                         if(!in_array($row->id, $products_used))

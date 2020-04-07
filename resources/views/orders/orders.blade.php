@@ -6,8 +6,7 @@
 <div class='row align-items-center pt-3'>
     <h1 style='text-decoration: underline;' class='col-md-7'>Zamówienia</h1>
     <div class='input-group col-md-5'>
-        <input class="form-control" type="search" placeholder="Szukaj" aria-label="Szukaj">
-        <button class="btn btn-outline-success" type="submit">Szukaj</button>
+        <input class="form-control" type="search" placeholder="Szukaj" id='search' aria-label="Szukaj">
     </div>
 </div>
 <form action="{{ route('new_order', ['supplier_name' => session('supplier')->name ?? '']) }}" class='pt-3'>
@@ -41,5 +40,30 @@
         @endfor
     </tbody>
 </table>
-    {{$paginate->render()}}
+<div class='pagination'>{{$paginate->render()}}</div>
 @endsection
+<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function(){
+        function fetch_search(query = '')
+        {
+            $.ajax({
+                url:"{{route('orders_search')}}",
+                method:'GET',
+                data:{query:query},
+                dataType: 'json',
+                success:function(data)
+                {
+                    $('tbody').html(data.table_data);
+                    $('#pagination').hide();
+                }
+            });
+        }
+        $(document).on('input', '#search', function(){
+            if($(this).val() == '')
+                window.location.replace("{{route('orders')}}");
+            var query = $(this).val();
+            fetch_search(query);
+        });
+    });
+</script>

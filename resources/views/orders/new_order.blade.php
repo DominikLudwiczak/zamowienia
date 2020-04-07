@@ -27,8 +27,7 @@
         <div class='row align-items-center'>
             <h3 class='col-md-7'>{{session('supplier')->name ?? ''}}</h3>
             <div class='input-group col-md-5'>
-                <input class="form-control" type="search" placeholder="Szukaj" aria-label="Szukaj">
-                <button class="btn btn-outline-success" type="submit">Szukaj</button>
+                <input class="form-control" type="search" placeholder="Szukaj" id='search' aria-label="Szukaj">
             </div>
         </div>
         <form method="post" action="{{ route('new_order_confirm') }}">
@@ -71,3 +70,28 @@
         <a href="{{ route('orders') }}" class='btn btn-primary float-right'>Cofnij</a>
     @endif
 @endsection
+<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function(){
+        var supplier = "{{session('supplier')->id}}";
+        function fetch_search(query = '')
+        {
+            $.ajax({
+                url:"{{route('orders_search_prod')}}",
+                method:'GET',
+                data:{query:query, var:supplier, type:'new_order'},
+                dataType: 'json',
+                success:function(data)
+                {
+                    $('tbody').html(data.table_data);
+                }
+            });
+        }
+        $(document).on('input', '#search', function(){
+            if($(this).val() == '')
+                window.location.replace("{{route('new_order', ['supplier_name' => session('supplier')->name])}}");
+            var query = $(this).val();
+            fetch_search(query);
+        });
+    });
+</script>

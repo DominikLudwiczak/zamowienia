@@ -41,20 +41,146 @@ class OrdersController extends Controller
 
 
 
+    public function search(Request $request)
+    {
+        $output = '';
+        if($request->ajax())
+        {
+            $query = $request->get('query');
+
+            $orders = orders::where('order_id', 'like', '%'.$query.'%')->orWhere('supplier', 'like', '%'.$query.'%')->orderBy('created_at')->get();
+            $users_search = user::where('name', 'like', '%'.$query.'%')->orderBy('name')->get();
+
+            if($orders->count() > 0 || $users_search->count() > 0)
+            {
+                $users = user::all();
+                $orders_used = array();
+                $j = 0;
+                for($i=0; $i < $orders->count(); $i++) 
+                    foreach($users as $user)
+                        if($user->id == $orders[$i]['user_id'])
+                        {
+                            $orders_used[$j]['order_id'] = $orders[$i]['order_id'];
+                            $orders_used[$j]['supplier'] = $orders[$i]['supplier'];
+                            $orders_used[$j]['user'] = $user->name;
+                            $orders_used[$j]['date'] = Carbon::parse($orders[$j]['created_at'])->diffForHumans();
+                            $j++;
+                        }
+
+                $x = $orders->count();
+                foreach($users_search as $usr)
+                {
+                    $orders_usr = orders::whereUser_id($usr->id)->orderBy('created_at')->get();
+                    foreach($orders_usr as $row)
+                    {
+                        if(!in_array($row->order_id, $orders_used))
+                        {
+                            $orders_used[$x]['order_id'] = $row->order_id;
+                            $orders_used[$x]['supplier'] = $row->supplier;
+                            $orders_used[$x]['user'] = $usr->name;
+                            $orders_used[$j]['date'] = Carbon::parse($row->created_at)->diffForHumans();
+                            $x++;
+                        }
+                    }
+                }
+
+                for($i=0; $i < count($orders_used); $i++)
+                {
+                    $output .= '
+                        <tr class="table-row" data-href="'.route('order_details',['order_id' => $orders_used[$i]['order_id']]).'">
+                            <td class="align-middle">'.($i+1).'</td>
+                            <td class="align-middle">'.$orders_used[$i]['supplier'].'</td>
+                            <td class="align-middle">'.$orders_used[$i]['user'].'</td>
+                            <td class="align-middle">'.$orders_used[$i]['date'].'</td>
+                        </tr>
+                    ';
+                }
+            }
+            else
+            {
+                $output = '
+                    <tr>
+                        <td></td>
+                        <td class="align-middle">Nie znaleziono</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                ';
+            }
+            $data = array('table_data' => $output);
+            echo json_encode($data);
+        }
+    }
+
+
+
+    public function search_prod(Request $request)
+    {
+        $output = '';
+        if($request->ajax())
+        {
+            $query = $request->get('query');
+            $var = $request->get('var');
+            $type = $request->get('type');
+
+            if($type == 'new_order')
+                $products = products::where([['supplier_id', '=', $var],['name', 'like', '%'.$query.'%']])->orderBy('name')->get();
+            else
+                $products = orderDetails::where([['order_id', '=', $order_id],['product', 'like', '%'.$query.'%']])->orWhere('ammount', 'like', '%'.$query.'%')->orderBy('product')->get();
+
+            if($products->count() > 0)
+            {
+                foreach($products as $key => $product)
+                {
+                    $output .= '
+                        <tr>
+                            <td class="align-middle">'.($key+1).'</td>';
+                            if($type == "new_order" || $type='confirm')
+                            {
+                                $output .= '<td class="align-middle">'.$product->name.'</td>';
+                                if($type == 'new_order')
+                                {
+                                    if(session("order"))
+                                    {
+                                        $ammount = "";
+                                        for($i=0; $i < count(session("order")); $i++)
+                                            if(session("order")[$i]["name"] == $product->name)
+                                                $ammount = session("order")[$i]["ammount"];
+                                    }
+                                    $output .= '<td><div class="col-sm-12 col-md-4 mx-auto"><input type="number" name="product_'.$product->id.'" value="'.$ammount.'"class="form-control"/></div></td>';
+                                }    
+                            }
+                            
+                            if($type == 'details' || $type='confirm')
+                            {
+                                if($type == 'details')
+                                    $output .= '<td class="align-middle">'.$product->product.'</td>';
+                                $output .= '<td class="align-middle">'.$product->ammount.'dd</td>';
+                            }
+                    $output .= '</tr>';
+                }
+            }
+            else
+            {
+                $output = '
+                    <tr>
+                        <td></td>
+                        <td class="align-middle">Nie znaleziono</td>
+                        <td></td>
+                    </tr>
+                ';
+            }
+            $data = array('table_data' => $output);
+            echo json_encode($data);
+        }
+    }
+
+
     public function order_details($order_id)
     {
-        $order = orders::whereOrder_id($order_id)->first();
+        $supplier = orders::whereOrder_id($order_id)->first()->supplier;
         $order_details = orderDetails::whereOrder_id($order_id)->get();
-        $supplier = $order->supplier;
-        $produkty = array();
-        $i = 0;
-        foreach($order_details as $row)
-        {
-            $produkty[$i]['name'] = $row->product;
-            $produkty[$i]['ammount'] = $row->ammount;
-            $i++;
-        }
-        return view('orders.details')->with('products', $produkty)->with('supplier', $supplier)->with('order_id', $order_id);
+        return view('orders.details')->with('products', $order_details)->with('supplier', $supplier)->with('order_id', $order_id);
     }
 
 

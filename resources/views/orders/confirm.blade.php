@@ -7,8 +7,7 @@
         <div class='row align-items-center pt-3 pb-3'>
             <h1 style='text-decoration: underline;' class='col-md-7 text-center text-md-left'>Potwierdzenie zamówienia</h1>
             <div class='input-group col-md-5'>
-                <input class="form-control" type="search" placeholder="Szukaj" aria-label="Szukaj">
-                <button class="btn btn-outline-success" type="submit">Szukaj</button>
+                <input class="form-control" type="search" placeholder="Szukaj" id='search' aria-label="Szukaj">
             </div>
         </div>
         <h3 class='text-center text-md-left'>{{session('supplier')->name}}</h3>
@@ -44,3 +43,28 @@
         </div>
     @endif
 @endsection
+<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function(){
+        var supplier = "{{session('supplier')->id}}";
+        function fetch_search(query = '')
+        {
+            $.ajax({
+                url:"{{route('orders_search_prod')}}",
+                method:'GET',
+                data:{query:query, var:supplier, type:'new_order'},
+                dataType: 'json',
+                success:function(data)
+                {
+                    $('tbody').html(data.table_data);
+                }
+            });
+        }
+        $(document).on('input', '#search', function(){
+            if($(this).val() == '')
+                window.location.replace("{{route('new_order_confirm')}}");
+            var query = $(this).val();
+            fetch_search(query);
+        });
+    });
+</script>
