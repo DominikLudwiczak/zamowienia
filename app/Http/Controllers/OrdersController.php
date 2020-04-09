@@ -25,18 +25,11 @@ class OrdersController extends Controller
 
     public function orders()
     {
-        $orders_all = orders::OrderBy('created_at', 'desc')->paginate(15);
-        $orders = array();
-        $i = 0 ;
-        foreach($orders_all as $order)
-        {
-            $orders[$i]['order_id'] = $order->order_id;
-            $orders[$i]['supplier'] = $order->supplier;
-            $orders[$i]['user'] = user::findOrFail($order->user_id)->name;
-            $orders[$i]['created_at'] = Carbon::parse($order->created_at)->diffForHumans();
-            $i++;
-        }
-        return view('orders.orders')->with('orders', $orders)->with('paginate', $orders_all);
+        $orders = orders::join('users', 'users.id', '=', 'orders.user_id')
+                        ->select('orders.*', 'users.name as user')
+                        ->OrderBy('orders.created_at', 'desc')
+                        ->paginate(15);
+        return view('orders.orders')->with('orders', $orders);
     }
 
 
@@ -48,50 +41,23 @@ class OrdersController extends Controller
         {
             $query = $request->get('query');
 
-            $orders = orders::where('order_id', 'like', '%'.$query.'%')->orWhere('supplier', 'like', '%'.$query.'%')->orderBy('created_at')->get();
-            $users_search = user::where('name', 'like', '%'.$query.'%')->orderBy('name')->get();
-
-            if($orders->count() > 0 || $users_search->count() > 0)
+            $orders = orders::join('users', 'users.id', '=', 'orders.user_id')
+                            ->select('orders.*', 'users.name as user')
+                            ->where('orders.supplier', 'like', '%'.$query.'%')
+                            ->orWhere('orders.order_id', 'like', '%'.$query.'%')
+                            ->orWhere('users.name', 'like', '%'.$query.'%')
+                            ->orderBy('orders.created_at', 'desc')
+                            ->get();
+            if($orders->count() > 0)
             {
-                $users = user::all();
-                $orders_used = array();
-                $j = 0;
-                for($i=0; $i < $orders->count(); $i++) 
-                    foreach($users as $user)
-                        if($user->id == $orders[$i]['user_id'])
-                        {
-                            $orders_used[$j]['order_id'] = $orders[$i]['order_id'];
-                            $orders_used[$j]['supplier'] = $orders[$i]['supplier'];
-                            $orders_used[$j]['user'] = $user->name;
-                            $orders_used[$j]['date'] = Carbon::parse($orders[$j]['created_at'])->diffForHumans();
-                            $j++;
-                        }
-
-                $x = $orders->count();
-                foreach($users_search as $usr)
-                {
-                    $orders_usr = orders::whereUser_id($usr->id)->orderBy('created_at')->get();
-                    foreach($orders_usr as $row)
-                    {
-                        if(!in_array($row->order_id, $orders_used))
-                        {
-                            $orders_used[$x]['order_id'] = $row->order_id;
-                            $orders_used[$x]['supplier'] = $row->supplier;
-                            $orders_used[$x]['user'] = $usr->name;
-                            $orders_used[$j]['date'] = Carbon::parse($row->created_at)->diffForHumans();
-                            $x++;
-                        }
-                    }
-                }
-
-                for($i=0; $i < count($orders_used); $i++)
+                foreach($orders as $key => $order)
                 {
                     $output .= '
-                        <tr class="table-row" data-href="'.route('order_details',['order_id' => $orders_used[$i]['order_id']]).'">
-                            <td class="align-middle">'.($i+1).'</td>
-                            <td class="align-middle">'.$orders_used[$i]['supplier'].'</td>
-                            <td class="align-middle">'.$orders_used[$i]['user'].'</td>
-                            <td class="align-middle">'.$orders_used[$i]['date'].'</td>
+                        <tr class="table-row" data-href="'.route('order_details',['order_id' => $order->order_id]).'">
+                            <td class="align-middle">'.($key+1).'</td>
+                            <td class="align-middle">'.$order->supplier.'</td>
+                            <td class="align-middle">'.$order->user.'</td>
+                            <td class="align-middle">'.Carbon::parse($order->created_at)->diffForHumans().'</td>
                         </tr>
                     ';
                 }

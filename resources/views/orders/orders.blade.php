@@ -29,18 +29,18 @@
             else
                 $x=0;
         ?>
-        @for($i=0; $i < count($orders); $i++)
+        @foreach($orders as $order)
             <?php $x++; ?>
-            <tr class='table-row' data-href="{{ route('order_details',['order_id' => $orders[$i]['order_id']]) }}">
+            <tr class='table-row' data-href="{{ route('order_details',['order_id' => $order->order_id]) }}">
                 <th scope="row">{{$x}}</th>
-                <td>{{$orders[$i]['supplier']}}</td>
-                <td>{{$orders[$i]['user']}}</td>
-                <td>{{$orders[$i]['created_at']}}</td>
+                <td>{{$order->supplier}}</td>
+                <td>{{$order->user}}</td>
+                <td>{{Carbon\Carbon::parse($order->created_at)->diffForHumans()}}</td>
             </tr>
-        @endfor
+        @endforeach
     </tbody>
 </table>
-<div class='pagination'>{{$paginate->render()}}</div>
+<div class='pagination'>{{$orders->render()}}</div>
 @endsection
 <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 <script>
@@ -64,6 +64,10 @@
                 window.location.replace("{{route('orders')}}");
             var query = $(this).val();
             fetch_search(query);
+        });
+
+        $(document).on('click', '.table-row', function(){
+            window.document.location = $(this).data("href");
         });
     });
 </script>

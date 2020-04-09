@@ -14,9 +14,4 @@ class products extends Model
     {
         return $this->belongsTo('App\suppliers');
     }
-
-    public function orders()
-    {
-        return $this->belongsTo('App\orderDetails');
-    }
 }

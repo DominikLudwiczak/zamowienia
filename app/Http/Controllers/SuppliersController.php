@@ -31,8 +31,6 @@ class SuppliersController extends Controller
             $query = $request->get('query');
             if($query != '')
                 $suppliers = suppliers::where('name', 'like', '%'.$query.'%')->orWhere('email', 'like', '%'.$query.'%')->orWhere('phone', 'like', '%'.$query.'%')->orderBy('name')->get();
-            else
-                $suppliers = suppliers::orderBy('name')->get();
             
             if($suppliers->count() > 0)
             {
