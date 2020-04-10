@@ -42,10 +42,13 @@ class OrdersController extends Controller
             $query = $request->get('query');
 
             $orders = orders::join('users', 'users.id', '=', 'orders.user_id')
+                            ->join('suppliers', 'suppliers.name', '=', 'orders.supplier')
                             ->select('orders.*', 'users.name as user')
                             ->where('orders.supplier', 'like', '%'.$query.'%')
                             ->orWhere('orders.order_id', 'like', '%'.$query.'%')
                             ->orWhere('users.name', 'like', '%'.$query.'%')
+                            ->orWhere('suppliers.email', 'like', '%'.$query.'%')
+                            ->orWhere('suppliers.phone', 'like', '%'.$query.'%')
                             ->orderBy('orders.created_at', 'desc')
                             ->get();
             if($orders->count() > 0)
@@ -92,7 +95,7 @@ class OrdersController extends Controller
             if($type == 'new_order')
                 $products = products::where([['supplier_id', '=', $var],['name', 'like', '%'.$query.'%']])->orderBy('name')->get();
             else
-                $products = orderDetails::where([['order_id', '=', $order_id],['product', 'like', '%'.$query.'%']])->orWhere('ammount', 'like', '%'.$query.'%')->orderBy('product')->get();
+                $products = orderDetails::where([['order_id', '=', $var],['name', 'like', '%'.$query.'%']])->orWhere('ammount', 'like', '%'.$query.'%')->orderBy('name')->get();
 
             if($products->count() > 0)
             {
@@ -100,29 +103,19 @@ class OrdersController extends Controller
                 {
                     $output .= '
                         <tr>
-                            <td class="align-middle">'.($key+1).'</td>';
-                            if($type == "new_order" || $type='confirm')
+                            <td class="align-middle">'.($key+1).'</td>
+                            <td class="align-middle">'.$product->name.'</td>';
+                            if($type == 'new_order')
                             {
-                                $output .= '<td class="align-middle">'.$product->name.'</td>';
-                                if($type == 'new_order')
-                                {
-                                    if(session("order"))
-                                    {
-                                        $ammount = "";
-                                        for($i=0; $i < count(session("order")); $i++)
-                                            if(session("order")[$i]["name"] == $product->name)
-                                                $ammount = session("order")[$i]["ammount"];
-                                    }
-                                    $output .= '<td><div class="col-sm-12 col-md-4 mx-auto"><input type="number" name="product_'.$product->id.'" value="'.$ammount.'"class="form-control"/></div></td>';
-                                }    
+                                $ammount = "";
+                                if(session("order"))
+                                    for($i=0; $i < count(session("order")); $i++)
+                                        if(session("order")[$i]["name"] == $product->name)
+                                            $ammount = session("order")[$i]["ammount"];
+                                $output .= '<td><div class="col-sm-12 col-md-4 mx-auto"><input type="number" name="product_'.$product->id.'" oninput="set_ammount('.$product->id.')" value="'.$ammount.'"class="form-control"/></div></td>';
                             }
-                            
-                            if($type == 'details' || $type='confirm')
-                            {
-                                if($type == 'details')
-                                    $output .= '<td class="align-middle">'.$product->product.'</td>';
-                                $output .= '<td class="align-middle">'.$product->ammount.'dd</td>';
-                            }
+                            else
+                                $output .= '<td class="align-middle">'.$product->ammount.'</td>';
                     $output .= '</tr>';
                 }
             }
@@ -158,7 +151,11 @@ class OrdersController extends Controller
             return view('orders.new_order')->with('suppliers', $suppliers);
         else if($supplier)
         {
-            session(['supplier' => $supplier]);
+            if(session('supplier') != $supplier)
+            {
+                Session::forget('order');
+                session(['supplier' => $supplier]);
+            }
             $products = products::whereSupplier_id($supplier->id)->get();
             return view('orders.new_order')->with('suppliers', $suppliers)->with('products', $products);
         }
@@ -166,25 +163,56 @@ class OrdersController extends Controller
     }
 
 
+    public function setAmmount(Request $request)
+    {
+        if($request->ajax())
+        {
+            $product = products::findOrFail($request->get('id'))->name;
+            $ammount = $request->get('ammount');
+            $order = array();
+
+            if(!session('order'))
+                $i = 0;
+            else
+            {
+                $i = count(session('order'));
+                $order = session('order');
+            }
+
+            $check = false;
+            for($i=0; $i < count($order); $i++)
+                if($order[$i]['name'] == $product)
+                {
+                    if($ammount == 0)
+                    {
+                        unset($order[$i]);
+                        $order = array_values($order);
+                    }
+                    else
+                    {
+                        $order[$i]['name'] = $product;
+                        $order[$i]['ammount'] = $ammount;
+                    }
+                    $check = true;
+                    break;
+                }
+            if($check == false)
+            {
+                $order[$i]['name'] = $product;
+                $order[$i]['ammount'] = $ammount;
+            }
+            session(['order' => $order]);
+        }
+    }
+
+
     public function confirm(Request $request)
     {
         $products = products::whereSupplier_id(session('supplier')->id)->get()->toarray();
-        $order = array();
-        $j=0;
         if(count($products) == 0)
             return redirect()->back()->with('failed', 'Brak towarów dla tego dostawcy');
-        for($i = $products[0]['id']; $i <= $products[count($products)-1]['id']; $i++)
-        {
-            if($request->has("product_".$i) && $request['product_'.$i] > 0)
-            {
-                $order[$j]['name'] = products::findOrFail($i)->name;
-                $order[$j]['ammount'] = $request['product_'.$i];
-                $j++;
-            }
-        }
-        if(count($order) == 0)
+        if(!session('order'))
             return redirect()->back()->with('failed', 'Wybierz towary, które chcesz zamówić');
-        session(['order' => $order]);
         return view('orders.confirm');
     }
 
@@ -236,7 +264,7 @@ class OrdersController extends Controller
             {
                 $order_details = [
                     'order_id' => $order_id,
-                    'product' => session('order')[$i]['name'],
+                    'name' => session('order')[$i]['name'],
                     'ammount' => session('order')[$i]['ammount']
                 ];
                 orderDetails::create($order_details);

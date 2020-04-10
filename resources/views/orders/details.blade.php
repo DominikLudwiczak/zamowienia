@@ -24,7 +24,7 @@
                 <?php $x++; ?>
                 <tr>
                     <th scope="row">{{$x}}</th>
-                    <td>{{$product->product}}</td>
+                    <td>{{$product->name}}</td>
                     <td>{{$product->ammount}}</td>
                 </tr>
             @endforeach
@@ -43,10 +43,6 @@
                 method:'GET',
                 data:{query:query, var:order_id}, type:'details',
                 dataType: 'json',
-                success:function(data)
-                {
-                    $('tbody').html(data.table_data);
-                }
             });
         }
         $(document).on('input', '#search', function(){

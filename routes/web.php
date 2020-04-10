@@ -81,6 +81,8 @@ Route::prefix('orders')->group(function(){
     Route::get('/details/{order_id}', 'OrdersController@order_details')->name('order_details');
 
     Route::get('/new/{supplier_name?}', 'OrdersController@new_order')->name('new_order');
+
+    Route::get('/setAmmount', 'OrdersController@setAmmount')->name('setAmmount');
     
     Route::post('/confirm', 'OrdersController@confirm')->name('new_order_confirm');
 

@@ -56,7 +56,7 @@
                                             $ammount = session('order')[$i]['ammount'];
                                 }
                                 ?>
-                            <td><div class='col-sm-12 col-md-4 mx-auto'><input type='number' name="product_{{$product->id}}" value="{{$ammount ?? ''}}"class='form-control'/></div></td>
+                            <td><div class='col-sm-12 col-md-4 mx-auto'><input type='number' name="product_{{$product->id}}" oninput="set_ammount({{$product->id}})" value="{{$ammount ?? ''}}" class='form-control'/></div></td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -66,32 +66,44 @@
                 <button class='btn btn-success float-right ml-2'>Dalej</button>
             </div>
         </form>
+        <script>
+            $(document).ready(function(){
+                var supplier = "{{session('supplier')->id}}";
+                function fetch_search(query = '')
+                {
+                    $.ajax({
+                        url:"{{route('orders_search_prod')}}",
+                        method:'GET',
+                        data:{query:query, var:supplier, type:'new_order'},
+                        dataType: 'json',
+                        success:function(data)
+                        {
+                            $('tbody').html(data.table_data);
+                        }
+                    });
+                }
+
+                $(document).on('input', '#search', function(){
+                    if($(this).val() == '')
+                        window.location.replace("{{route('new_order', ['supplier_name' => session('supplier')->name])}}");
+                    var query = $(this).val();
+                    fetch_search(query);
+                });
+            });
+
+            function set_ammount(id)
+            {
+                var ammount = document.getElementsByName('product_'+id)[0].value;
+                $.ajax({
+                    url:"{{route('setAmmount')}}",
+                    method:'GET',
+                    data:{id:id, ammount:ammount},
+                    dataType: 'json',
+                });
+            }
+        </script>
     @else
         <a href="{{ route('orders') }}" class='btn btn-primary float-right'>Cofnij</a>
     @endif
 @endsection
 <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
-<script>
-    $(document).ready(function(){
-        var supplier = "{{session('supplier')->id}}";
-        function fetch_search(query = '')
-        {
-            $.ajax({
-                url:"{{route('orders_search_prod')}}",
-                method:'GET',
-                data:{query:query, var:supplier, type:'new_order'},
-                dataType: 'json',
-                success:function(data)
-                {
-                    $('tbody').html(data.table_data);
-                }
-            });
-        }
-        $(document).on('input', '#search', function(){
-            if($(this).val() == '')
-                window.location.replace("{{route('new_order', ['supplier_name' => session('supplier')->name])}}");
-            var query = $(this).val();
-            fetch_search(query);
-        });
-    });
-</script>

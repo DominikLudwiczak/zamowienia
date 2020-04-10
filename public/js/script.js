@@ -69,6 +69,7 @@ function modal_delete(id)
     })
 }
 
+
 $(document).ready(function($) {
     $(".table-row").click(function() {
         window.document.location = $(this).data("href");
