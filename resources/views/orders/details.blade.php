@@ -42,7 +42,7 @@
                 url:"{{route('orders_search_prod')}}",
                 method:'GET',
                 data:{query:query, var:order_id}, type:'details',
-                dataType: 'jsonp',
+                dataType: 'json',
                 success:function(data)
                 {
                     $('tbody').html(data.table_data);

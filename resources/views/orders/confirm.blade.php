@@ -44,7 +44,7 @@
                 url:"{{route('confirm_search')}}",
                 method:'GET',
                 data:{query:query},
-                dataType: 'jsonp',
+                dataType: 'json',
                 success:function(data)
                 {
                     $('tbody').html(data.table_data);
