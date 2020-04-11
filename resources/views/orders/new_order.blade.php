@@ -75,7 +75,7 @@
                         url:"{{route('orders_search_prod')}}",
                         method:'GET',
                         data:{query:query, var:supplier, type:'new_order'},
-                        dataType: 'json',
+                        dataType: 'jsonp',
                         success:function(data)
                         {
                             $('tbody').html(data.table_data);
@@ -98,7 +98,7 @@
                     url:"{{route('setAmmount')}}",
                     method:'GET',
                     data:{id:id, ammount:ammount},
-                    dataType: 'json',
+                    dataType: 'jsonp',
                 });
             }
         </script>
