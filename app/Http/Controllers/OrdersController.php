@@ -188,7 +188,7 @@ class OrdersController extends Controller
                         unset($order[$i]);
                         $order = array_values($order);
                     }
-                    else
+                    else if($ammount == '' || $ammount > 0)
                     {
                         $order[$i]['name'] = $product;
                         $order[$i]['ammount'] = $ammount;
@@ -196,7 +196,7 @@ class OrdersController extends Controller
                     $check = true;
                     break;
                 }
-            if($check == false)
+            if($check == false && ($ammount == '' || $ammount > 0))
             {
                 $order[$i]['name'] = $product;
                 $order[$i]['ammount'] = $ammount;
@@ -215,6 +215,53 @@ class OrdersController extends Controller
             return redirect()->back()->with('failed', 'Wybierz towary, które chcesz zamówić');
         return view('orders.confirm');
     }
+
+
+    public function confirm_search(Request $request)
+    {
+        $output = '';
+        if($request->ajax())
+        {
+            $query = $request->get('query');
+            if($query == '')
+            {
+                for($i=0; $i < count(session('order')); $i++)
+                {
+                    $output .= '<tr>
+                        <th scope="row">1</th>
+                        <td>'.session('order')[$i]['name'].'</td>
+                        <td>'.session('order')[$i]['ammount'].'</td>
+                    </tr>';
+                }
+            }
+            else
+            {
+                $order = session('order');
+                $check = false;
+                for($i=0; $i < count($order); $i++)
+                    if(strpos($order[$i]['name'], $query) !== false || strpos($order[$i]['ammount'], $query) !== false)
+                    {
+                        $output .= '<tr>
+                                        <td class="align-middle">'.($i+1).'</td>
+                                        <td class="align-middle">'.$order[$i]['name'].'</td>
+                                        <td class="align-middle">'.$order[$i]['ammount'].'</td>
+                                    </tr>';
+                        $check = true;
+                    }
+                if($check == false)
+                {
+                    $output .= '<tr>
+                                    <td></td>
+                                    <td class="align-middle">Nie znaleziono</td>
+                                    <td></td>
+                                </tr>';
+                }
+            }
+        }
+        $data = array('table_data' => $output);
+        echo json_encode($data);
+    }
+
 
     private function order_id_generate()
     {

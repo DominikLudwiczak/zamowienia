@@ -43,6 +43,10 @@
                 method:'GET',
                 data:{query:query, var:order_id}, type:'details',
                 dataType: 'json',
+                success:function(data)
+                {
+                    $('tbody').html(data.table_data);
+                }
             });
         }
         $(document).on('input', '#search', function(){

@@ -20,15 +20,6 @@
                 </tr>
             </thead>
             <tbody>
-                <?php $x=0; ?>
-                @for($i=0; $i < count(session('order')); $i++)
-                    <?php $x++; ?>
-                    <tr>
-                        <th scope="row">{{$x}}</th>
-                        <td>{{session('order')[$i]['name']}}</td>
-                        <td>{{session('order')[$i]['ammount']}}</td>
-                    </tr>
-                @endfor
             </tbody>
         </table>
         <form method='post' action="{{ route('new_order_send') }}" id ='send'>
@@ -46,13 +37,13 @@
 <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 <script>
     $(document).ready(function(){
-        var supplier = "{{session('supplier')->id}}";
+        fetch_search();
         function fetch_search(query = '')
         {
             $.ajax({
-                url:"{{route('orders_search_prod')}}",
+                url:"{{route('confirm_search')}}",
                 method:'GET',
-                data:{query:query, var:supplier, type:'new_order'},
+                data:{query:query},
                 dataType: 'json',
                 success:function(data)
                 {
@@ -61,8 +52,6 @@
             });
         }
         $(document).on('input', '#search', function(){
-            if($(this).val() == '')
-                window.location.replace("{{route('new_order_confirm')}}");
             var query = $(this).val();
             fetch_search(query);
         });

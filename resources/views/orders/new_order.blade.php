@@ -56,7 +56,7 @@
                                             $ammount = session('order')[$i]['ammount'];
                                 }
                                 ?>
-                            <td><div class='col-sm-12 col-md-4 mx-auto'><input type='number' name="product_{{$product->id}}" oninput="set_ammount({{$product->id}})" value="{{$ammount ?? ''}}" class='form-control'/></div></td>
+                            <td><div class='col-sm-12 col-md-4 mx-auto'><input type='number' name="product_{{$product->id}}" oninput="set_ammount({{$product->id}})" min="1" value="{{$ammount ?? ''}}" class='form-control'/></div></td>
                         </tr>
                     @endforeach
                 </tbody>

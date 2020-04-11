@@ -86,6 +86,8 @@ Route::prefix('orders')->group(function(){
     
     Route::post('/confirm', 'OrdersController@confirm')->name('new_order_confirm');
 
+    Route::get('/confirm/search', 'OrdersController@confirm_search')->name('confirm_search');
+
     Route::get('/search_prod', 'OrdersController@search_prod')->name('orders_search_prod');
     
     Route::post('/send', 'OrdersController@send')->name('new_order_send');
