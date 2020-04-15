@@ -137,9 +137,9 @@ class OrdersController extends Controller
 
     public function order_details($order_id)
     {
-        $supplier = orders::whereOrder_id($order_id)->first()->supplier;
+        $order = orders::whereOrder_id($order_id)->first();
         $order_details = orderDetails::whereOrder_id($order_id)->get();
-        return view('orders.details')->with('products', $order_details)->with('supplier', $supplier)->with('order_id', $order_id);
+        return view('orders.details')->with('products', $order_details)->with('order', $order);
     }
 
 
@@ -228,7 +228,7 @@ class OrdersController extends Controller
                 for($i=0; $i < count(session('order')); $i++)
                 {
                     $output .= '<tr>
-                        <th scope="row">1</th>
+                        <th scope="row">'.($i+1).'</th>
                         <td>'.session('order')[$i]['name'].'</td>
                         <td>'.session('order')[$i]['ammount'].'</td>
                     </tr>';
@@ -304,9 +304,11 @@ class OrdersController extends Controller
             $order = [
                 'order_id' => $order_id,
                 'supplier' => session('supplier')->name,
-                'user_id' => Auth::user()->id
+                'user_id' => Auth::user()->id,
+                'msg' => session('msg')
             ];
             orders::create($order);
+            print_r(session('order'));
             for($i=0; $i < count(session('order')); $i++)
             {
                 $order_details = [
@@ -319,9 +321,9 @@ class OrdersController extends Controller
             Session::forget(['order', 'supplier', 'msg']);
             return redirect(route('dashboard'))->with('success', 'Zamówienie zostało wysłane');
         }catch(\Illuminate\Database\QueryException $ex){
-            return redirect()->back()->with('failed', 'Nie udało się wysłać zamówienia, spróbuj ponownie później');
+            return redirect(route('new_order', ['supplier_name' => session('supplier')->name]))->with('failed', 'Nie udało się wysłać zamówienia, spróbuj ponownie później');
         }catch(Exception $ex){
-            return redirect()->back()->with('failed', 'Nie udało się wysłać zamówienia, spróbuj ponownie później');
+            return redirect(route('new_order', ['supplier_name' => session('supplier')->name]))->with('failed', ' udało się wysłać zamówienia, spróbuj ponownie później');
         }
     }
 }

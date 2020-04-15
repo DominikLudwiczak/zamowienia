@@ -4,13 +4,24 @@
 
 @section('content')
     <div class='row align-items-center pt-3'>
-        <h1 style='text-decoration: underline;' class='col-md-7'>{{$supplier}} - {{$order_id}}</h1>
+        <h1 style='text-decoration: underline;' class='col-md-7'>{{$order->supplier}} - {{$order->order_id}}</h1>
         <div class='input-group col-md-5 pb-3'>
             <input class="form-control" type="search" placeholder="Szukaj" id='search' aria-label="Szukaj">
         </div>
     </div>
-
-    <table class="table table-striped text-center">
+    @if($order->msg)
+        <div class='col-md-8 mx-auto'>
+            <div class='card text-center'>
+                <div class='card-header'>
+                    Wiadomość dla dostawcy:
+                </div>
+                <div class='card-body'>
+                    {{$order->msg}}
+                </div>
+            </div>
+        </div>
+    @endif
+    <table class="table table-striped text-center mt-3">
         <thead class='thead-dark'>
             <tr>
                 <th scope="col">#</th>
@@ -35,7 +46,7 @@
 <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 <script>
     $(document).ready(function(){
-        var order_id = "{{$order_id}}";
+        var order_id = "{{$order->order_id}}";
         function fetch_search(query = '')
         {
             $.ajax({
@@ -51,7 +62,7 @@
         }
         $(document).on('input', '#search', function(){
             if($(this).val() == '')
-                window.location.replace("{{route('order_details', ['order_id' => $order_id])}}");
+                window.location.replace("{{route('order_details', ['order_id' => $order->order_id])}}");
             var query = $(this).val();
             fetch_search(query);
         });

@@ -18,6 +18,7 @@ class CreateOrdersTable extends Migration
             $table->string('order_id')->unique();
             $table->string('supplier');
             $table->bigInteger('user_id')->unsigned();
+            $table->text('msg')->nullable();
             $table->timestamps();
         });
 
