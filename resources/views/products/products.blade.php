@@ -6,7 +6,7 @@
 <div class='row align-items-center pt-3'>
     <h1 style='text-decoration: underline;' class='col-md-7'>Produkty</h1>
     <div class='input-group col-md-5'>
-        <input class="form-control" type="search" placeholder="Szukaj" id='search' aria-label="Szukaj">
+        <input class="form-control" type="search" placeholder="Szukaj" id='search' aria-label="Szukaj" autofocus>
     </div>
 </div>
 <form action="{{ route('new_product') }}" class='pt-3'>
