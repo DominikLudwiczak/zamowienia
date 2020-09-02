@@ -1,7 +1,7 @@
 <nav class="navbar sidebar d-md-flex collapse sidebar-collapse navbarSupportedContent shadow" id='sidebar' style='background-color: #1D65B7; position: fixed; height: 100vh; z-index:2;'>
     <div class="mx-auto" style="height:100%;">
         <ul class="nav flex-column mx-2" style='font-size: 0.9rem;'>
-            @can('CheckAdmin', $user)
+            @if(Gate::allows('admin'))
                 <li class="nav-item">
                     <a class="nav-link text-white" id='dashboard' href="{{ route('dashboard') }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
@@ -33,7 +33,7 @@
                         Użytkownik
                     </a>
                 </li>
-            @endcan
+            @endif
         </ul>
     </div>
 </nav>
