@@ -19,7 +19,7 @@ Route::get('/', function () {
 Route::get('/dashboard', function()
 {
     return view('dashboard');
-})->middleware('auth')->name('dashboard');
+})->middleware('CheckActive')->name('dashboard');
 
 
 Auth::routes(['register' => false, 'reset' => false, 'confirm' => false]);
@@ -43,7 +43,7 @@ Route::prefix('suppliers')->group(function(){
 
     Route::get('/new', function(){
         return view('suppliers.new_supplier');
-    })->middleware('auth')->name('new_supplier');
+    })->middleware('CheckActive')->middleware('CheckAdmin')->name('new_supplier');
 
     Route::post('/new', 'SuppliersController@add_supplier')->middleware('CheckSupplier')->name('add_supplier');
 
