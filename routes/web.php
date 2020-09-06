@@ -92,3 +92,8 @@ Route::prefix('orders')->group(function(){
     
     Route::post('/send', 'OrdersController@send')->name('new_order_send');
 });
+
+// Calendar
+Route::prefix('calendar')->group(function(){
+    Route::get('/', 'CalendarController@calendar')->name('calendar');
+});
