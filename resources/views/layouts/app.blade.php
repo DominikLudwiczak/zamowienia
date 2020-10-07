@@ -74,7 +74,7 @@
             <div class='container-fluid'>
                 <div class="row">
                     <x-nav-left/>
-                    <div class='col-md-9 mx-auto'>
+                    <div class='col-md-9' id='content'>
                         @include('includes.messages')
                         @yield('content')
                     </div>
@@ -89,6 +89,19 @@
     </div>
     
     <script>
+        window.onload = changeContentWidth();
+        window.addEventListener('resize', changeContentWidth);
+
+        function changeContentWidth()
+        {
+            var windowWidth = window.innerWidth;
+            var sidebarWidth = document.getElementById('sidebar').offsetWidth;
+            
+            document.getElementById('content').style.marginLeft = sidebarWidth+'px';
+            document.getElementById('content').style.width = (windowWidth - sidebarWidth)+'px';
+            sidebar.style.height = window.height;
+        }
+
         function active()
         {
             var route = "{{Route::getCurrentRoute()->getName()}}";
