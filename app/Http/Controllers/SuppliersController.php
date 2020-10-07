@@ -55,6 +55,7 @@ class SuppliersController extends Controller
                     <tr>
                         <td></td>
                         <td></td>
+                        <td></td>
                         <td class="align-middle">Nie znaleziono</td>
                         <td></td>
                         <td></td>

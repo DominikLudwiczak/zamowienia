@@ -95,5 +95,5 @@ Route::prefix('orders')->group(function(){
 
 // Calendar
 Route::prefix('calendar')->group(function(){
-    Route::get('/', 'CalendarController@calendar')->name('calendar');
+    Route::get('/{month?}/{year?}', 'CalendarController@calendar')->where(['month' => '[0-9]+', 'year' => '[0-9]+'])->name('calendar');
 });

@@ -98,6 +98,8 @@
                 route = 'suppliers';
             else if(route.includes('product'))
                 route = 'products';
+            else if(route.includes('calenda'))
+                route = 'calendar';
             else
                 route = 'dashboard';
 

@@ -75,3 +75,25 @@ $(document).ready(function($) {
         window.document.location = $(this).data("href");
     });
 });
+
+function next(month, year)
+{
+    if(month == 13)
+    {
+        month = 1;
+        year++;
+    }
+    var route = `/calendar/${month}/${year}`;
+    window.location.href = route;
+}
+
+function previous(month, year)
+{
+    if(month == 0)
+    {
+        month = 12;
+        year--;
+    }
+    var route = `/calendar/${month}/${year}`;
+    window.location.href = route;
+}
