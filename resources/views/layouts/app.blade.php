@@ -72,11 +72,13 @@
         </nav>
         @auth
             <div class='container-fluid'>
-                <div class="row">
+                <div class="row" id='row'>
                     <x-nav-left/>
-                    <div class='col-md-9' id='content'>
-                        @include('includes.messages')
-                        @yield('content')
+                    <div class='col' id='content'>
+                        <div class="container">
+                            @include('includes.messages')
+                            @yield('content')
+                        </div>
                     </div>
                 </div>
             </div>
@@ -94,12 +96,11 @@
 
         function changeContentWidth()
         {
-            var windowWidth = window.innerWidth;
+            var windowWidth = document.getElementById('row').offsetWidth;
             var sidebarWidth = document.getElementById('sidebar').offsetWidth;
             
             document.getElementById('content').style.marginLeft = sidebarWidth+'px';
             document.getElementById('content').style.width = (windowWidth - sidebarWidth)+'px';
-            sidebar.style.height = window.height;
         }
 
         function active()
