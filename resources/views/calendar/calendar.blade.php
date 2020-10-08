@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', '- Grafik')
+@section('title', '- Kalendarz')
 
 @section('content')
-    <div class="col-md-12">
+    <div class="calendar mx-auto">
         <button onclick="previous({{$month}}-1, {{$year}})">Wstecz</button> {{$miesiace[$month-1]}} {{$year}} <button onclick="next({{$month}}+1, {{$year}})">Dalej</button>
         <div class="row">
             <div class="col-md-1">
@@ -40,7 +40,7 @@
                         <?php $z = str_pad($i-(date('N', strtotime($year."-".$month."-1"))-1)+1, 2, 0, STR_PAD_LEFT);?>
                         <h3>{{$z}}</h3>
                         @foreach($vacations->where('start', '<=', $year."-".$month."-$z")->where('end', '>=', $year."-".$month."-$z") as $vacation)
-                            {{$vacation->start}} | {{$vacation->end}}<br/>
+                            {{ $users->where('id', $vacation->user_id)->first()->name }}
                         @endforeach
                     @endif
                 </div>

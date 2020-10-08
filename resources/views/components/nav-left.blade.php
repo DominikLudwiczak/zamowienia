@@ -40,6 +40,13 @@
                         Użytkownik
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white" id='calendar' href="{{ route('calendar') }}">
+                        <img src="{{ asset('public/img/calendar.svg') }}"/>
+                        Kalendarz
+                    </a>
+                </li>
             @endif
         </ul>
     </div>
