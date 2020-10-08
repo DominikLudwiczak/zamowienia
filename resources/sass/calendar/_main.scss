@@ -1,0 +1,36 @@
+.calendar
+{
+    background-color: gray;
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+
+    &-header
+    {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &-days
+    {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &-week
+    {
+        display: flex;
+        width: 100%;
+    }
+
+    &-day
+    {
+        display: flex;
+        flex: 1 1 30%;
+        border: 1px solid white;
+    }
+}

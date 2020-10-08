@@ -83,7 +83,7 @@ function next(month, year)
         month = 1;
         year++;
     }
-    var route = `/calendar/${month}/${year}`;
+    var route = `/calendar/vacations/${month}/${year}`;
     window.location.href = route;
 }
 
@@ -94,6 +94,6 @@ function previous(month, year)
         month = 12;
         year--;
     }
-    var route = `/calendar/${month}/${year}`;
+    var route = `/calendar/vacations/${month}/${year}`;
     window.location.href = route;
 }

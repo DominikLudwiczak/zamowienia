@@ -19,6 +19,7 @@ class CreateVacationsTable extends Migration
             $table->date('end');
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('who_added')->unsigned();
+            $table->integer('confirmed')->default(0);
             $table->timestamps();
         });
 

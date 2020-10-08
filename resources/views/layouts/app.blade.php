@@ -21,7 +21,7 @@
     <!-- Styles -->
     <link href="{{ asset('/public/css/app.css') }}" rel="stylesheet">
 </head>
-<body onload="active()">
+<body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
@@ -92,6 +92,7 @@
     
     <script>
         window.onload = changeContentWidth();
+        window.onload = active();
         window.addEventListener('resize', changeContentWidth);
 
         function changeContentWidth()
@@ -112,8 +113,8 @@
                 route = 'suppliers';
             else if(route.includes('product'))
                 route = 'products';
-            else if(route.includes('calenda'))
-                route = 'calendar';
+            else if(route.includes('vacatio'))
+                route = 'vacations';
             else
                 route = 'dashboard';
 
@@ -124,7 +125,12 @@
 
         $(document).ready(function(){
             $('.toast').toast('show');
+            $('#alert').modal({
+                backdrop: 'static', 
+                keyboard: false
+            });
         });
+        
     </script>
 </body>
 </html>

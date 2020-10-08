@@ -16,8 +16,7 @@ Route::get('/', function () {
     return redirect(route('dashboard'));
 });
 
-Route::get('/dashboard', function()
-{
+Route::get('/dashboard', function() {
     return view('dashboard');
 })->middleware('CheckActive')->name('dashboard');
 
@@ -26,8 +25,7 @@ Auth::routes(['register' => false, 'reset' => false, 'confirm' => false]);
 
 //Password reset
 Route::prefix('password/reset')->group(function(){
-    Route::get('/', function()
-    {
+    Route::get('/', function() {
         return view('auth.passwords.reset');
     })->name('password.change');
 
@@ -35,13 +33,13 @@ Route::prefix('password/reset')->group(function(){
 });
 
 //Suppliers
-Route::prefix('suppliers')->group(function(){
+Route::prefix('suppliers')->group(function() {
 
     Route::get('/', 'SuppliersController@suppliers')->name('suppliers');
 
     Route::get('/search', 'SuppliersController@search')->name('suppliers_search');
 
-    Route::get('/new', function(){
+    Route::get('/new', function() {
         return view('suppliers.new_supplier');
     })->middleware('CheckActive')->middleware('CheckAdmin')->name('new_supplier');
 
@@ -55,7 +53,7 @@ Route::prefix('suppliers')->group(function(){
 });
 
 //Products
-Route::prefix('products')->group(function(){
+Route::prefix('products')->group(function() {
     
     Route::get('/', 'ProductsController@products')->name('products');
 
@@ -73,7 +71,7 @@ Route::prefix('products')->group(function(){
 });
 
 //Orders
-Route::prefix('orders')->group(function(){
+Route::prefix('orders')->group(function() {
     Route::get('/', 'OrdersController@orders')->name('orders');
 
     Route::get('/search', 'OrdersController@search')->name('orders_search');
@@ -94,6 +92,13 @@ Route::prefix('orders')->group(function(){
 });
 
 // Calendar
-Route::prefix('calendar')->group(function(){
-    Route::get('/{month?}/{year?}', 'CalendarController@calendar')->where(['month' => '[0-9]+', 'year' => '[0-9]+'])->name('calendar');
+Route::prefix('calendar')->group(function() {
+
+    Route::prefix('vacations')->group(function() {
+        Route::get('/{month?}/{year?}', 'CalendarController@calendar')->where(['month' => '[0-9]+', 'year' => '[0-9]+'])->name('vacations');
+
+        Route::get('/add', 'CalendarController@add')->name('vacation_add');
+
+        Route::post('/add', 'CalendarController@add_store')->middleware('CheckVacation');
+    });
 });

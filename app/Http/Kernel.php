@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'CheckPasswordChange' => \App\Http\Middleware\CheckPasswordChange::class,
         'CheckAdmin' => \App\Http\Middleware\CheckAdmin::class,
         'CheckActive' => \App\Http\Middleware\CheckActive::class,
+        'CheckVacation' => \App\Http\Middleware\CheckVacation::class,
     ];
 }
