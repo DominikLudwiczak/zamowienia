@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', '- Urlopy')
+@section('title', '- urlopy')
 
 @section('content')
     <form method='post'>

@@ -25,7 +25,7 @@ class CalendarController extends Controller
         
         $users = user::all();
         $vacations = vacations::where('start', 'like', '%'.$year."-".$month.'%')->orWhere('end', 'like', '%'.$year."-".$month.'%')->OrderBy('start')->get();
-        return view('calendar.calendar')->with('month', $month)->with('year', $year)->with('vacations', $vacations)->with('miesiace', $this->miesiace)->with('users', $users);
+        return view('calendar.vacations.vacations')->with('month', $month)->with('year', $year)->with('vacations', $vacations)->with('miesiace', $this->miesiace)->with('users', $users);
     }
 
 
@@ -33,7 +33,7 @@ class CalendarController extends Controller
     public function add()
     {
         $users = user::all();
-        return view('calendar.add')->with('users', $users);
+        return view('calendar.vacations.add')->with('users', $users);
     }
 
 

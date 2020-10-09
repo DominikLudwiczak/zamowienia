@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', '- Urlopy')
+@section('title', '- urlopy')
 
 @section('content')
     <div class='row align-items-center pt-3'>
@@ -11,9 +11,9 @@
     </div>
     <div class="calendar mx-auto">
         <div class="calendar-header">
-            <button onclick="previous({{$month}}-1, {{$year}})">Wstecz</button> 
+            <button class="calendar-header__arrow mr-4" onclick="previous({{$month}}-1, {{$year}})"><i class="fa fa-chevron-left"></i></button> 
             {{$miesiace[$month-1]}} {{$year}} 
-            <button onclick="next({{$month}}+1, {{$year}})">Dalej</button>
+            <button class="calendar-header__arrow ml-4" onclick="next({{$month}}+1, {{$year}})"><i class="fa fa-chevron-right"></i></button>
         </div>
 
         <div class="calendar-days">
@@ -26,20 +26,23 @@
             <span class="calendar-days">Niedziela</span>
         </div>
         <div class="calendar-week">
-        <!-- cal_days_in_month(CAL_GREGORIAN, $month, $year) + date('N', strtotime($year."-".$month."-1"))-1 -->
-            @for($i=0; $i < 35; $i++)
+            @for($i=0; $i < ceil((cal_days_in_month(CAL_GREGORIAN, $month, $year) + date('N', strtotime($year."-".$month."-1")))/7)*7; $i++)
                 @if($i % 7 == 0 && $i > 0)
                     </div>
                     <div class="calendar-week">
                 @endif
+                <?php $z = str_pad($i-(date('N', strtotime($year."-".$month."-1"))-1)+1, 2, 0, STR_PAD_LEFT);?>
 
-                <div class='calendar-day'>
-                    <?php $z = str_pad($i-(date('N', strtotime($year."-".$month."-1"))-1)+1, 2, 0, STR_PAD_LEFT);?>
+                @if(date("N", strtotime($year."-".$month."-".$z)) == 7)
+                    <div class='calendar-day calendar-day__sunday'>
+                @else
+                    <div class='calendar-day'>
+                @endif
                     
                     @if($z > 0 && $z <= cal_days_in_month(CAL_GREGORIAN, $month, $year))
                         <h3>{{$z}}</h3>
                         @foreach($vacations->where('start', '<=', $year."-".$month."-$z")->where('end', '>=', $year."-".$month."-$z")->where('confirmed', '>=', 0) as $vacation)
-                            {{ $users->where('id', $vacation->user_id)->first()->name }}
+                            <span class='d-none d-md-block d-lg-block'>{{ $users->where('id', $vacation->user_id)->first()->name }}</span>
                         @endforeach
                     @endif
                 </div>
