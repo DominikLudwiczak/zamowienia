@@ -33,6 +33,13 @@
                         Urlopy
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white" id='requests' href="{{ route('requests') }}">
+                        <img src="{{ asset('public/img/interview.svg') }}"/>
+                        Wnioski
+                    </a>
+                </li>
             @else
                 <li class="nav-item">
                     <a class="nav-link text-white" id='products' href="#">

@@ -116,6 +116,8 @@
                 route = 'products';
             else if(route.includes('vacatio'))
                 route = 'vacations';
+            else if(route.includes('request'))
+                route = 'requests'
             else
                 route = 'dashboard';
 

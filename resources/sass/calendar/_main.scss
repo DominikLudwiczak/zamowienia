@@ -1,9 +1,9 @@
 .calendar
 {
-    background-color: $gray;
     text-align: center;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    flex: 1 1 30%;
 
     &-header
     {
@@ -13,7 +13,12 @@
         color: white;
         justify-content: center;
         background-color: $blue;
-        font-size: 1.5rem;
+        font-size: 1rem;
+
+        @include media-breakpoint-up(sm)
+        {
+            font-size: 1.5rem;
+        }
 
         &__arrow
         {
@@ -29,6 +34,8 @@
         width: 100%;
         align-items: center;
         justify-content: center;
+        background-color: $blue;
+        color: white;
     }
 
     &-week
@@ -41,11 +48,50 @@
     {
         display: flex;
         flex: 1 1 30%;
+        min-height: 10vh;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
         border: 1px solid white;
+        background-color: rgba($cyan, .2);
+
+        &__num
+        {
+            padding: 0.3rem;
+            font-size: 1rem;
+
+            @include media-breakpoint-up(sm)
+            {
+                font-size: 1.5rem;
+            }
+        }
 
         &__sunday
         {
-            background-color: red !important;
+            color: $red;
         }
+    }
+
+    &-event
+    {
+        width: 100%;
+        background-color: $red;
+        color: white;
+        font-size: 0.8rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        &__conf
+        {
+            background-color: $green;
+        }
+    }
+
+    &-event:hover
+    {
+        text-decoration: underline;
+        color: white;
+        background-color: rgba($blue, .8);
     }
 }

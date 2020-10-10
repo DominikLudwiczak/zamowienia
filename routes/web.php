@@ -94,11 +94,15 @@ Route::prefix('orders')->group(function() {
 // Calendar
 Route::prefix('calendar')->group(function() {
 
+    // Vacations
     Route::prefix('vacations')->group(function() {
         Route::get('/{month?}/{year?}', 'CalendarController@calendar')->where(['month' => '[0-9]+', 'year' => '[0-9]+'])->name('vacations');
 
         Route::get('/add', 'CalendarController@add')->name('vacation_add');
-
         Route::post('/add', 'CalendarController@add_store')->middleware('CheckVacation');
+
+        Route::get('/requests', 'CalendarController@requests')->name('requests');
+
+        Route::get('/request/{id}', 'CalendarController@request')->where(['id' => '[0-9]+'])->name('request');
     });
 });

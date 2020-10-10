@@ -24,8 +24,9 @@ class CalendarController extends Controller
         $month = str_pad($month, 2, 0, STR_PAD_LEFT);
         
         $users = user::all();
+        $curr_usr = Auth::user()->id;
         $vacations = vacations::where('start', 'like', '%'.$year."-".$month.'%')->orWhere('end', 'like', '%'.$year."-".$month.'%')->OrderBy('start')->get();
-        return view('calendar.vacations.vacations')->with('month', $month)->with('year', $year)->with('vacations', $vacations)->with('miesiace', $this->miesiace)->with('users', $users);
+        return view('calendar.vacations.vacations')->with('month', $month)->with('year', $year)->with('vacations', $vacations)->with('miesiace', $this->miesiace)->with('users', $users)->with('curr_usr', $curr_usr);
     }
 
 
@@ -64,5 +65,23 @@ class CalendarController extends Controller
         $vacation->save();
 
         return redirect()->back()->with('success', 'Wysłano wniosek!');
+    }
+
+
+
+    public function requests()
+    {
+        $requests = vacations::orderBy('start', 'desc')->paginate(15);
+        $users = user::all();
+        return view('calendar.requests.requests')->withRequests($requests)->withUsers($users);
+    }
+
+
+
+    public function request($id)
+    {
+        $request = vacations::findOrFail($id);
+        $user = user::findOrFail($request->user_id);
+        return view('calendar.requests.request')->withRequest($request)->withUser($user);
     }
 }

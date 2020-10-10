@@ -49,7 +49,7 @@
 
                     <?php 
                         $min = date('Y-m-d', strtotime('+1 day'));
-                        $max = date('Y-m-d', strtotime('+1 week 1 day'));
+                        $max = date('Y-m-d', strtotime('+1 month 1 day'));
                     ?>
                     <div class="form-group row">
                         <div class="col-md-6">

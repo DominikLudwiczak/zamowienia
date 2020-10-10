@@ -13,7 +13,7 @@
     <button class='btn btn-success float-right'>Stwórz nowe</button>
 </form>
 
-<table class="table table-striped text-center table-hover">
+<table class="table table-striped table-responsive-sm text-center table-hover">
     <thead class='thead-dark'>
         <tr>
             <th scope="col">#</th>
