@@ -20,6 +20,7 @@ class CreateVacationsTable extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('who_added')->unsigned();
             $table->integer('confirmed')->default(0);
+            $table->bigInteger('who_conf')->unsigned()->nullable();
             $table->timestamps();
         });
 
@@ -29,6 +30,10 @@ class CreateVacationsTable extends Migration
                 ->on('users');
 
             $table->foreign('who_added')
+                ->references('id')
+                ->on('users');
+
+            $table->foreign('who_conf')
                 ->references('id')
                 ->on('users');
         });

@@ -54,17 +54,22 @@ class CalendarController extends Controller
                 return redirect()->back()->withInput()->with('double', $double);
         }
 
-        $vacation = new vacations;
-        $vacation->start = $request->start;
-        $vacation->end = $request->end;
-        if($request->user == 0)
-            $vacation->user_id = Auth::user()->id;
-        else
-            $vacation->user_id = $request->user;
-        $vacation->who_added = Auth::user()->id;
-        $vacation->save();
+        try
+        {
+            $vacation = new vacations;
+            $vacation->start = $request->start;
+            $vacation->end = $request->end;
+            if($request->user == 0)
+                $vacation->user_id = Auth::user()->id;
+            else
+                $vacation->user_id = $request->user;
+            $vacation->who_added = Auth::user()->id;
+            $vacation->save();
+        }catch(\Illuminate\Database\QueryException $ex){
+            return redirect()->back()->withFailed('Wystąpił błąd');
+        }
 
-        return redirect()->back()->with('success', 'Wysłano wniosek!');
+        return redirect()->back()->with('success', 'Wysłano wniosek');
     }
 
 
@@ -81,7 +86,34 @@ class CalendarController extends Controller
     public function request($id)
     {
         $request = vacations::findOrFail($id);
-        $user = user::findOrFail($request->user_id);
-        return view('calendar.requests.request')->withRequest($request)->withUser($user);
+        $users = user::all();
+        return view('calendar.requests.request')->withRequest($request)->withUsers($users);
+    }
+
+
+    public function request_store(Request $request, $id)
+    {
+        try
+        {
+            $vacation = vacations::findOrFail($id);
+            if($request->status === "denny")
+                $vacation->confirmed = -1;
+            elseif($request->status === "allow")
+            {
+                $vacation->confirmed = 1;
+                $similar = vacations::where('start', '<=', $vacation->start)->where('end', '>=', $vacation->end)->get();
+                foreach($similar as $row)
+                {
+                    $row->confirmed = -1;
+                    $row->who_conf = Auth::user()->id;
+                    $row->save();
+                }
+            }
+            $vacation->who_conf = Auth::user()->id;
+            $vacation->save();
+        }catch(\Illuminate\Database\QueryException $ex){
+            return redirect()->back()->withFailed('Wystąpił błąd');
+        }
+        return redirect()->back()->withSuccess('Zmieniono status urlopu');
     }
 }

@@ -5,6 +5,47 @@
 @section('content')
     <form method='post'>
     @csrf
+        <div class="col-md-8 mx-auto mt-3">
+            <div class="card">
+                <div class="card-header">
+                    Wniosek o urlop
+                </div>
+                <div class="card-body mx-auto">
+                    @if(Gate::allows('admin'))
+                        <select name='user' class="custom-select mb-2">
+                            <option value="0" default>Użytkownik...</option>
+                            @foreach($users as $user)
+                                @if($user->id != old('user'))
+                                    <option value="{{$user->id}}">{{$user->name}}</option>
+                                @else
+                                    <option value="{{$user->id}}" selected>{{$user->name}}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                    @endif
+
+                    <?php 
+                        $min = date('Y-m-d', strtotime('+1 day'));
+                        $max = date('Y-m-d', strtotime('+1 month 1 day'));
+                    ?>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="start">Początek:</label>
+                            <input type='date' id='start' name='start' class='form-control' value="{{old('start')}}" min="{{$min}}" max="{{$max ?? ''}}"/>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="end">Koniec:</label>
+                            <input type='date' id='end' name='end' class='form-control' value="{{old('end')}}" min="{{$min}}" max="{{$max ?? ''}}"/>
+                        </div>
+                    </div>
+                    
+                    <div class="row col float-right">
+                        <a href="{{ route('vacations') }}" class='btn btn-primary ml-auto'>Cofnij</a>
+                        <button class='btn btn-success ml-2'>Wyślij</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         @if(session('double'))
             <div class="modal" tabindex="-1" role="dialog" id='alert'>
                 <div class="modal-dialog" role="document">
@@ -32,42 +73,5 @@
                 </div>
             </div>
         @endif
-        <div class="col-md-8 mx-auto mt-3">
-            <div class="card">
-                <div class="card-header">
-                    Wniosek o urlop
-                </div>
-                <div class="card-body mx-auto">
-                    @if(Gate::allows('admin'))
-                        <select name='user' class="custom-select mb-2">
-                            <option value='0' default>Użytkownik...</option>
-                            @foreach($users as $user)
-                                <option value="{{$user->id}}">{{$user->name}}</option>
-                            @endforeach
-                        </select>
-                    @endif
-
-                    <?php 
-                        $min = date('Y-m-d', strtotime('+1 day'));
-                        $max = date('Y-m-d', strtotime('+1 month 1 day'));
-                    ?>
-                    <div class="form-group row">
-                        <div class="col-md-6">
-                            <label for="start">Początek:</label>
-                            <input type='date' id='start' name='start' class='form-control' value="{{old('start')}}" min="{{$min}}" max="{{$max ?? ''}}"/>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="end">Koniec:</label>
-                            <input type='date' id='end' name='end' class='form-control' value="{{old('end')}}" min="{{$min}}" max="{{$max ?? ''}}"/>
-                        </div>
-                    </div>
-                    
-                    <div class="row col float-right">
-                        <a href="{{ route('vacations') }}" class='btn btn-primary ml-auto'>Cofnij</a>
-                        <button class='btn btn-success ml-2'>Wyślij</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </form>
 @endsection
