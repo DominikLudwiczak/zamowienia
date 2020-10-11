@@ -23,11 +23,19 @@
                         <input class="form-control" type="date" id="end" value="{{$request->end}}" readonly/>
                     </div>
                 </div>
-                <div class="row text-center">
-                    @if($request->confirmed == 0)
-                        <div class="col-md-6">odrzuć</div>
-                        <div class="col-md-6">przyjmij</div>
-                    @endif
+
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label form="status">Status:</label>
+                        <input type='text' id='status' class="form-control" value="<?php if($request->confirmed == 0){echo 'do rozpatrzenia';}elseif($request->confirmed == 1){echo 'przyjęty';}else{echo 'odrzucony';} ?>" readonly/>
+                    </div>
+
+                    <div class="row form-group col-md-6 text-center">
+                        @if($request->confirmed == 0)
+                            <div class="col-md-6"><label style="opacity: 0; visibility: hidden;">label</label><br/><a href="#" class="btn btn-danger">Odrzuć</a></div>
+                            <div class="col-md-6"><label style="opacity: 0; visibility: hidden;">label</label><br/><a href="#" class="btn btn-success">Przyjmij</a></div>
+                        @endif
+                    </div>
                 </div>
             </div>
             <div class="card-footer text-center">
