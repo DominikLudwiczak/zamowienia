@@ -61,6 +61,8 @@
                             <div class='alert alert-danger'>Istnieje urlop w tym terminie, popraw swój wniosek!</div>
                         @elseif(session('double') === 'proposal')
                             <div class='alert alert-primary'>Istnieje wniosek o urlop, który się pokrywa z twoim, czy pomimo tego wysłać wniosek?</div>
+                        @elseif(session('double') === 'double')
+                            <div class='alert alert-danger'>Masz już złożony wniosek o urlop w tym terminie, popraw swój wniosek!</div>
                         @endif
                     </div>
                     <div class="modal-footer">

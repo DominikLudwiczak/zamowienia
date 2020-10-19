@@ -15,8 +15,27 @@ class CalendarController extends Controller
         $this->miesiace=['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'];
     }
 
+
+    public function vacation_check($start, $end, $userid)
+    {
+        $vacations = Vacations::where('end', '>=', $start)->where('start', '<=', $end)->get();
+        if($vacations->where('user_id', '=', $userid)->where('confirmed', '>=', 0)->count() > 1)
+            $double = 'double';
+        elseif($vacations->where('confirmed', 1)->count() > 0)
+            $double = 'vacation';
+        elseif($vacations->where('confirmed', 0)->count() > 0)
+            $double = 'proposal';
+
+        if(isset($double))
+            return $double;
+        return false;
+    }
+
+
+
     public function calendar($month=null, $year=null)
     {
+        session(['url' => null]);
         if($month==null)
             $month = date('m');
         if($year==null)
@@ -44,13 +63,12 @@ class CalendarController extends Controller
     {
         if(!isset($request->double))
         {
-            $vacations = vacations::where('end', '>=', $request->start)->where('start', '<=', $request->end)->get();
-            if($vacations->where('confirmed', 1)->count() > 0)
-                $double = 'vacation';
-            else if($vacations->where('confirmed', 0)->count() > 0)
-                $double = 'proposal';
-
-            if(isset($double))
+            if($request->user == 0)
+                $userid = Auth::user()->id;
+            else
+                $userid = $request->user;
+            $double = $this->vacation_check($request->start, $request->end, $userid);
+            if($double != false)
                 return redirect()->back()->withInput()->with('double', $double);
         }
 
@@ -76,7 +94,8 @@ class CalendarController extends Controller
 
     public function requests()
     {
-        $requests = vacations::orderBy('start', 'desc')->paginate(15);
+        session(['url' => null]);
+        $requests = vacations::orderBy('created_at', 'desc')->paginate(15);
         $users = user::all();
         return view('calendar.requests.requests')->withRequests($requests)->withUsers($users);
     }
@@ -95,25 +114,51 @@ class CalendarController extends Controller
     {
         try
         {
+            session(['url' => $request->url]);
             $vacation = vacations::findOrFail($id);
-            if($request->status === "denny")
-                $vacation->confirmed = -1;
-            elseif($request->status === "allow")
+            if($request->start != $vacation->start || $request->end != $vacation->end)
             {
-                $vacation->confirmed = 1;
-                $similar = vacations::where('start', '<=', $vacation->end)->where('end', '>=', $vacation->start)->get();
-                foreach($similar as $row)
+                $double = false;
+                if(!isset($request->double))
+                    $double = $this->vacation_check($request->start, $request->end, $vacation->user_id);
+                    
+                if($double === 'vacation')
+                    return redirect()->back()->withFailed('W tym okresie istnieje już urlop, popraw swój wniosek');
+                elseif($double === 'double')
+                    return redirect()->back()->withFailed('W tym okresie masz już złożony wniosek o urlop, popraw swój wniosek');
+                elseif($double === 'proposal')
+                    return redirect()->back()->withInput()->withDouble('proposal');
+                else
                 {
-                    $row->confirmed = -1;
-                    $row->who_conf = Auth::user()->id;
-                    $row->save();
+                    $vacation->start = $request->start;
+                    $vacation->end = $request->end;
+                    $msg = 'Zmieniono datę urlopu';
                 }
             }
-            $vacation->who_conf = Auth::user()->id;
+            elseif($request->has('status'))
+            {
+                if($request->status === "deny")
+                    $vacation->confirmed = -1;
+                elseif($request->status === "allow")
+                {
+                    $vacation->confirmed = 1;
+                    $similar = vacations::where('start', '<=', $vacation->end)->where('end', '>=', $vacation->start)->get();
+                    foreach($similar as $row)
+                    {
+                        $row->confirmed = -1;
+                        $row->who_conf = Auth::user()->id;
+                        $row->save();
+                    }
+                }
+                $vacation->who_conf = Auth::user()->id;
+                $msg = 'Zmieniono status urlopu';
+            }
+            else
+                return redirect()->back();
             $vacation->save();
         }catch(\Illuminate\Database\QueryException $ex){
             return redirect()->back()->withFailed('Wystąpił błąd');
         }
-        return redirect()->back()->withSuccess('Zmieniono status urlopu');
+        return redirect()->back()->withSuccess($msg);
     }
 }
