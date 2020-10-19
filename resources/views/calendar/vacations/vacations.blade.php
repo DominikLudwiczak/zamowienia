@@ -4,7 +4,7 @@
 
 @section('content')
     <div class='row align-items-center pt-3'>
-        <h1 style='text-decoration: underline;' class="col-md-7">Kalendarz</h1>
+        <h1 style='text-decoration: underline;' class="col-md-7">Urlopy</h1>
         <div class='input-group col-md-5' style="justify-content: flex-end;">
             <a href="{{ route('vacation_add') }}" class='btn btn-success mb-2'>Dodaj</a>
         </div>
@@ -54,20 +54,28 @@
                         @foreach($vacations->where('start', '<=', $year."-".$month."-$z")->where('end', '>=', $year."-".$month."-$z")->where('confirmed', '>=', 0) as $vacation)
                             @if(Gate::allows('admin'))
                                 @if($vacation->confirmed == 0)
-                                    <a href="{{ route('request', ['id' => $vacation->id]) }}" class="calendar-event d-none d-sm-flex">{{ $users->where('id', $vacation->user_id)->first()->name }}</a>
-                                    <a href="#" class='calendar-event d-flex d-sm-none'><i class="fa fa-times"></i></a>
+                                    <a href="{{ route('request', ['id' => $vacation->id]) }}" class="calendar-event" id="e_{{$vacation->id}}" onmouseover="hoverEvent(this.id)" onmouseout="hoverEvent(this.id)">
+                                        <span class="d-none d-sm-flex">{{ $users->where('id', $vacation->user_id)->first()->name }}</span>
+                                        <i class="fa fa-times d-flex d-sm-none"></i>
+                                    </a>
                                 @else
-                                    <a href="{{ route('request', ['id' => $vacation->id]) }}" class='calendar-event calendar-event__conf d-none d-sm-flex'>{{ $users->where('id', $vacation->user_id)->first()->name }}</a>
-                                    <a href="{{ route('request', ['id' => $vacation->id]) }}" class='calendar-event calendar-event__conf d-flex d-sm-none'><i class="fa fa-times"></i></a>
+                                    <a href="{{ route('request', ['id' => $vacation->id]) }}" class="calendar-event calendar-event__conf" id="e_{{$vacation->id}}" onmouseover="hoverEvent(this.id)" onmouseout="hoverEvent(this.id)">
+                                        <span class="d-none d-sm-flex">{{ $users->where('id', $vacation->user_id)->first()->name }}</span>
+                                        <i class="fa fa-times d-flex d-sm-none"></i>
+                                    </a>
                                 @endif
                             @else
                                 @if($vacation->user_id == $curr_usr)
                                     @if($vacation->confirmed == 0)
-                                        <a href="{{ route('request', ['id' => $vacation->id]) }}" class='calendar-event d-none d-sm-flex'>{{ $users->where('id', $vacation->user_id)->first()->name }}</a>
-                                        <a href="{{ route('request', ['id' => $vacation->id]) }}" class='calendar-event d-flex d-sm-none'><i class="fa fa-times"></i></a>
+                                        <a href="{{ route('request', ['id' => $vacation->id]) }}" class="calendar-event" id="e_{{$vacation->id}}" onmouseover="hoverEvent(this.id)" onmouseout="hoverEvent(this.id)">
+                                            <span class="d-none d-sm-flex">{{ $users->where('id', $vacation->user_id)->first()->name }}</span>
+                                            <i class="fa fa-times d-flex d-sm-none"></i>
+                                        </a>
                                     @else
-                                        <a href="{{ route('request', ['id' => $vacation->id]) }}" class='calendar-event calendar-event__conf d-none d-sm-flex'>{{ $users->where('id', $vacation->user_id)->first()->name }}</a>
-                                        <a href="{{ route('request', ['id' => $vacation->id]) }}" class='calendar-event calendar-event__conf d-flex d-sm-none'><i class="fa fa-times"></i></a>
+                                        <a href="{{ route('request', ['id' => $vacation->id]) }}" class="calendar-event calendar-event__conf" id="e_{{$vacation->id}}" onmouseover="hoverEvent(this.id)" onmouseout="hoverEvent(this.id)">
+                                            <span class="d-none d-sm-flex">{{ $users->where('id', $vacation->user_id)->first()->name }}</span>
+                                            <i class="fa fa-times d-flex d-sm-none"></i>
+                                        </a>
                                     @endif
                                 @endif
                             @endif

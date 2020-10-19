@@ -10976,15 +10976,20 @@ a.text-dark:focus {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
 .calendar-event__conf {
   background-color: #38c172;
 }
 
-.calendar-event:hover {
+.calendar-event__active {
   text-decoration: underline;
-  color: white;
-  background-color: rgba(52, 144, 220, 0.8);
+  background-color: rgba(52, 144, 220, 0.8) !important;
+  color: white !important;
+}
+
+.table-row__hover:hover {
+  cursor: pointer;
 }
 

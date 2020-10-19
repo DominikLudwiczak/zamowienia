@@ -30,7 +30,7 @@
             ?>
             @foreach($requests as $request)
                 <?php $x++; ?>
-                <tr class='table-row' data-href="{{ route('request', ['id' => $request->id]) }}">
+                <tr class='table-row table-row__hover' data-href="{{ route('request', ['id' => $request->id]) }}">
                     <th scope="row">{{$x}}</th>
                     <td>{{$users->where('id', $request->user_id)->first()->name}}</td>
                     <td>{{$request->start}}</td>
@@ -72,9 +72,5 @@
             var query = $(this).val();
             fetch_search(query);
         });
-
-        // $(document).on('click', '.table-row', function(){
-        //     window.document.location = $(this).data("href");
-        // });
     });
 </script>

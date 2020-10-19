@@ -101,7 +101,7 @@ class CalendarController extends Controller
             elseif($request->status === "allow")
             {
                 $vacation->confirmed = 1;
-                $similar = vacations::where('start', '<=', $vacation->start)->where('end', '>=', $vacation->end)->get();
+                $similar = vacations::where('start', '<=', $vacation->end)->where('end', '>=', $vacation->start)->get();
                 foreach($similar as $row)
                 {
                     $row->confirmed = -1;

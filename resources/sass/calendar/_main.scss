@@ -81,6 +81,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+        align-items: center;
 
         &__conf
         {
@@ -88,10 +89,16 @@
         }
     }
 
-    &-event:hover
+    &-event__active
     {
         text-decoration: underline;
-        color: white;
-        background-color: rgba($blue, .8);
+        background-color: rgba($blue, .8) !important;
+        color: white !important;
     }
+}
+
+
+.table-row__hover:hover
+{
+    cursor: pointer;
 }

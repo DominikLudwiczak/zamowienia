@@ -31,8 +31,8 @@
                     </div>
 
                     <div class="form-group col-md-6">
-                        <label form="status">Wysłany przez:</label>
-                        <input type='text' id='status' class="form-control" value="{{$users->where('id', $request->who_added)->first()->name}}" readonly/>
+                        <label form="sended">Wysłany przez:</label>
+                        <input type='text' id='sended' class="form-control" value="{{$users->where('id', $request->who_added)->first()->name}}" readonly/>
                     </div>
                 </div>
                 @if($request->confirmed == 0)
@@ -46,11 +46,11 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             @if($request->confirmed == -1)
-                                <label form="status">Odrzucony przez:</label>
+                                <label for="who">Odrzucony przez:</label>
                             @else
-                                <label form="status">Przyjęty przez:</label>
+                                <label for="who">Przyjęty przez:</label>
                             @endif
-                            <input type='text' id='status' class="form-control" value="{{$users->where('id', $request->who_conf)->first()->name}}" readonly/>
+                            <input type='text' id='who' class="form-control" value="{{$users->where('id', $request->who_conf)->first()->name}}" readonly/>
                         </div>
 
                         <div class="form-group col-md-6">

@@ -97,3 +97,11 @@ function previous(month, year)
     var route = `/calendar/vacations/${month}/${year}`;
     window.location.href = route;
 }
+
+function hoverEvent(id)
+{
+    let events = document.querySelectorAll('#'+id);
+    events.forEach((e) => {
+        e.classList.toggle('calendar-event__active');
+    });
+}
