@@ -26,20 +26,6 @@
                         Produkty
                     </a>
                 </li>
-
-                <li class="nav-item">
-                    <a class="nav-link text-white" id='vacations' href="{{ route('vacations') }}">
-                        <img src="{{ asset('public/img/calendar.svg') }}"/>
-                        Urlopy
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link text-white" id='requests' href="{{ route('requests') }}">
-                        <img src="{{ asset('public/img/interview.svg') }}"/>
-                        Wnioski
-                    </a>
-                </li>
             @else
                 <li class="nav-item">
                     <a class="nav-link text-white" id='products' href="#">
@@ -47,14 +33,28 @@
                         Użytkownik
                     </a>
                 </li>
-
-                <li class="nav-item">
-                    <a class="nav-link text-white" id='vacations' href="{{ route('vacations') }}">
-                        <img src="{{ asset('public/img/calendar.svg') }}"/>
-                        Urlopy
-                    </a>
-                </li>
             @endif
+
+            <li class="nav-item">
+                <a class="nav-link text-white" id='vacations' href="{{ route('vacations') }}">
+                    <img src="{{ asset('public/img/calendar.svg') }}"/>
+                    Urlopy
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link text-white" id='requests' href="{{ route('requests') }}">
+                    <img src="{{ asset('public/img/interview.svg') }}"/>
+                    Wnioski
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link text-white" id='scheduler' href="{{ route('scheduler') }}">
+                    <img src="{{ asset('public/img/calendar.svg') }}"/>
+                    Grafik
+                </a>
+            </li>
         </ul>
     </div>
 </nav>

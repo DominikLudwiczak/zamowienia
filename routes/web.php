@@ -105,5 +105,7 @@ Route::prefix('calendar')->group(function() {
 
         Route::get('/request/{id}', 'CalendarController@request')->where(['id' => '[0-9]+'])->name('request');
         Route::post('/request/{id}', 'CalendarController@request_store')->where(['id' => '[0-9]+']);
+
+        Route::get('/scheduler/{month?}/{year?}', 'CalendarController@scheduler')->where(['month' => '[0-9]+', 'year' => '[0-9]+'])->name('scheduler');
     });
 });

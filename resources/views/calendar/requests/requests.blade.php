@@ -29,6 +29,9 @@
                     $x=0;
             ?>
             @foreach($requests as $request)
+                @if(!Gate::allows('admin') && $request->user_id != $curr_usr)
+                    @continue;
+                @endif
                 <?php $x++; ?>
                 <tr class='table-row table-row__hover' data-href="{{ route('request', ['id' => $request->id]) }}">
                     <th scope="row">{{$x}}</th>

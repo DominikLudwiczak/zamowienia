@@ -118,6 +118,8 @@
                 route = 'vacations';
             else if(route.includes('request'))
                 route = 'requests'
+            else if(route.includes('schedule'))
+                route = 'scheduler';
             else
                 route = 'dashboard';
 
