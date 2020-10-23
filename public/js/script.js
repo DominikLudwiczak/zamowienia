@@ -84,25 +84,25 @@ function table_row_href(route)
         window.document.location = `request/${route}`;
 }
 
-function next(month, year)
+function next(month, year, module)
 {
     if(month == 13)
     {
         month = 1;
         year++;
     }
-    var route = `/calendar/vacations/${month}/${year}`;
+    var route = `/calendar/${module}/${month}/${year}`;
     window.location.href = route;
 }
 
-function previous(month, year)
+function previous(month, year, module)
 {
     if(month == 0)
     {
         month = 12;
         year--;
     }
-    var route = `/calendar/vacations/${month}/${year}`;
+    var route = `/calendar/${module}/${month}/${year}`;
     window.location.href = route;
 }
 

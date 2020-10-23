@@ -11,9 +11,9 @@
     </div>
     <div class="calendar mx-auto">
         <div class="calendar-header">
-            <button class="calendar-header__arrow mr-4" onclick="previous({{$month}}-1, {{$year}})"><i class="fa fa-chevron-left"></i></button> 
+            <button class="calendar-header__arrow mr-4" onclick="previous({{$month}}-1, {{$year}}, 'vacations')"><i class="fa fa-chevron-left"></i></button> 
             {{$miesiace[$month-1]}} {{$year}} 
-            <button class="calendar-header__arrow ml-4" onclick="next({{$month}}+1, {{$year}})"><i class="fa fa-chevron-right"></i></button>
+            <button class="calendar-header__arrow ml-4" onclick="next({{$month}}+1, {{$year}}, 'vacations')"><i class="fa fa-chevron-right"></i></button>
         </div>
 
         <div class="calendar-days d-none d-md-flex d-lg-flex">

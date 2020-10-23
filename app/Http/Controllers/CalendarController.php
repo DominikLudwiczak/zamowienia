@@ -231,17 +231,4 @@ class CalendarController extends Controller
             echo json_encode($data);
         }
     }
-
-
-    // scheduler
-    public function scheduler($month=null, $year=null)
-    {
-        if($month==null)
-            $month = date('m');
-        if($year==null)
-            $year = date('Y');
-        $month = str_pad($month, 2, 0, STR_PAD_LEFT);
-
-        return view('calendar.scheduler.scheduler')->withMonth($month)->withYear($year)->withMiesiace($this->miesiace);
-    }
 }
