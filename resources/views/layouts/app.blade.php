@@ -120,6 +120,8 @@
                 route = 'requests'
             else if(route.includes('schedule'))
                 route = 'scheduler';
+            else if(route.includes('shop'))
+                route = 'shops';
             else
                 route = 'dashboard';
 

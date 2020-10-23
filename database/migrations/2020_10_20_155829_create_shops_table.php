@@ -18,7 +18,7 @@ class CreateShopsTable extends Migration
             $table->string('name')->unique();
             $table->string('city');
             $table->string('street');
-            $table->string('nuber');
+            $table->string('number');
             $table->integer('postal');
             $table->timestamps();
         });

@@ -45,9 +45,9 @@ Route::prefix('suppliers')->group(function() {
 
     Route::post('/new', 'SuppliersController@add_supplier')->middleware('CheckSupplier')->name('add_supplier');
 
-    Route::get('/edit/{id}', 'SuppliersController@edit')->name('edit_supplier');
+    Route::get('/edit/{id}', 'SuppliersController@edit')->where(['id' => '[0-9]+'])->name('edit_supplier');
 
-    Route::post('/edit/{id}', 'SuppliersController@edit_save')->middleware('CheckSupplier')->name('edit_supplier_save');
+    Route::post('/edit/{id}', 'SuppliersController@edit_save')->where(['id' => '[0-9]+'])->middleware('CheckSupplier')->name('edit_supplier_save');
 
     Route::post('/delete', 'SuppliersController@delete')->name('delete_supplier');
 });
@@ -63,9 +63,9 @@ Route::prefix('products')->group(function() {
 
     Route::post('/new', 'ProductsController@add_product')->middleware('CheckProduct')->name('add_product');
 
-    Route::get('/edit/{id}', 'ProductsController@edit')->name('edit_product');
+    Route::get('/edit/{id}', 'ProductsController@edit')->where(['id' => '[0-9]+'])->name('edit_product');
 
-    Route::post('/edit/{id}', 'ProductsController@edit_product_save')->middleware('CheckProduct')->name('edit_product_save');
+    Route::post('/edit/{id}', 'ProductsController@edit_product_save')->where(['id' => '[0-9]+'])->middleware('CheckProduct')->name('edit_product_save');
 
     Route::post('/delete', 'ProductsController@delete')->name('delete_product');
 });
@@ -76,7 +76,7 @@ Route::prefix('orders')->group(function() {
 
     Route::get('/search', 'OrdersController@search')->name('orders_search');
 
-    Route::get('/details/{order_id}', 'OrdersController@order_details')->name('order_details');
+    Route::get('/details/{order_id}', 'OrdersController@order_details')->where(['order_id' => '[0-9]+'])->name('order_details');
 
     Route::get('/new/{supplier_name?}', 'OrdersController@new_order')->name('new_order');
 
@@ -109,4 +109,22 @@ Route::prefix('calendar')->group(function() {
 
         Route::get('/scheduler/{month?}/{year?}', 'CalendarController@scheduler')->where(['month' => '[0-9]+', 'year' => '[0-9]+'])->name('scheduler');
     });
+});
+
+// Shops
+Route::prefix('shops')->group(function() {
+    Route::get('/', 'ShopsController@shops')->name('shops');
+
+    Route::get('/search', 'ShopsController@search')->name('shops_search');
+
+    Route::get('/edit/{id}', 'ShopsController@edit')->where(['id' => '[0-9]+'])->name('edit_shop');
+    Route::post('/edit/{id}', 'ShopsController@edit_store')->where(['id' => '[0-9]+'])->middleware('CheckShop');
+
+    Route::post('/delete', 'ShopsController@delete')->name('delete_shop');
+
+    Route::get('/add', function(){
+        return view('shops.add');
+    })->name('add_shop');
+
+    Route::post('/add', 'ShopsController@add_store')->middleware('CheckShop');
 });

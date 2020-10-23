@@ -26,6 +26,12 @@
                         Produkty
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" id='shops' href="{{ route('shops') }}">
+                    <img src="{{ asset('public/img/store.svg') }}"/>
+                        Sklepy
+                    </a>
+                </li>
             @else
                 <li class="nav-item">
                     <a class="nav-link text-white" id='products' href="#">
