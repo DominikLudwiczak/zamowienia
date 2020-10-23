@@ -72,13 +72,16 @@ function modal_delete(id)
 
 $(document).ready(function($) {
     $(".table-row").click(function() {
-        window.document.location = $(this).data("href");
+        table_row_href($(this).data("href"));
     });
 });
 
-function row_href(route)
+function table_row_href(route)
 {
-    window.document.location = route;
+    if(isNaN(route))
+        window.document.location = route;
+    else
+        window.document.location = `request/${route}`;
 }
 
 function next(month, year)

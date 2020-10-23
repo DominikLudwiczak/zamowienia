@@ -198,7 +198,7 @@ class CalendarController extends Controller
                 foreach($requests as $key => $request)
                 {
                     $output .= "
-                        <tr data-href='".route('request', ['id' => $request->id])."' class='table-row table-row__hover'>
+                        <tr class='table-row table-row__hover' onclick='table_row_href(".$request->id.")'>
                             <td class=align-middle>".($key+1)."</td>
                             <td class=align-middle>$request->user</td>
                             <td class=align-middle>$request->start</td>
