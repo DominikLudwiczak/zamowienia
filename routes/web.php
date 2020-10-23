@@ -102,6 +102,7 @@ Route::prefix('calendar')->group(function() {
         Route::post('/add', 'CalendarController@add_store')->middleware('CheckVacation');
 
         Route::get('/requests', 'CalendarController@requests')->name('requests');
+        Route::get('/search', 'CalendarController@request_search')->name('requests_search');
 
         Route::get('/request/{id}', 'CalendarController@request')->where(['id' => '[0-9]+'])->name('request');
         Route::post('/request/{id}', 'CalendarController@request_store')->where(['id' => '[0-9]+']);

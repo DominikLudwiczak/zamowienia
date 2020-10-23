@@ -76,6 +76,11 @@ $(document).ready(function($) {
     });
 });
 
+function row_href(route)
+{
+    window.document.location = route;
+}
+
 function next(month, year)
 {
     if(month == 13)

@@ -18,11 +18,12 @@ class CreateSchedulersTable extends Migration
             $table->dateTime('start');
             $table->dateTime('end');
             $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('shop_id')->unsigned();
             $table->bigInteger('who_added')->unsigned();
             $table->timestamps();
         });
 
-        Schema::table('vacations', function (Blueprint $table){
+        Schema::table('schedulers', function (Blueprint $table){
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users');
@@ -30,6 +31,10 @@ class CreateSchedulersTable extends Migration
             $table->foreign('who_added')
                 ->references('id')
                 ->on('users');
+
+            $table->foreign('shop_id')
+                ->references('id')
+                ->on('shops');
         });
     }
 

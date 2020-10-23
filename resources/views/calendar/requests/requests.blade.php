@@ -3,7 +3,7 @@
 @section('title', '- wnioski')
 
 @section('content')
-    <div class='row align-items-center pt-3'>
+    <div class='row align-items-center pt-3 pb-3'>
         <h1 style='text-decoration: underline;' class='col-md-7'>Wnioski urlopowe</h1>
         <div class='input-group col-md-5'>
             <input class="form-control" type="search" placeholder="Szukaj" id='search' aria-label="Szukaj" autofocus>
@@ -58,7 +58,7 @@
         function fetch_search(query = '')
         {
             $.ajax({
-                url:"{{route('orders_search')}}",
+                url:"{{route('requests_search')}}",
                 method:'GET',
                 data:{query:query},
                 dataType: 'json',
@@ -71,7 +71,7 @@
         }
         $(document).on('input', '#search', function(){
             if($(this).val() == '')
-                window.location.replace("{{route('orders')}}");
+                window.location.replace("{{route('requests')}}");
             var query = $(this).val();
             fetch_search(query);
         });

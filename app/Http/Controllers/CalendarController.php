@@ -7,16 +7,18 @@ use App\vacations;
 use App\user;
 use Auth;
 use Gate;
+use Carbon;
 
 class CalendarController extends Controller
 {
+    // konstruktor
     public function __construct()
     {
         $this->middleware('CheckActive');
         $this->miesiace=['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'];
     }
 
-
+    // vacation_check
     public function vacation_check($start, $end, $userid, $vacationid = null)
     {
         $vacations = Vacations::where('end', '>=', $start)->where('start', '<=', $end)->where('id', '!=', $vacationid)->get();
@@ -31,7 +33,7 @@ class CalendarController extends Controller
     }
 
 
-
+    // calendar
     public function calendar($month=null, $year=null)
     {
         session(['url' => null]);
@@ -48,7 +50,7 @@ class CalendarController extends Controller
     }
 
 
-
+    // add
     public function add()
     {
         $users = user::all();
@@ -57,7 +59,7 @@ class CalendarController extends Controller
 
 
 
-
+    // add_store
     public function add_store(Request $request)
     {
         if(!isset($request->double))
@@ -90,7 +92,7 @@ class CalendarController extends Controller
     }
 
 
-
+    // requests
     public function requests()
     {
         session(['url' => null]);
@@ -101,7 +103,7 @@ class CalendarController extends Controller
     }
 
 
-
+    // request
     public function request($id)
     {
         $request = vacations::findOrFail($id);
@@ -112,6 +114,7 @@ class CalendarController extends Controller
     }
 
 
+    // request_store
     public function request_store(Request $request, $id)
     {
         try
@@ -172,6 +175,65 @@ class CalendarController extends Controller
 
 
 
+    // search
+    public function request_search(Request $request)
+    {
+        $output = '';
+        if($request->ajax())
+        {
+            $query = $request->get('query');
+
+            $requests = vacations::join('users', 'users.id', '=', 'vacations.user_id')
+                                    ->select('vacations.*', 'users.name as user')
+                                    ->where('vacations.start', 'like', "%$query%")
+                                    ->orWhere('vacations.end', 'like', "%$query%")
+                                    ->orWhere('vacations.created_at', 'like', "%$query%")
+                                    ->orWhere('vacations.updated_at', 'like', "%$query%")
+                                    ->orWhere('users.name', 'like', "%$query%")
+                                    ->OrderBy('vacations.created_at', 'desc')
+                                    ->get();
+
+            if($requests->count() > 0)
+            {
+                foreach($requests as $key => $request)
+                {
+                    $output .= "
+                        <tr data-href='".route('request', ['id' => $request->id])."' class='table-row table-row__hover'>
+                            <td class=align-middle>".($key+1)."</td>
+                            <td class=align-middle>$request->user</td>
+                            <td class=align-middle>$request->start</td>
+                            <td class=align-middle>$request->end</td>
+                            <td class=align-middle>".Carbon\Carbon::parse($request->created_at)->diffForHumans()."</td>";
+
+                    if($request->confirmed == -1)
+                        $output .= "<td style='background-color: red; color: white;'>odrzucony</td>";
+                    elseif($request->confirmed == 0)
+                        $output .= "<td style='background-color: #209DFC; color: white;'>do rozpatrzenia</td>";
+                    else
+                        $output .= "<td style='background-color: #00DC60; color: white;'>przyjęty</td>";
+                    $output .= "</tr>";
+                }
+            }
+            else
+            {
+                $output = '
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="align-middle">Nie znaleziono</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                ';
+            }
+            $data = array('table_data' => $output);
+            echo json_encode($data);
+        }
+    }
+
+
+    // scheduler
     public function scheduler($month=null, $year=null)
     {
         if($month==null)

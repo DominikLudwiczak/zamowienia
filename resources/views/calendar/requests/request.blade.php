@@ -58,10 +58,11 @@
                                 <input type='text' id='who' class="form-control" value="{{$users->where('id', $request->who_conf)->first()->name}}" readonly/>
                             </div>
                         @elseif(Gate::allows('admin'))
-                            <div class="row col-md-6 text-center">
-                                <div class="col-md-6"><label style="opacity: 0; visibility: hidden;">label</label><br/><button type='button' class="btn btn-danger" data-toggle="modal" data-target="#deny">Odrzuć</button></div>
-                                <div class="col-md-6"><label style="opacity: 0; visibility: hidden;">label</label><br/><button type='button' class="btn btn-success" data-toggle="modal" data-target="#allow">Przyjmij</button></div>
+                            <div class="row col-md-6 d-block text-center ml-2">
+                                <label class='d-none d-md-block' for="odrzuc" style="opacity: 0; visibility: hidden;">label</label><button type='button' id='odrzuc' class="btn btn-danger" data-toggle="modal" data-target="#deny">Odrzuć</button>
+                                <button type='button' class="btn btn-success ml-3" data-toggle="modal" data-target="#allow">Przyjmij</button>
                             </div>
+                            
                         @endif
                     </div>
                 </div>
