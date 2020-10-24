@@ -110,9 +110,23 @@ Route::prefix('calendar')->group(function() {
 
     // Scheduler
     Route::prefix('scheduler')->group(function() {
-        Route::get('/{month?}/{year?}', 'SchedulerController@scheduler')->where(['month' => '[0-9]+', 'year' => '[0-9]+'])->name('scheduler');
 
-        Route::get('/add', 'SchedulerController@add')->name('scheduler_add');
+        // user
+        Route::prefix('user')->group(function() {
+            Route::get('/{month?}/{year?}', 'SchedulerController@scheduler_user')->where(['month' => '[0-9]+', 'year' => '[0-9]+'])->name('scheduler_user');
+        });
+
+        //admin
+        Route::prefix('admin')->middleware('CheckAdmin')->group(function() {
+            Route::get('/', 'SchedulerController@scheduler_admin')->name('scheduler_admin');
+            Route::get('/{id}/{month?}/{year?}', 'SchedulerController@scheduler_admin')->where(['id' => '[0-9]+', 'month' => '[0-9]+', 'year' => '[0-9]+'])->name('scheduler_shop');
+
+            Route::get('/add', 'SchedulerController@add')->name('scheduler_add');
+
+            Route::get('/delete', 'SchedulerController@add')->name('scheduler_delete');
+
+            Route::get('/edit', 'SchedulerController@add')->name('scheduler_edit');
+        });
     });
 });
 

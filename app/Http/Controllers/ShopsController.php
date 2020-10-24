@@ -12,6 +12,7 @@ class ShopsController extends Controller
     public function __construct()
     {
         $this->middleware('CheckActive');
+        $this->middleware('CheckAdmin');
     }
 
 
