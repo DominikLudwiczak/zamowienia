@@ -119,7 +119,7 @@ Route::prefix('calendar')->group(function() {
         //admin
         Route::prefix('admin')->middleware('CheckAdmin')->group(function() {
             Route::get('/', 'SchedulerController@scheduler_admin')->name('scheduler_admin');
-            Route::get('/{id}/{month?}/{year?}', 'SchedulerController@scheduler_admin')->where(['id' => '[0-9]+', 'month' => '[0-9]+', 'year' => '[0-9]+'])->name('scheduler_shop');
+            Route::get('/{id}/{month?}/{year?}', 'SchedulerController@scheduler_shop')->where(['id' => '[0-9]+', 'month' => '[0-9]+', 'year' => '[0-9]+'])->name('scheduler_shop');
 
             Route::get('/add', 'SchedulerController@add')->name('scheduler_add');
 

@@ -35,4 +35,10 @@ class SchedulerController extends Controller
         $shops = shops::all();
         return view('calendar.scheduler.scheduler_admin')->withShops($shops);
     }
+
+    // scheduler_shop
+    public function scheduler_shop($id, $month=null, $year=null)
+    {
+
+    }
 }
