@@ -39,6 +39,12 @@ class SchedulerController extends Controller
     // scheduler_shop
     public function scheduler_shop($id, $month=null, $year=null)
     {
+        if($month==null)
+            $month = date('m');
+        if($year==null)
+            $year = date('Y');
+        $month = str_pad($month, 2, 0, STR_PAD_LEFT);
 
+        return view('calendar.scheduler.scheduler_shop')->withMonth($month)->withYear($year)->withMiesiace($this->miesiace)->withShopid($id);
     }
 }

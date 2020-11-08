@@ -5,12 +5,15 @@
 @section('content')
     <div class='row align-items-center pt-3'>
         <h1 style='text-decoration: underline;' class="col-md-7">Grafik</h1>
+        <div class='input-group col-md-5' style="justify-content: flex-end;">
+            <a href="{{ route('scheduler_add') }}" class='btn btn-success mb-2'>Dodaj</a>
+        </div>
     </div>
     <div class="calendar mx-auto">
         <div class="calendar-header">
-            <button class="calendar-header__arrow mr-4" onclick="previous({{$month}}-1, {{$year}}, 'scheduler/user')"><i class="fa fa-chevron-left"></i></button> 
+            <button class="calendar-header__arrow mr-4" onclick="previous({{$month}}-1, {{$year}}, 'scheduler/shop/{{$shopid}}')"><i class="fa fa-chevron-left"></i></button> 
             {{$miesiace[$month-1]}} {{$year}} 
-            <button class="calendar-header__arrow ml-4" onclick="next({{$month}}+1, {{$year}}, 'scheduler/user')"><i class="fa fa-chevron-right"></i></button>
+            <button class="calendar-header__arrow ml-4" onclick="next({{$month}}+1, {{$year}}, 'scheduler/shop/{{$shopid}}')"><i class="fa fa-chevron-right"></i></button>
         </div>
 
         <div class="calendar-days d-none d-md-flex d-lg-flex">

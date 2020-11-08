@@ -112,13 +112,12 @@ Route::prefix('calendar')->group(function() {
     Route::prefix('scheduler')->group(function() {
 
         // user
-        Route::prefix('user')->group(function() {
-            Route::get('/{month?}/{year?}', 'SchedulerController@scheduler_user')->where(['month' => '[0-9]+', 'year' => '[0-9]+'])->name('scheduler_user');
-        });
+        Route::get('/user/{month?}/{year?}', 'SchedulerController@scheduler_user')->where(['month' => '[0-9]+', 'year' => '[0-9]+'])->name('scheduler_user');
 
         //admin
-        Route::prefix('admin')->middleware('CheckAdmin')->group(function() {
-            Route::get('/', 'SchedulerController@scheduler_admin')->name('scheduler_admin');
+        Route::get('/admin', 'SchedulerController@scheduler_admin')->middleware('CheckAdmin')->name('scheduler_admin');
+
+        Route::prefix('shop')->middleware('CheckAdmin')->group(function() {
             Route::get('/{id}/{month?}/{year?}', 'SchedulerController@scheduler_shop')->where(['id' => '[0-9]+', 'month' => '[0-9]+', 'year' => '[0-9]+'])->name('scheduler_shop');
 
             Route::get('/add', 'SchedulerController@add')->name('scheduler_add');
