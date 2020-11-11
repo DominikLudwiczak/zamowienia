@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class scheduler extends Model
 {
     protected $fillable = [
-        'supplier_id', 'name'
+        'start', 'end', 'user_id', 'shop_id', 'who_added'
     ];
 }
