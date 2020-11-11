@@ -47,4 +47,24 @@ class SchedulerController extends Controller
 
         return view('calendar.scheduler.scheduler_shop')->withMonth($month)->withYear($year)->withMiesiace($this->miesiace)->withShopid($id);
     }
+
+
+    // scheduler add
+    public function add($id)
+    {
+        $users = User::all();
+        return view('calendar.scheduler.add')->withUsers($users)->withShopid($id);
+    }
+
+    // scheduler add_store
+    public function add_store(Request $request, $id)
+    {
+        try
+        {
+            
+        }catch(\Illuminate\Database\QueryException $ex){
+            return redirect()->back()->withInput()->withFailed('Wystąpił błąd');
+        }
+        return redirect(route('scheduler_shop', ['id' => $id]))->withSuccess('Dodano zmianę');
+    }
 }

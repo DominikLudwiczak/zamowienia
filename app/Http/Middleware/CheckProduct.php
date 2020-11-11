@@ -18,6 +18,9 @@ class CheckProduct
         $request->validate([
             'dostawca' => 'required|integer',
             'nazwa' => 'required|max:255'
+        ], 
+        [
+            'integer' => 'Pole :attribute jest wymagane'
         ]);
         return $next($request);
     }

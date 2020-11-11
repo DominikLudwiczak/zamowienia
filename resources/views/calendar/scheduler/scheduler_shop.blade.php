@@ -6,7 +6,7 @@
     <div class='row align-items-center pt-3'>
         <h1 style='text-decoration: underline;' class="col-md-7">Grafik</h1>
         <div class='input-group col-md-5' style="justify-content: flex-end;">
-            <a href="{{ route('scheduler_add') }}" class='btn btn-success mb-2'>Dodaj</a>
+            <a href="{{ route('scheduler_add', ['id' => $shopid]) }}" class='btn btn-success mb-2'>Dodaj</a>
         </div>
     </div>
     <div class="calendar mx-auto">

@@ -12,7 +12,7 @@
             <div class='card-body'>
                 <form method="post" action="{{ route('edit_product_save', ['id' => $product->id]) }}" class='col-md-6 offset-md-3'>
                 @csrf
-                    <select name='dostawca' class="custom-select">
+                    <select name='dostawca' class="custom-select" required>
                         @foreach($suppliers as $supplier)
                             @if($supplier->id == $product->supplier_id)
                                 <option value="{{$supplier->id}}" selected>{{$supplier->name}}</option>
@@ -25,7 +25,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">Nazwa</span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Nazwa produktu" name="nazwa" value="{{$product->name}}"/>
+                        <input type="text" class="form-control" placeholder="Nazwa produktu" name="nazwa" value="{{$product->name}}" required/>
                     </div>
                     <button class='btn btn-success float-right ml-2'>Zapisz</button>
                     <a href="{{ route('products') }}" class='btn btn-primary float-right'>Cofnij</a>

@@ -12,7 +12,7 @@
             <div class='card-body'>
                 <form method="post" action="{{ route('add_product') }}" class='col-md-6 offset-md-3'>
                 @csrf
-                    <select value="default" name='dostawca' class="custom-select">
+                    <select name='dostawca' class="custom-select" required>
                         <option selected>Dostawca...</option>
                         @foreach($suppliers as $supplier)
                             <option value="{{$supplier->id}}">{{$supplier->name}}</option>
@@ -22,7 +22,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">Nazwa</span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Nazwa produktu" name="nazwa" aria-label="Username" aria-describedby="basic-addon1">
+                        <input type="text" class="form-control" placeholder="Nazwa produktu" name="nazwa" required>
                     </div>
                     <button class='btn btn-success float-right ml-2'>Dodaj</button>
                     <a href="{{ route('products') }}" class='btn btn-primary float-right'>Cofnij</a>

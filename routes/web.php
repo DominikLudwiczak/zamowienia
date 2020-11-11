@@ -120,11 +120,12 @@ Route::prefix('calendar')->group(function() {
         Route::prefix('shop')->middleware('CheckAdmin')->group(function() {
             Route::get('/{id}/{month?}/{year?}', 'SchedulerController@scheduler_shop')->where(['id' => '[0-9]+', 'month' => '[0-9]+', 'year' => '[0-9]+'])->name('scheduler_shop');
 
-            Route::get('/add', 'SchedulerController@add')->name('scheduler_add');
+            Route::get('/add/{id}', 'SchedulerController@add')->where(['id' => '[0-9]+', 'month' => '[0-9]+', 'year' => '[0-9]+'])->name('scheduler_add');
+            Route::post('/add/{id}', 'SchedulerController@add_store')->where(['id' => '[0-9]+', 'month' => '[0-9]+', 'year' => '[0-9]+'])->middleware('CheckScheduler');
 
-            Route::get('/delete', 'SchedulerController@add')->name('scheduler_delete');
+            Route::get('/delete/{id}', 'SchedulerController@add')->where(['id' => '[0-9]+', 'month' => '[0-9]+', 'year' => '[0-9]+'])->name('scheduler_delete');
 
-            Route::get('/edit', 'SchedulerController@add')->name('scheduler_edit');
+            Route::get('/edit/{id}', 'SchedulerController@add')->where(['id' => '[0-9]+', 'month' => '[0-9]+', 'year' => '[0-9]+'])->name('scheduler_edit');
         });
     });
 });

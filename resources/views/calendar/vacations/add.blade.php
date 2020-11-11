@@ -31,11 +31,11 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label for="start">Początek:</label>
-                            <input type='date' id='start' name='start' class='form-control' value="{{old('start')}}" min="{{$min}}" max="{{$max ?? ''}}"/>
+                            <input type='date' id='start' name='start' class='form-control' value="{{old('start')}}" min="{{$min}}" max="{{$max ?? ''}}" required/>
                         </div>
                         <div class="col-md-6">
                             <label for="end">Koniec:</label>
-                            <input type='date' id='end' name='end' class='form-control' value="{{old('end')}}" min="{{$min}}" max="{{$max ?? ''}}"/>
+                            <input type='date' id='end' name='end' class='form-control' value="{{old('end')}}" min="{{$min}}" max="{{$max ?? ''}}" required/>
                         </div>
                     </div>
                     
