@@ -15,8 +15,9 @@ class CreateSchedulersTable extends Migration
     {
         Schema::create('schedulers', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('start');
-            $table->dateTime('end');
+            $table->date('date');
+            $table->time('start', 0);
+            $table->time('end', 0);
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('shop_id')->unsigned();
             $table->bigInteger('who_added')->unsigned();

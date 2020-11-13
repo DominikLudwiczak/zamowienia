@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\User;
 use App\shops;
+use App\scheduler;
+use Auth;
 
 class SchedulerController extends Controller
 {
@@ -25,8 +27,9 @@ class SchedulerController extends Controller
         if($year==null)
             $year = date('Y');
         $month = str_pad($month, 2, 0, STR_PAD_LEFT);
-
-        return view('calendar.scheduler.scheduler_user')->withMonth($month)->withYear($year)->withMiesiace($this->miesiace);
+        $shops = shops::all();
+        $schedulers = scheduler::where('date', 'like', '%'.$year."-".$month.'%')->where('user_id', Auth::user()->id)->OrderBy('start')->get();
+        return view('calendar.scheduler.scheduler_user')->withMonth($month)->withYear($year)->withMiesiace($this->miesiace)->withSchedulers($schedulers)->withShops($shops);
     }
 
     // scheduler_admin
@@ -44,8 +47,10 @@ class SchedulerController extends Controller
         if($year==null)
             $year = date('Y');
         $month = str_pad($month, 2, 0, STR_PAD_LEFT);
-
-        return view('calendar.scheduler.scheduler_shop')->withMonth($month)->withYear($year)->withMiesiace($this->miesiace)->withShopid($id);
+        $shop = shops::findOrFail($id);
+        $users = User::all();
+        $schedulers = scheduler::where('date', 'like', '%'.$year."-".$month.'%')->where('shop_id', $id)->OrderBy('start')->get();
+        return view('calendar.scheduler.scheduler_shop')->withMonth($month)->withYear($year)->withMiesiace($this->miesiace)->withShop($shop)->withSchedulers($schedulers)->withUsers($users);
     }
 
 
@@ -61,9 +66,16 @@ class SchedulerController extends Controller
     {
         try
         {
-            
+            $work = new scheduler;
+            $work->date = $request->date;
+            $work->start = $request->start;
+            $work->end = $request->end;
+            $work->user_id = $request->user;
+            $work->shop_id = $id;
+            $work->who_added = Auth::user()->id;
+            $work->save();
         }catch(\Illuminate\Database\QueryException $ex){
-            return redirect()->back()->withInput()->withFailed('Wystąpił błąd');
+            return redirect()->back()->withFailed('Wystąpił błąd');
         }
         return redirect(route('scheduler_shop', ['id' => $id]))->withSuccess('Dodano zmianę');
     }

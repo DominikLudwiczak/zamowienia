@@ -4,16 +4,16 @@
 
 @section('content')
     <div class='row align-items-center pt-3'>
-        <h1 style='text-decoration: underline;' class="col-md-7">Grafik</h1>
+        <h1 style='text-decoration: underline;' class="col-md-7">Grafik-{{$shop->name}}</h1>
         <div class='input-group col-md-5' style="justify-content: flex-end;">
-            <a href="{{ route('scheduler_add', ['id' => $shopid]) }}" class='btn btn-success mb-2'>Dodaj</a>
+            <a href="{{ route('scheduler_add', ['id' => $shop->id]) }}" class='btn btn-success mb-2'>Dodaj</a>
         </div>
     </div>
     <div class="calendar mx-auto">
         <div class="calendar-header">
-            <button class="calendar-header__arrow mr-4" onclick="previous({{$month}}-1, {{$year}}, 'scheduler/shop/{{$shopid}}')"><i class="fa fa-chevron-left"></i></button> 
-            {{$miesiace[$month-1]}} {{$year}} 
-            <button class="calendar-header__arrow ml-4" onclick="next({{$month}}+1, {{$year}}, 'scheduler/shop/{{$shopid}}')"><i class="fa fa-chevron-right"></i></button>
+            <button class="calendar-header__arrow mr-4" onclick="previous({{$month}}-1, {{$year}}, 'scheduler/shop/{{$shop->id}}')"><i class="fa fa-chevron-left"></i></button> 
+            {{$miesiace[$month-1]}} {{$year}}
+            <button class="calendar-header__arrow ml-4" onclick="next({{$month}}+1, {{$year}}, 'scheduler/shop/{{$shop->id}}')"><i class="fa fa-chevron-right"></i></button>
         </div>
 
         <div class="calendar-days d-none d-md-flex d-lg-flex">
@@ -51,7 +51,12 @@
                     @if($z > 0 && $z <= cal_days_in_month(CAL_GREGORIAN, $month, $year))
                         <span class="calendar-day__num">{{$z}}</span>
                         
-                        <!-- tutaj wiświetlanie grafiku -->
+                        @foreach($schedulers->where('date', '=', $year."-".$month."-$z") as $scheduler)
+                            <a href="#" class="calendar-event calendar-event__conf" id="e_{{$scheduler->id}}" onmouseover="hoverEvent(this.id)" onmouseout="hoverEvent(this.id)">
+                                <span class="d-none d-sm-flex">{{ $users->where('id', $scheduler->user_id)->first()->name }}</span>
+                                <i class="fa fa-times d-flex d-sm-none"></i>
+                            </a>
+                        @endforeach
                     @endif
                 </div>
             @endfor
