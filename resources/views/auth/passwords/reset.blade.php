@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class='col-md-8 mx-auto'>
+    <div class='col-md-8 mx-auto mt-4'>
         <div class="card">
             <div class="card-header">Zmiana hasła</div>
 
