@@ -13,7 +13,7 @@
                 <div class="card-body mx-auto">
                     @if(Gate::allows('admin'))
                         <select name='user' class="custom-select mb-2">
-                            <option value="0" default>Użytkownik...</option>
+                            <option value="0" default>Pracownik...</option>
                             @foreach($users as $user)
                                 @if($user->id != old('user'))
                                     <option value="{{$user->id}}">{{$user->name}}</option>

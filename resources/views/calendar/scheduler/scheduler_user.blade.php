@@ -49,7 +49,7 @@
                         <span class="calendar-day__num">{{$z}}</span>
                         
                         @foreach($schedulers->where('date', '=', $year."-".$month."-$z") as $scheduler)
-                            <a href="#" class="calendar-event calendar-event__conf" id="e_{{$scheduler->id}}" onmouseover="hoverEvent(this.id)" onmouseout="hoverEvent(this.id)">
+                            <a href="{{ route('scheduler_view', ['id' => $scheduler->id]) }}" class="calendar-event calendar-event__conf" id="e_{{$scheduler->id}}" onmouseover="hoverEvent(this.id)" onmouseout="hoverEvent(this.id)">
                                 <span class="d-none d-sm-flex">{{ $shops->where('id', $scheduler->shop_id)->first()->name }}</span>
                                 <i class="fa fa-times d-flex d-sm-none"></i>
                             </a>

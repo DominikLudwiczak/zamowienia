@@ -79,4 +79,53 @@ class SchedulerController extends Controller
         }
         return redirect(route('scheduler_shop', ['id' => $id]))->withSuccess('Dodano zmianę');
     }
+
+    // scheduler view
+    public function view($id)
+    {
+        $work = scheduler::findOrFail($id);
+        $user = User::findOrFail($work->user_id);
+        $shop = shops::findOrFail($work->shop_id);
+        return view('calendar.scheduler.view')->withWork($work)->withUser($user)->withShop($shop);
+    }
+
+    // scheduler edit
+    public function edit($id)
+    {
+        $work = scheduler::findOrFail($id);
+        $users = User::all();
+        $shop = shops::findOrFail($work->shop_id);
+        $curr_usr = Auth::user();
+        return view('calendar.scheduler.edit')->withWork($work)->withUsers($users)->withShop($shop)->with('curr_usr', $curr_usr);
+    }
+
+    // scheduler edit_store
+    public function edit_store(Request $request, $id)
+    {
+        try
+        {
+            $work = scheduler::findOrFail($id);
+            $work->date = $request->date;
+            $work->start = $request->start;
+            $work->end = $request->end;
+            $work->user_id = $request->user;
+            $work->save();
+        }catch(\Illuminate\Database\QueryException $ex){
+            return redirect()->back()->withFailed('Wystąpił błąd');
+        }
+        return redirect(route('scheduler_view', ['id' => $id]))->withSuccess('Edytowano zmianę');
+    }
+
+    // scheduler delete
+    public function delete(Request $request)
+    {
+        try
+        {
+            $work = scheduler::findOrFail($request->id);
+            $work->delete();
+        }catch(\Illuminate\Database\QueryException $ex){
+            return redirect(route('scheduler_shop', ['id' => $work->shop_id]))->withFailed('Wystąpił błąd');
+        }
+        return redirect(route('scheduler_shop', ['id' => $work->shop_id]))->withSuccess('Usunięto zmianę');
+    }
 }
