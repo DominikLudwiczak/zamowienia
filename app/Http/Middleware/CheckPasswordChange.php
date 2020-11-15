@@ -19,6 +19,11 @@ class CheckPasswordChange
             'stare_haslo' => 'required|string',
             'nowe_haslo' => 'required|string|min:8',
             'potw_nowe_haslo' => 'required|string|min:8|same:nowe_haslo'
+        ],[],
+        [
+            'stare_haslo' => 'stare hasło',
+            'nowe_haslo' => 'nowe hasło',
+            'potw_nowe_haslo' => 'powtórz nowe hasło',
         ]);
         return $next($request);
     }
