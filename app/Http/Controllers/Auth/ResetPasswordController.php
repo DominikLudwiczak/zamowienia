@@ -43,14 +43,14 @@ class ResetPasswordController extends Controller
         {
             try
             {
-                User::whereEmail(Auth::user()->email)->update(['password' => Hash::make($userData['nowe_haslo']), 'remember_token' => null]);
+                User::whereEmail(Auth::user()->email)->update(['password' => Hash::make($userData['nowe_haslo']), 'pass_changed' => date("Y-m-d H:i:s")]);
                 Auth::logoutOtherDevices($userData['nowe_haslo']);
                 Auth::logout();
-                return redirect( route('login') )->with('success', 'Zmiana hasła powiodła się!');
+                return redirect(route('login'))->with('success', 'Zmiana hasła powiodła się!');
             }catch(\Illuminate\Database\QueryException $ex){
-                return redirect( route('dashboard') )->with('failed', 'Zmiana hasła nie powiodła się!');
+                return redirect()->back()->with('failed', 'Zmiana hasła nie powiodła się!');
             }
         }
-        return redirect( route('dashboard') )->with('failed', 'Zmiana hasła nie powiodła się!');
+        return redirect()->back()->with('failed', 'Zmiana hasła nie powiodła się!');
     }
 }

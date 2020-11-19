@@ -53,6 +53,7 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
+        'verified' => Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
@@ -70,5 +71,7 @@ class Kernel extends HttpKernel
         'CheckVacation' => \App\Http\Middleware\CheckVacation::class,
         'CheckShop' => \App\Http\Middleware\CheckShop::class,
         'CheckScheduler' => \App\Http\Middleware\CheckScheduler::class,
+        'CheckEmployee' => \App\Http\Middleware\CheckEmployee::class,
+        'CheckEmployeePassword' => \App\Http\Middleware\CheckEmployeePassword::class,
     ];
 }

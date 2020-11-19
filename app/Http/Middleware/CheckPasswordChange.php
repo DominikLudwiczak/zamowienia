@@ -3,6 +3,10 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Carbon\Carbon;
+
+use App\User;
+use Auth;
 
 class CheckPasswordChange
 {
@@ -15,10 +19,16 @@ class CheckPasswordChange
      */
     public function handle($request, Closure $next)
     {
+        $user = User::findOrFail(Auth::id());
+        if($user->pass_changed == null && Carbon::parse($user->created_at)->add(1, 'day') < Carbon::now())
+        {
+            return redirect()->back()->withFailed('Hasło tymczasowe wygasło');
+        }
+
         $request->validate([
             'stare_haslo' => 'required|string',
-            'nowe_haslo' => 'required|string|min:8',
-            'potw_nowe_haslo' => 'required|string|min:8|same:nowe_haslo'
+            'nowe_haslo' => 'required|string|min:8|different:stare_haslo',
+            'potw_nowe_haslo' => 'required|string|same:nowe_haslo'
         ],[],
         [
             'stare_haslo' => 'stare hasło',

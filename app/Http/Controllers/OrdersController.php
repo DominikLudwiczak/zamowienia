@@ -309,7 +309,6 @@ class OrdersController extends Controller
                 'msg' => session('msg')
             ];
             orders::create($order);
-            print_r(session('order'));
             for($i=0; $i < count(session('order')); $i++)
             {
                 $order_details = [

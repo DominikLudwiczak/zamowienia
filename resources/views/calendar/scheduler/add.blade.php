@@ -35,13 +35,9 @@
                     Dodaj zmianę
                 </div>
                 <div class="card-body col-md-8 mx-auto">
-                    <?php 
-                        $min = date('Y-m-d');
-                    ?>
-
                     <div class="form-group">
                         <label for="date">Data:</label>
-                        <input type='date' id='date' name='date' class='form-control' value="{{old('date')}}" min="{{$min}}" required/>
+                        <input type='date' id='date' name='date' class='form-control' value="{{old('date')}}" required/>
                     </div>
 
                     <div class="form-group row">
