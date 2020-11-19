@@ -53,7 +53,7 @@ class CalendarController extends Controller
     // add
     public function add()
     {
-        $users = user::all();
+        $users = user::whereActive(1)->get();
         return view('calendar.vacations.add')->with('users', $users);
     }
 

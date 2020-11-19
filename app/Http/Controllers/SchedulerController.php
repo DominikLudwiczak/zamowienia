@@ -57,7 +57,7 @@ class SchedulerController extends Controller
     // scheduler add
     public function add($id)
     {
-        $users = User::all();
+        $users = User::whereActive(1)->get();
         return view('calendar.scheduler.add')->withUsers($users)->withShopid($id);
     }
 
@@ -93,10 +93,10 @@ class SchedulerController extends Controller
     public function edit($id)
     {
         $work = scheduler::findOrFail($id);
-        $users = User::all();
+        $users = User::whereActive(1)->get();
         $shop = shops::findOrFail($work->shop_id);
-        $curr_usr = Auth::user();
-        return view('calendar.scheduler.edit')->withWork($work)->withUsers($users)->withShop($shop)->with('curr_usr', $curr_usr);
+        $user = User::findOrFail($work->user_id);
+        return view('calendar.scheduler.edit')->withWork($work)->withUsers($users)->withShop($shop)->with('user', $user);
     }
 
     // scheduler edit_store

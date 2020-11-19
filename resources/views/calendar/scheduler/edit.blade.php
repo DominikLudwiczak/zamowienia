@@ -56,7 +56,7 @@
 
                     <div class="form-group">
                         <select name='user' class="custom-select mb-2" required>
-                            <option value="{{$work->user_id}}" default>{{$users->where('id', $work->user_id)->first()->name}}</option>
+                            <option value="{{$work->user_id}}" default>{{$user->name}}</option>
                             @foreach($users as $user)
                                 @if($user->id != $work->user_id)
                                     <option value="{{$user->id}}">{{$user->name}}</option>
