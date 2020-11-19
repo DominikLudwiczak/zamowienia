@@ -152,3 +152,24 @@ Route::prefix('shops')->group(function() {
 
     Route::post('/add', 'ShopsController@add_store')->middleware('CheckShop');
 });
+
+// Employees
+Route::prefix('employees')->group(function() {
+    // admin
+    Route::middleware('CheckAdmin')->group(function() {
+        Route::get('/', 'EmployeeController@all')->name('employees_admin');
+
+        Route::get('/new', function(){
+            return view('employees.new');
+        })->name('new_employee');
+
+        Route::get('/edit', 'EmployeeController@edit')->name('edit_employee');
+
+        Route::post('/delete', 'EmployeeController@delete')->name('delete_employee');
+
+        Route::get('/search', 'EmployeeController@search')->name('employees_search');
+    });
+
+    // user
+    Route::get('/user', 'EmployeeController@user')->name('employee_user');
+});

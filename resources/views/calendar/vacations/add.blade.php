@@ -10,7 +10,7 @@
                 <div class="card-header">
                     Wniosek o urlop
                 </div>
-                <div class="card-body mx-auto">
+                <div class="card-body col-md-12 mx-auto">
                     @if(Gate::allows('admin'))
                         <select name='user' class="custom-select mb-2">
                             <option value="0" default>Pracownik...</option>

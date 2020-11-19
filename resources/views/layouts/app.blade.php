@@ -108,6 +108,8 @@
             var route = "{{Route::getCurrentRoute()->getName()}}";
             if(route.includes('order'))
                 route = 'orders';
+            else if(route.includes('employee'))
+                route = 'employees';
             else if(route.includes('supplier'))
                 route = 'suppliers';
             else if(route.includes('product'))

@@ -96,9 +96,12 @@ class CalendarController extends Controller
     public function requests()
     {
         session(['url' => null]);
-        $requests = vacations::orderBy('created_at', 'desc')->paginate(15);
-        $users = user::all();
         $curr_usr = Auth::user()->id;
+        if(!Gate::allows('admin'))
+            $requests = vacations::where('user_id', $curr_usr)->orderBy('created_at', 'desc')->paginate(15);
+        else
+            $requests = vacations::orderBy('created_at', 'desc')->paginate(15);
+        $users = user::all();
         return view('calendar.requests.requests')->withRequests($requests)->withUsers($users)->with('curr_usr', $curr_usr);
     }
 
@@ -192,6 +195,9 @@ class CalendarController extends Controller
                                     ->orWhere('users.name', 'like', "%$query%")
                                     ->OrderBy('vacations.created_at', 'desc')
                                     ->get();
+
+            if(!Gate::allows('admin'))
+                $requests = $requests->where('user_id', Auth::user()->id);
 
             if($requests->count() > 0)
             {
