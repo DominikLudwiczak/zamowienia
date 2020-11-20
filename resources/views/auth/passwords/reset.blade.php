@@ -44,7 +44,7 @@
                 </form>
             </div>
             <div class='card-footer'>
-                <button class='btn btn-success float-right' form='change'>Zmień hasło</button>
+                <button class='btn btn-success float-right' name="type" value="reset" form='change'>Zmień hasło</button>
             </div>
         </div>
 @endsection

@@ -86,12 +86,9 @@
                                                     <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
                                                         <td style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 5px 0;" valign="top">
                                                             <div style="text-align: center">
-                                                                <span style="text-decoration: underline">Twoje konto już prawie jest gotowe,</span><br/> 
-                                                                wystarczy tylko, że zalogujesz się za pomocą hasła podanego ponieżej, a następnie zmienisz je na swoje własne<br/><br/>
-                                                                Twoje tymczasowe hasło to:<br/>
-                                                                <span style="font-weight: bold">{{ $pass }}</span><br/>
-                                                                <span>(ważne przez 24h)</span><br/><br/>
-                                                                <a class="btn" href="{{ $url }}">Zaloguj się</a>
+                                                                <span style="text-decoration: underline">Twoje konto już prawie jest gotowe,<br/></span>
+                                                                wystarczy tylko, że klikniesz w guzik poniżej<br/><br/>
+                                                                    <a class="btn" href="{{$url}}">Zaloguj się</a>
                                                             </div>
                                                         </td>
                                                     </tr>

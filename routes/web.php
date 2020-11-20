@@ -18,16 +18,22 @@ Route::get('/', function () {
 
 Auth::routes(['register' => false, 'reset' => false, 'confirm' => false, 'verify' => false]);
 
-//Password reset
-Route::prefix('password/reset')->middleware('CheckActive')->group(function(){
-    Route::get('/', function() {
-        return view('auth.passwords.reset');
-    })->name('password.change');
+Route::get('/verification/{id}/{token}', '\App\Http\Controllers\Auth\VerificationController@verification')->where(['id' => '[0-9]+'])->name('email_verify');
 
-    Route::post('/', '\App\Http\Controllers\Auth\ResetPasswordController@change')->middleware('CheckPasswordChange')->name('password.changing');
-});
+Route::get('/setPassword/{id}/{token}', '\App\Http\Controllers\Auth\ResetPasswordController@set')->where(['id' => '[0-9]+'])->name('set_password');
+Route::post('/setPassword/{id}/{token}', '\App\Http\Controllers\Auth\ResetPasswordController@set_store')->where(['id' => '[0-9]+']);
 
-Route::middleware('CheckEmployeePassword')->group(function(){
+
+Route::middleware('CheckVerified')->group(function(){
+    //Password reset
+    Route::prefix('password/reset')->middleware('CheckActive')->group(function(){
+        Route::get('/', function() {
+            return view('auth.passwords.reset');
+        })->name('password.change');
+
+        Route::post('/', '\App\Http\Controllers\Auth\ResetPasswordController@change')->middleware('CheckPasswordChange')->name('password.changing');
+    });
+
     Route::get('/dashboard', function() {
         return view('dashboard');
     })->middleware('CheckActive')->name('dashboard');

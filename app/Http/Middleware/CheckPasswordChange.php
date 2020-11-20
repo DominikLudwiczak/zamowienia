@@ -19,22 +19,30 @@ class CheckPasswordChange
      */
     public function handle($request, Closure $next)
     {
-        $user = User::findOrFail(Auth::id());
-        if($user->pass_changed == null && Carbon::parse($user->created_at)->add(1, 'day') < Carbon::now())
+        if($request->type === 'set')
         {
-            return redirect()->back()->withFailed('Hasło tymczasowe wygasło');
+            $request->validate([
+                'nowe_haslo' => 'required|string|min:8',
+                'potw_nowe_haslo' => 'required|string|same:nowe_haslo'
+            ],[],
+            [
+                'nowe_haslo' => 'nowe hasło',
+                'potw_nowe_haslo' => 'powtórz nowe hasło',
+            ]);
         }
-
-        $request->validate([
-            'stare_haslo' => 'required|string',
-            'nowe_haslo' => 'required|string|min:8|different:stare_haslo',
-            'potw_nowe_haslo' => 'required|string|same:nowe_haslo'
-        ],[],
-        [
-            'stare_haslo' => 'stare hasło',
-            'nowe_haslo' => 'nowe hasło',
-            'potw_nowe_haslo' => 'powtórz nowe hasło',
-        ]);
+        else
+        {
+            $request->validate([
+                'stare_haslo' => 'required|string',
+                'nowe_haslo' => 'required|string|min:8|different:stare_haslo',
+                'potw_nowe_haslo' => 'required|string|same:nowe_haslo'
+            ],[],
+            [
+                'stare_haslo' => 'stare hasło',
+                'nowe_haslo' => 'nowe hasło',
+                'potw_nowe_haslo' => 'powtórz nowe hasło',
+            ]);
+        }
         return $next($request);
     }
 }

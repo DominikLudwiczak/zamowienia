@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Auth\VerifiesEmails;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
+
+use App\User;
+use App\usersTokens;
+use Auth;
 
 class VerificationController extends Controller
 {
@@ -19,18 +24,39 @@ class VerificationController extends Controller
     |
     */
 
-    use VerifiesEmails;
+    public function verification(Request $request, $id, $token)
+    {
+        $check = true;
+        try
+        {
+            $user = User::findOrFail($id);
+            $userToken = usersTokens::whereEmail($user->email)->OrderBy('expired_at', 'desc')->first();
 
-    /**
-     * Where to redirect users after verification.
-     *
-     * @var string
-     */
-    protected $redirectTo = RouteServiceProvider::HOME;
+            if($userToken->token === $token && Carbon::now()->lte($userToken->expired_at))
+            {
+                $user->email_verified_at = date("Y-m-d H:i:s");
+                $user->save();
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+                $token = hash('sha512', Str::random(60));
+                $userToken->token = $token;
+                $userToken->expired_at = Carbon::now()->addDays(1);
+                $userToken->save();
+            }
+            else
+                $check = false;
+        }catch(\Illuminate\Database\QueryException $ex){
+            $check = false;
+        }catch(\Exception $ex){
+            $check = false;
+        }
+
+        if($check == true)
+            return redirect(route('set_password', ['id' => $id, 'token' => $token]));
+        
+        if($check != true)
+        {
+            Auth::logout();
+            return redirect(route('login'))->withFailed('wystapił błąd');
+        }
+    }
 }

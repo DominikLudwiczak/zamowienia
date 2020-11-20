@@ -6,8 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
+
+use Illuminate\Mail\Message;
+use Illuminate\Support\Facades\Password;
 
 use App\User;
+use App\usersTokens;
 use App\scheduler;
 use App\vacations;
 
@@ -29,26 +34,36 @@ class EmployeeController extends Controller
     // new - store
     public function new_store(Request $request)
     {
-        $pass = Str::random(10);
-
-        $active = false;
-        if($request->active == 'on')
-            $active = true;
-
-        $user = new User;
-        $user->name = $request->nazwa;
-        $user->email = $request->email;
-        $user->password = Hash::make($pass);
-        $user->active = $active;
-        $user->save();
-
-        return view('emails.employee')->withPass($pass)->withUrl(env('APP_URL').'/login');
         try
         {
-            Mail::send('emails.employee', array(), function($message){
-                $message->from('phumarta.sklep@gmail.com', 'PHU Marta')->to($request->email)->Subject('Nowy pracownik');
-            });
+            $pass = Str::random(10);
+
+            $active = false;
+            if($request->active == 'on')
+                $active = true;
+    
+            $user = new User;
+            $user->name = $request->nazwa;
+            $user->email = $request->email;
+            $user->password = Hash::make($pass);
+            $user->active = $active;
+            $user->save();
+
+            $token = Str::random(60);
+            $token_hash = hash('sha512', $token);
+
+            $usersToken = new usersTokens;
+            $usersToken->email = $request->email;
+            $usersToken->token = $token_hash;
+            $usersToken->expired_at = Carbon::now()->addDays(1);
+            $usersToken->save();
+
+            return view('emails.employee')->withUrl(route('email_verify', ['id' => $user->id, 'token' => $token_hash]));
+
         }catch(\Illuminate\Database\QueryException $ex){
+            return $ex;
+            return redirect()->back()->withFailed('Wystąpił błąd');
+        }catch(\Exception $ex){
             return redirect()->back()->withFailed('Wystąpił błąd');
         }
         return redirect()->back()->withSuccess('Dodano użytkownika');

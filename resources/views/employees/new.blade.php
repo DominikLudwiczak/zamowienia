@@ -27,7 +27,7 @@
                     </div>
 
                     <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="active" name="active" checked>
+                        <input type="checkbox" class="form-check-input" id="active" name="active" <?php if(old('active') == 'on'){ echo "checked";} ?>>
                         <label class="form-check-label" for="active">Aktywny</label>
                     </div>
                     

@@ -7,7 +7,7 @@ use Closure;
 use App\User;
 use Auth;
 
-class CheckEmployeePassword
+class CheckVerified
 {
     /**
      * Handle an incoming request.
@@ -18,9 +18,12 @@ class CheckEmployeePassword
      */
     public function handle($request, Closure $next)
     {
-        $usr = User::findOrFail(Auth::id());
-        if($usr->pass_changed == null)
-            return redirect()->route('password.change');
+        $user = User::findOrFail(Auth::id());
+        if($user->email_verified_at == null)
+        {
+            Auth::logout();
+            return redirect(route('login'))->withFailed('Potwierdź swój adres email');
+        }
         return $next($request);
     }
 }

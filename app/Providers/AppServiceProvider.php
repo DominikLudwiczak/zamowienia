@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         View::composer('components.nav-left', function($view){
-            $view->with('user', User::find(Auth::user()->id));
+            $view->with('user', User::find(Auth::id()));
         });
     }
 }
