@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -51,7 +52,13 @@ class VerificationController extends Controller
         }
 
         if($check == true)
+        {
+            Mail::send('emails.verified', array('url', route('set_password', ['id' => $id, 'token' => $token])), function($message){
+                $message->from('phumarta.sklep@gmail.com', 'PHU Marta')->to($request->email)->Subject('Ustaw swoje hasło');
+            });
+            // return view('emails.verified')->withUrl(route('set_password', ['id' => $id, 'token' => $token]));
             return redirect(route('set_password', ['id' => $id, 'token' => $token]));
+        }
         
         if($check != true)
         {

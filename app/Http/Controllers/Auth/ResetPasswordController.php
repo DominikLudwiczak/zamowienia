@@ -46,11 +46,11 @@ class ResetPasswordController extends Controller
             if($userToken->token === $token && Carbon::now()->lte($userToken->expired_at))
                 return view('auth.passwords.set');
         }catch(\Illuminate\Database\QueryException $ex){
-            return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodła się!');
+            return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
         }catch(\Exception $ex){
-            return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodła się!');
+            return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
         }
-        return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodła się!');
+        return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
     }
 
 
@@ -69,11 +69,11 @@ class ResetPasswordController extends Controller
                 Auth::logout();
             }
         }catch(\Illuminate\Database\QueryException $ex){
-            return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodła się!');
+            return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
         }catch(\Exception $ex){
-            return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodła się!');
+            return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
         }
-        return redirect(route('login'))->withSuccess('Ustawienie hasła powiodła się!');
+        return redirect(route('login'))->withSuccess('Ustawienie hasła powiodło się!');
     }
 
     // change password
