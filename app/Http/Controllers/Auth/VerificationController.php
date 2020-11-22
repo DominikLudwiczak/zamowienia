@@ -42,6 +42,11 @@ class VerificationController extends Controller
                 $userToken->token = $token;
                 $userToken->expired_at = Carbon::now()->addDays(1);
                 $userToken->save();
+
+                $dane = array('url' => route('set_password', ['id' => $id, 'token' => $token]));
+                Mail::send('emails.verified', $dane, function($message){
+                    $message->from('phumarta.sklep@gmail.com', 'PHU Marta')->to("ludek088@gmail.com")->Subject('Ustaw swoje hasło');
+                });
             }
             else
                 $check = false;
@@ -52,13 +57,7 @@ class VerificationController extends Controller
         }
 
         if($check == true)
-        {
-            Mail::send('emails.verified', array('url', route('set_password', ['id' => $id, 'token' => $token])), function($message){
-                $message->from('phumarta.sklep@gmail.com', 'PHU Marta')->to($request->email)->Subject('Ustaw swoje hasło');
-            });
-            // return view('emails.verified')->withUrl(route('set_password', ['id' => $id, 'token' => $token]));
             return redirect(route('set_password', ['id' => $id, 'token' => $token]));
-        }
         
         if($check != true)
         {

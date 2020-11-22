@@ -58,15 +58,15 @@ class EmployeeController extends Controller
             $usersToken->expired_at = Carbon::now()->addDays(1);
             $usersToken->save();
 
-            Mail::send('emails.employee', array('url', route('email_verify', ['id' => $user->id, 'token' => $token_hash])), function($message){
-                $message->from('phumarta.sklep@gmail.com', 'PHU Marta')->to($request->email)->Subject('Weryfikacja email');
+            $dane = array('url' => route('email_verify', ['id' => $user->id, 'token' => $token_hash]));
+            Mail::send('emails.employee', $dane, function($message){
+                $message->from('phumarta.sklep@gmail.com', 'PHU Marta')->to("ludek088@gmail.com")->Subject('Weryfikacja email');
             });
-            // return view('emails.employee')->withUrl(route('email_verify', ['id' => $user->id, 'token' => $token_hash]));
 
-        }catch(\Illuminate\Database\QueryException $ex){
-            return $ex;
+        }catch(\Illuminate\Database\QueryException $ex){            
             return redirect()->back()->withFailed('Wystąpił błąd');
         }catch(\Exception $ex){
+            return $ex;
             return redirect()->back()->withFailed('Wystąpił błąd');
         }
         return redirect()->back()->withSuccess('Dodano użytkownika');
