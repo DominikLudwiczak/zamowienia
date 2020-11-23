@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -24,7 +25,45 @@ Route::get('/', function () {
 
 Auth::routes(['register' => false, 'reset' => false, 'confirm' => false, 'verify' => false]);
 
-Route::get('/verification/{id}/{token}', 'Auth\VerificationController@verification')->where(['id' => '[0-9]+'])->name('email_verify');
+Route::get('/verification/{id}/{token}', function($id, $token){
+    $check = true;
+    try
+    {
+        $user = User::findOrFail($id);
+        $userToken = usersTokens::whereEmail($user->email)->OrderBy('expired_at', 'desc')->first();
+
+        if($userToken->token === $token && Carbon::now()->lte($userToken->expired_at))
+        {
+            $user->email_verified_at = date("Y-m-d H:i:s");
+            $user->save();
+
+            $token = hash('sha512', Str::random(60));
+            $userToken->token = $token;
+            $userToken->expired_at = Carbon::now()->addDays(1);
+            $userToken->save();
+
+            $dane = array('url' => route('set_password', ['id' => $id, 'token' => $token]));
+            Mail::send('emails.verified', $dane, function($message){
+                $message->from('phumarta.sklep@gmail.com', 'PHU Marta')->to("ludek088@gmail.com")->Subject('Ustaw swoje hasło');
+            });
+        }
+        else
+            $check = false;
+    }catch(\Illuminate\Database\QueryException $ex){
+        $check = false;
+    }catch(\Exception $ex){
+        $check = false;
+    }
+
+    if($check == true)
+        return redirect(route('set_password', ['id' => $id, 'token' => $token]));
+    
+    if($check != true)
+    {
+        Auth::logout();
+        return redirect(route('login'))->withFailed('wystapił błąd');
+    }
+})->where(['id' => '[0-9]+'])->name('email_verify');
 
 Route::get('/setPassword/{id}/{token}', function($id, $token){
     try
