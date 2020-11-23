@@ -60,7 +60,7 @@ class EmployeeController extends Controller
 
             $dane = array('url' => route('email_verify', ['id' => $user->id, 'token' => $token_hash]));
             Mail::send('emails.employee', $dane, function($message){
-                $message->from('phumarta.sklep@gmail.com', 'PHU Marta')->to("ludek088@gmail.com")->Subject('Weryfikacja email');
+                $message->from('phumarta.sklep@gmail.com', 'PHU Marta')->to((string)$request->email)->Subject('Weryfikacja email');
             });
 
         }catch(\Illuminate\Database\QueryException $ex){            
