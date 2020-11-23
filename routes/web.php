@@ -19,7 +19,7 @@ use App\usersTokens;
 |
 */
 Route::get('/', function () {
-    return redirect(route('dashboard'));
+    return redirect(route('login'));
 });
 
 Auth::routes(['register' => false, 'reset' => false, 'confirm' => false, 'verify' => false]);
