@@ -63,7 +63,7 @@ class EmployeeController extends Controller
                 $message->from('phumarta.sklep@gmail.com', 'PHU Marta')->to((string)$request->email)->Subject('Weryfikacja email');
             });
 
-        }catch(\Illuminate\Database\QueryException $ex){            
+        }catch(\Illuminate\Database\QueryException $ex){
             return redirect()->back()->withFailed('Wystąpił błąd');
         }catch(\Exception $ex){
             return redirect()->back()->withFailed('Wystąpił błąd');
