@@ -1,7 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
+use Carbon\Carbon;
 
+use App\User;
+use App\usersTokens;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,15 +19,55 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/', function () {
-    return redirect(route('login'));
+    return redirect(route('dashboard'));
 });
 
 Auth::routes(['register' => false, 'reset' => false, 'confirm' => false, 'verify' => false]);
 
-Route::get('/verification/{id}/{token}', '\App\Http\Controllers\Auth\VerificationController@verification')->where(['id' => '[0-9]+'])->name('email_verify');
+Route::get('/verification/{id}/{token}', 'Auth\VerificationController@verification')->where(['id' => '[0-9]+'])->name('email_verify');
 
-Route::get('/setPassword/{id}/{token}', '\App\Http\Controllers\Auth\ResetPasswordController@set')->where(['id' => '[0-9]+'])->name('set_password');
-Route::post('/setPassword/{id}/{token}', '\App\Http\Controllers\Auth\ResetPasswordController@set_store')->where(['id' => '[0-9]+']);
+Route::get('/setPassword/{id}/{token}', function($id, $token){
+    try
+    {
+        $user = User::findOrFail($id);
+        if($user->pass_changed == null)
+        {
+            $userToken = usersTokens::whereEmail($user->email)->OrderBy('expired_at', 'desc')->first();
+
+            if($userToken->token === $token && Carbon::now()->lte($userToken->expired_at))
+                return view('auth.passwords.set');
+        }
+    }catch(\Illuminate\Database\QueryException $ex){
+        return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
+    }catch(\Exception $ex){
+        return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');        
+    }
+    return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
+})->where(['id' => '[0-9]+'])->name('set_password');
+
+Route::post('/setPassword/{id}/{token}', function(Request $request, $id, $token){
+    try
+    {
+        $user = User::findOrFail($id);
+        if($user->pass_changed == null)
+        {
+            $userToken = usersTokens::whereEmail($user->email)->OrderBy('expired_at', 'desc')->first();
+
+            if($userToken->token === $token && Carbon::now()->lte($userToken->expired_at))
+            {
+                $user->password = Hash::make($request->nowe_haslo);
+                $user->pass_changed = date("Y-m-d H:i:s");
+                $user->save();
+                Auth::logout();
+            }
+        }
+    }catch(\Illuminate\Database\QueryException $ex){
+        return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
+    }catch(\Exception $ex){
+        return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
+    }
+    return redirect(route('login'))->withSuccess('Ustawienie hasła powiodło się!');
+})->where(['id' => '[0-9]+']);
 
 
 Route::middleware('CheckVerified')->group(function(){
@@ -31,7 +77,7 @@ Route::middleware('CheckVerified')->group(function(){
             return view('auth.passwords.reset');
         })->name('password.change');
 
-        Route::post('/', '\App\Http\Controllers\Auth\ResetPasswordController@change')->middleware('CheckPasswordChange')->name('password.changing');
+        Route::post('/', 'Auth\ResetPasswordController@change')->middleware('CheckPasswordChange')->name('password.changing');
     });
 
     Route::get('/dashboard', function() {

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -26,15 +25,6 @@ class ResetPasswordController extends Controller
     |
     */
 
-    use ResetsPasswords;
-
-    /**
-     * Where to redirect users after resetting their password.
-     *
-     * @var string
-     */
-    protected $redirectTo = RouteServiceProvider::HOME;
-
     // set password
     public function set($id, $token)
     {
@@ -48,11 +38,10 @@ class ResetPasswordController extends Controller
         }catch(\Illuminate\Database\QueryException $ex){
             return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
         }catch(\Exception $ex){
-            return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
+            return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');        
         }
         return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
     }
-
 
     // set password_store
     public function set_store(Request $request, $id, $token)
@@ -65,6 +54,7 @@ class ResetPasswordController extends Controller
             if($userToken->token === $token && Carbon::now()->lte($userToken->expired_at))
             {
                 $user->password = Hash::make($request->nowe_haslo);
+                $user->pass_changed = date("Y-m-d H:i:s");
                 $user->save();
                 Auth::logout();
             }

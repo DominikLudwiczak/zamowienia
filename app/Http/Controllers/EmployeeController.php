@@ -66,11 +66,11 @@ class EmployeeController extends Controller
         }catch(\Illuminate\Database\QueryException $ex){            
             return redirect()->back()->withFailed('Wystąpił błąd');
         }catch(\Exception $ex){
-            return $ex;
             return redirect()->back()->withFailed('Wystąpił błąd');
         }
         return redirect()->back()->withSuccess('Dodano użytkownika');
     }
+
 
     // edit
     public function edit($id)

@@ -12,6 +12,7 @@
             }
             body {
             background-color: #f6f6f6;
+            color: black;
             }
 
             .btn {
@@ -22,6 +23,7 @@
                 color: white;
                 text-decoration: none;
                 font-weight: 700;
+                color: white;
             }
             @media only screen and (max-width: 640px) {
             body {
