@@ -46,7 +46,7 @@ Route::get('/verification/{id}/{token}', function($id, $token){
 
                 $dane = array('url' => route('set_password', ['id' => $id, 'token' => $token]));
                 Mail::send('emails.verified', $dane, function($message){
-                    $message->from('phumarta.sklep@gmail.com', 'PHU Marta')->to((string)$user->email)->Subject('Ustaw swoje hasło');
+                    $message->from('phumarta.sklep@gmail.com', 'PHU Marta')->to("dominikludwiczak6@wp.pl")->Subject('Ustaw swoje hasło');
                 });
             }
             else
