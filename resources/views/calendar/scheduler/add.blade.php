@@ -17,17 +17,21 @@
                     @if(session('double') === 'double_user')
                         <div class='alert alert-danger'>Ten użytkownik ma już zapisaną zmianę w tym terminie!</div>
                     @elseif(session('double') === 'double_other_user')
-                        <div class='alert alert-danger'>Zmiany w tym sklepie pokrywają się!</div>
+                        <div class='alert alert-primary'>Czy napewno chcesz aby zmiany się pokrywały?</div>
                     @endif
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Popraw</button>
+                    @if(session('double') === 'double_other_user')
+                        <input type="hidden" name="check" value="false" form="form"/>
+                        <button type="submit" class="btn btn-success" name="schedulerid" value="0" form="form">Zatwierdź</button>
+                    @endif
                 </div>
                 </div>
             </div>
         </div>
     @endif
-    <form method='post'>
+    <form method='post' id="form">
     @csrf
         <div class="col-md-8 mx-auto mt-3">
             <div class="card">
@@ -66,6 +70,9 @@
                     
                     <div class="row col float-right">
                         <a href="{{ route('scheduler_shop', ['id' => $shopid]) }}" class='btn btn-primary ml-auto'>Cofnij</a>
+                        @if(!session('double'))
+                            <input type="hidden" name="check" value="true"/>
+                        @endif
                         <button class='btn btn-success ml-2' name="schedulerid" value="0">Dodaj</button>
                     </div>
                 </div>
