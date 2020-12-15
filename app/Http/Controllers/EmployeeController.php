@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
-use Illuminate\Mail\Message;
-use Illuminate\Support\Facades\Password;
+use App\Mail\EmployeeRegister;
+// use Illuminate\Support\Facades\Password;
 
 use App\User;
 use App\usersTokens;
@@ -58,10 +58,8 @@ class EmployeeController extends Controller
             $usersToken->expired_at = Carbon::now()->addDays(1);
             $usersToken->save();
 
-            $dane = array('url' => route('email_verify', ['id' => $user->id, 'token' => $token_hash]));
-            Mail::send('emails.employee', $dane, function($message){
-                $message->from('phumarta.sklep@gmail.com', 'PHU Marta')->to("dominikludwiczak6@wp.pl")->Subject('Weryfikacja email');
-            });
+            //wysyłanie maila
+            Mail::to($request->email)->send(new EmployeeRegister($user->id, $token_hash));
 
         }catch(\Illuminate\Database\QueryException $ex){
             return redirect()->back()->withFailed('Wystąpił błąd');

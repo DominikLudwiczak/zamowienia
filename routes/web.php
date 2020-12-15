@@ -9,6 +9,8 @@ use Carbon\Carbon;
 
 use App\User;
 use App\usersTokens;
+
+use App\Mail\EmployeeVerified;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -44,10 +46,8 @@ Route::get('/verification/{id}/{token}', function($id, $token){
                 $userToken->expired_at = Carbon::now()->addDays(1);
                 $userToken->save();
 
-                $dane = array('url' => route('set_password', ['id' => $id, 'token' => $token]));
-                Mail::send('emails.verified', $dane, function($message){
-                    $message->from('phumarta.sklep@gmail.com', 'PHU Marta')->to("dominikludwiczak6@wp.pl")->Subject('Ustaw swoje hasło');
-                });
+                //wysyłanie maila
+                Mail::to($user->email)->send(new EmployeeVerified($user->id, $token));
             }
             else
                 $check = false;

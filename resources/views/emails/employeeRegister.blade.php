@@ -78,7 +78,7 @@
                                         <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
                                             <td class="content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
                                                 <h1 class="aligncenter" style="font-family: 'Helvetica Neue',Helvetica,Arial,'Lucida Grande',sans-serif; box-sizing: border-box; font-size: 28px; color: #000; line-height: 1.2em; font-weight: 500; text-align: center; margin: 40px 0 0;" item-align="center">
-                                                    Adres potwierdzony, ustaw swoje hasło
+                                                    Zweryfikuj adres email
                                                 </h1>
                                             </td>
                                         </tr>
@@ -88,9 +88,9 @@
                                                     <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
                                                         <td style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 5px 0;" valign="top">
                                                             <div style="text-align: center">
-                                                                <span style="text-decoration: underline">Twoje konto zostało aktywowane<br/></span>
-                                                                Aby ustawić hasło, za pomocą którego będziesz się logować kliknij poniżej<br/><br/>
-                                                                    <a class="btn" href="{{$url}}">Ustaw hasło</a>
+                                                                <span style="text-decoration: underline">Twoje konto już prawie jest gotowe,<br/></span>
+                                                                wystarczy tylko, że klikniesz w guzik poniżej<br/><br/>
+                                                                    <a class="btn" href="{{$url}}">Zaloguj się</a>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -105,7 +105,7 @@
                         <table width="100%" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
                             <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
                                 <td class="aligncenter content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 12px; vertical-align: top; color: #999; text-align: center; margin: 0; padding: 0 0 20px;" tem-align="center" valign="top">
-                                    Email <a href="mailto:phumarta.sklep@gmail.com" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 12px; color: #999; text-decoration: underline; margin: 0;">phumarta.sklep@gmail.com</a>
+                                    Email <a href="mailto:sklep@phumarta.pl" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 12px; color: #999; text-decoration: underline; margin: 0;">sklep@phumarta.pl</a>
                                 </td>
                             </tr>
                         </table>
