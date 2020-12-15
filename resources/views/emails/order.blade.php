@@ -107,11 +107,11 @@ background-color: #f6f6f6;
                                             </h1>
                                         </td>
                                     </tr>
-                                    @if(session('msg'))
+                                    @if($msg)
                                         <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
                                             <td class="content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
                                                 <p class="aligncenter" style="font-family: 'Helvetica Neue',Helvetica,Arial,'Lucida Grande',sans-serif; box-sizing: border-box; font-size: 15px; color: #000; line-height: 1.2em; font-weight: 350; text-align: center; margin: 40px 0 0;" item-align="center">
-                                                    {{session('msg')}}
+                                                    {{$msg}}
                                                 </p>
                                             </td>
                                         </tr>
@@ -168,7 +168,7 @@ background-color: #f6f6f6;
                     <table width="100%" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
                         <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
                             <td class="aligncenter content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 12px; vertical-align: top; color: #999; text-align: center; margin: 0; padding: 0 0 20px;" tem-align="center" valign="top">
-                                Email <a href="mailto:phumarta.sklep@gmail.com" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 12px; color: #999; text-decoration: underline; margin: 0;">phumarta.sklep@gmail.com</a>
+                                Email <a href="mailto:zamowienia@phumarta.pl" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 12px; color: #999; text-decoration: underline; margin: 0;">zamowienia@phumarta.pl</a>
                             </td>
                         </tr>
                     </table>

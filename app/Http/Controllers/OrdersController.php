@@ -11,6 +11,7 @@ use App\suppliers;
 use App\user;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\Order;
 use Session;
 use Auth;
 use hash;
@@ -294,21 +295,17 @@ class OrdersController extends Controller
 
     public function send(Request $request)
     {
-        session(['msg' => $request->msg]);
         try
         {
-            $data=array();
-            Mail::send('emails.order', $data, function($message){
-                $message->from('phumarta.sklep@gmail.com', 'PHU Marta')->to(session('supplier')->email)->Subject('Zamówienie '.date('d.m.Y'));
-            });
             $order_id = $this->order_id_generate();
-            $order = [
-                'order_id' => $order_id,
-                'supplier' => session('supplier')->name,
-                'user_id' => Auth::user()->id,
-                'msg' => session('msg')
-            ];
-            orders::create($order);
+
+            $order = new orders;
+            $order->order_id = $order_id;
+            $order->supplier = session('supplier')->name;
+            $order->user_id = Auth::id();
+            $order->msg = $request->msg;
+            $order->save();
+
             for($i=0; $i < count(session('order')); $i++)
             {
                 $order_details = [
@@ -318,7 +315,10 @@ class OrdersController extends Controller
                 ];
                 orderDetails::create($order_details);
             }
-            Session::forget(['order', 'supplier', 'msg']);
+            //wysyłanie maila
+            Mail::to(session('supplier')->email)->send(new Order($order));
+            Session::forget(['order', 'supplier']);
+            
             return redirect(route('dashboard'))->with('success', 'Zamówienie zostało wysłane');
         }catch(\Illuminate\Database\QueryException $ex){
             return redirect(route('new_order', ['supplier_name' => session('supplier')->name]))->with('failed', 'Nie udało się wysłać zamówienia, spróbuj ponownie później');
