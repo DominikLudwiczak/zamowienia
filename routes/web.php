@@ -1,16 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
 
-use App\User;
-use App\usersTokens;
-
-use App\Mail\EmployeeVerified;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,104 +18,22 @@ Route::get('/', function () {
 
 Auth::routes(['register' => false, 'reset' => false, 'confirm' => false, 'verify' => false]);
 
-Route::get('/verification/{id}/{token}', function($id, $token){
-    $check = true;
-    try
-    {
-        $user = User::findOrFail($id);
-        if($user->email_verified_at == null)
-        {
-            $userToken = usersTokens::whereEmail($user->email)->OrderBy('expired_at', 'desc')->first();
+Route::get('/verification/{id}/{token}', 'Auth\VerificationController@verification')->where(['id' => '[0-9]+', 'token' => '[a-zA-Z0-9]+'])->name('email_verify');
 
-            if($userToken->token === $token && Carbon::now()->lte($userToken->expired_at))
-            {
-                $user->email_verified_at = date("Y-m-d H:i:s");
-                $user->save();
-
-                $token = hash('sha512', Str::random(60));
-                $userToken->token = $token;
-                $userToken->expired_at = Carbon::now()->addDays(1);
-                $userToken->save();
-
-                //wysyłanie maila
-                Mail::to($user->email)->send(new EmployeeVerified($user->id, $token));
-            }
-            else
-                $check = false;
-        }
-    }catch(\Illuminate\Database\QueryException $ex){
-        $check = false;
-    }catch(\Exception $ex){
-        $check = false;
-    }
-
-    if($check == true)
-        return redirect(route('set_password', ['id' => $id, 'token' => $token]));
-    
-    if($check != true)
-    {
-        Auth::logout();
-        return redirect(route('login'))->withFailed('wystapił błąd');
-    }
-})->where(['id' => '[0-9]+'])->name('email_verify');
-
-Route::get('/setPassword/{id}/{token}', function($id, $token){
-    try
-    {
-        $user = User::findOrFail($id);
-        if($user->pass_changed == null)
-        {
-            $userToken = usersTokens::whereEmail($user->email)->OrderBy('expired_at', 'desc')->first();
-
-            if($userToken->token === $token && Carbon::now()->lte($userToken->expired_at))
-                return view('auth.passwords.set');
-        }
-    }catch(\Illuminate\Database\QueryException $ex){
-        return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
-    }catch(\Exception $ex){
-        return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');        
-    }
-    return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
-})->where(['id' => '[0-9]+'])->name('set_password');
-
-Route::post('/setPassword/{id}/{token}', function(Request $request, $id, $token){
-    try
-    {
-        $user = User::findOrFail($id);
-        if($user->pass_changed == null)
-        {
-            $userToken = usersTokens::whereEmail($user->email)->OrderBy('expired_at', 'desc')->first();
-
-            if($userToken->token === $token && Carbon::now()->lte($userToken->expired_at))
-            {
-                $user->password = Hash::make($request->nowe_haslo);
-                $user->pass_changed = date("Y-m-d H:i:s");
-                $user->save();
-                Auth::logout();
-            }
-        }
-    }catch(\Illuminate\Database\QueryException $ex){
-        return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
-    }catch(\Exception $ex){
-        return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
-    }
-    return redirect(route('login'))->withSuccess('Ustawienie hasła powiodło się!');
-})->where(['id' => '[0-9]+']);
+Route::get('/setPassword/{id}/{token}', 'Auth\VerificationController@setPassword')->where(['id' => '[0-9]+', 'token' => '[a-zA-Z0-9]+'])->name('set_password');
+Route::post('/setPassword/{id}/{token}', 'Auth\VerificationController@setPassword_store')->where(['id' => '[0-9]+', 'token' => '[a-zA-Z0-9]+']);
 
 
 Route::middleware('CheckVerified')->group(function(){
     //Password reset
     Route::prefix('password/reset')->middleware('CheckActive')->group(function(){
-        Route::get('/', function() {
-            return view('auth.passwords.reset');
-        })->name('password.change');
+
+        Route::view('/', 'auth.passwords.reset')->name('password.change');
 
         Route::post('/', 'Auth\ResetPasswordController@change')->middleware('CheckPasswordChange')->name('password.changing');
     });
 
-    Route::get('/dashboard', function() {
-        return view('dashboard');
-    })->middleware('CheckActive')->name('dashboard');
+    Route::view('/dashboard', 'dashboard')->middleware('CheckActive')->name('dashboard');
 
     //Suppliers
     Route::prefix('suppliers')->group(function() {
@@ -133,9 +42,7 @@ Route::middleware('CheckVerified')->group(function(){
 
         Route::get('/search', 'SuppliersController@search')->name('suppliers_search');
 
-        Route::get('/new', function() {
-            return view('suppliers.new_supplier');
-        })->middleware('CheckActive')->middleware('CheckAdmin')->name('new_supplier');
+        Route::view('/new', 'suppliers.new_supplier')->middleware('CheckActive')->middleware('CheckAdmin')->name('new_supplier');
 
         Route::post('/new', 'SuppliersController@add_supplier')->middleware('CheckSupplier')->name('add_supplier');
 
@@ -240,9 +147,7 @@ Route::middleware('CheckVerified')->group(function(){
 
         Route::post('/delete', 'ShopsController@delete')->name('delete_shop');
 
-        Route::get('/add', function(){
-            return view('shops.add');
-        })->name('add_shop');
+        Route::view('/add', 'shops.add')->name('add_shop');
 
         Route::post('/add', 'ShopsController@add_store')->middleware('CheckShop');
     });
@@ -253,9 +158,7 @@ Route::middleware('CheckVerified')->group(function(){
         Route::middleware('CheckAdmin')->group(function() {
             Route::get('/', 'EmployeeController@all')->name('employees_admin');
 
-            Route::get('/new', function(){
-                return view('employees.new');
-            })->name('new_employee');
+            Route::view('/new', 'employees.new')->name('new_employee');
             Route::post('/new', 'EmployeeController@new_store')->middleware('CheckEmployee');
 
             Route::get('/edit/{id}', 'EmployeeController@edit')->where(['id' => '[0-9]+'])->name('edit_employee');

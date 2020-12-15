@@ -18,6 +18,8 @@ class EmployeeRegister extends Mailable
      */
     public function __construct($id, $token_hash)
     {
+        $this->middleware('CheckActive');
+        $this->middleware('CheckAdmin');
         $this->id = $id;
         $this->token_hash = $token_hash;
     }
