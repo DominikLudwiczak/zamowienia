@@ -275,7 +275,7 @@ Route::middleware('CheckVerified')->middleware('CheckActive')->group(function(){
             Route::post('/new', 'EmployeeController@new_store')->middleware('CheckEmployee');
 
             Route::get('/edit/{id}', 'EmployeeController@edit')->where(['id' => '[0-9]+'])->name('edit_employee');
-            Route::post('/edit/{id}', 'EmployeeController@edit_store')->where(['id' => '[0-9]+']);
+            Route::post('/edit/{id}', 'EmployeeController@edit_store')->where(['id' => '[0-9]+'])->middleware('CheckEmployeeEdit');
 
             Route::post('/delete', 'EmployeeController@delete')->name('delete_employee');
 

@@ -72,6 +72,7 @@ class Kernel extends HttpKernel
         'CheckShop' => \App\Http\Middleware\CheckShop::class,
         'CheckScheduler' => \App\Http\Middleware\CheckScheduler::class,
         'CheckEmployee' => \App\Http\Middleware\CheckEmployee::class,
+        'CheckEmployeeEdit' => \App\Http\Middleware\CheckEmployeeEdit::class,
         'CheckVerified' => \App\Http\Middleware\CheckVerified::class,
     ];
 }

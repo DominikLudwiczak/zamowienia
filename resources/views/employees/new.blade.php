@@ -3,7 +3,7 @@
 @section('title', '- pracownicy')
 
 @section('content')
-<h1 style='text-decoration: underline;' class='col-md-7 pt-3 pb-3'>Dodawanie pracownika</h1>
+    <h1 style='text-decoration: underline;' class='col-md-7 pt-3 pb-3'>Dodawanie pracownika</h1>
     <div class='col-md-8 offset-md-2'>
         <div class='card'>
             <div class='card-header'>
