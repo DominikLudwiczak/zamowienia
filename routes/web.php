@@ -280,6 +280,8 @@ Route::middleware('CheckVerified')->middleware('CheckActive')->group(function(){
             Route::post('/delete', 'EmployeeController@delete')->name('delete_employee');
 
             Route::get('/search', 'EmployeeController@search')->name('employees_search');
+
+            Route::post('/resend/{id}', 'EmployeeController@resend')->where(['id' => '[0-9]+'])->name('employee_resend');
         });
 
         // user
