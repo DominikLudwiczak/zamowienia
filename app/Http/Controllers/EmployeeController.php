@@ -87,7 +87,15 @@ class EmployeeController extends Controller
     {
         try
         {
-            
+            $active = false;
+            if($request->active == 'on')
+                $active = true;
+
+            $user = User::findOrFail($id);
+            $user->name = $request->nazwa;
+            $user->email = $request->email;
+            $user->active = $active;
+            $user->save();
         }catch(\Illuminate\Database\QueryException $ex){
             return redirect()->back()->withFailed('Wystąpił błąd');
         }

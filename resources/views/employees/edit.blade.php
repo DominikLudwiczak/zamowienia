@@ -41,7 +41,7 @@
                         <hr/>
                     @endif
                     
-                    <button class='btn btn-success float-right ml-2'>Dodaj</button>
+                    <button class='btn btn-success float-right ml-2'>Zapisz</button>
                     <a href="{{ route('employees_admin') }}" class='btn btn-primary float-right'>Cofnij</a>
                 </form>
             </div>
