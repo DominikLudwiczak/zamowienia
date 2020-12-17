@@ -26,16 +26,15 @@
 
                     <?php 
                         $min = date('Y-m-d', strtotime('+1 day'));
-                        $max = date('Y-m-d', strtotime('+1 month 1 day'));
                     ?>
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label for="start">Początek:</label>
-                            <input type='date' id='start' name='start' class='form-control' value="{{old('start')}}" min="{{$min}}" max="{{$max ?? ''}}" required/>
+                            <input type='date' id='start' name='start' class='form-control' value="{{old('start')}}" <?php if(!Gate::allows('admin')){ echo "min=$min";}?> required/>
                         </div>
                         <div class="col-md-6">
                             <label for="end">Koniec:</label>
-                            <input type='date' id='end' name='end' class='form-control' value="{{old('end')}}" min="{{$min}}" max="{{$max ?? ''}}" required/>
+                            <input type='date' id='end' name='end' class='form-control' value="{{old('end')}}" <?php if(!Gate::allows('admin')){ echo "min=$min";}?> required/>
                         </div>
                     </div>
                     

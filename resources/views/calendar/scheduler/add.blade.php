@@ -16,6 +16,8 @@
                 <div class="modal-body">
                     @if(session('double') === 'double_user')
                         <div class='alert alert-danger'>Ten użytkownik ma już zapisaną zmianę w tym terminie!</div>
+                    @elseif(session('double') === 'vacation')
+                        <div class='alert alert-danger'>Ten użytkownik tym terminie jest na urlopie lub ma nie rozpatrzony wniosek o urlop!</div>
                     @elseif(session('double') === 'double_other_user')
                         <div class='alert alert-primary'>Czy napewno chcesz aby zmiany się pokrywały?</div>
                     @endif
@@ -70,7 +72,7 @@
                     
                     <div class="row col float-right">
                         <a href="{{ route('scheduler_shop', ['id' => $shopid]) }}" class='btn btn-primary ml-auto'>Cofnij</a>
-                        @if(!session('double'))
+                        @if(session('double') !== 'double_other_user')
                             <input type="hidden" name="check" value="true"/>
                         @endif
                         <button class='btn btn-success ml-2' name="schedulerid" value="0">Dodaj</button>

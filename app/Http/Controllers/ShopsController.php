@@ -8,14 +8,6 @@ use App\shops;
 
 class ShopsController extends Controller
 {
-    // Konstruktor
-    public function __construct()
-    {
-        $this->middleware('CheckActive');
-        $this->middleware('CheckAdmin');
-    }
-
-
     // shops
     public function shops()
     {

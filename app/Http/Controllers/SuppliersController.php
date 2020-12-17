@@ -9,13 +9,6 @@ use App\suppliers;
 
 class SuppliersController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('CheckActive');
-        $this->middleware('CheckAdmin');
-    }
-    
-
     public function suppliers()
     {
         $suppliers = suppliers::orderBy('name')->paginate(15);

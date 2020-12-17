@@ -9,13 +9,6 @@ use App\suppliers;
 
 class ProductsController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('CheckActive');
-        $this->middleware('CheckAdmin');
-    }
-
-
     public function products()
     {
         $products = products::join('suppliers', 'suppliers.id', '=', 'products.supplier_id')

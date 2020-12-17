@@ -14,7 +14,6 @@ class CalendarController extends Controller
     // konstruktor
     public function __construct()
     {
-        $this->middleware('CheckActive');
         $this->miesiace=['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'];
     }
 

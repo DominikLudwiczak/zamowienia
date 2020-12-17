@@ -137,25 +137,25 @@ Route::post('/setPassword/{id}/{token}', function(Request $request, $id, $token)
 })->where(['id' => '[0-9]+', 'token' => '[a-zA-Z0-9]+']);
 
 
-Route::middleware('CheckVerified')->group(function(){
+Route::middleware('CheckVerified')->middleware('CheckActive')->group(function(){
     //Password reset
-    Route::prefix('password/reset')->middleware('CheckActive')->group(function(){
+    Route::prefix('password/reset')->group(function(){
 
         Route::view('/', 'auth.passwords.reset')->name('password.change');
 
         Route::post('/', 'Auth\ResetPasswordController@change')->middleware('CheckPasswordChange')->name('password.changing');
     });
 
-    Route::view('/dashboard', 'dashboard')->middleware('CheckActive')->name('dashboard');
+    Route::view('/dashboard', 'dashboard')->name('dashboard');
 
     //Suppliers
-    Route::prefix('suppliers')->group(function() {
+    Route::prefix('suppliers')->middleware('CheckAdmin')->group(function() {
 
         Route::get('/', 'SuppliersController@suppliers')->name('suppliers');
 
         Route::get('/search', 'SuppliersController@search')->name('suppliers_search');
 
-        Route::view('/new', 'suppliers.new_supplier')->middleware('CheckActive')->middleware('CheckAdmin')->name('new_supplier');
+        Route::view('/new', 'suppliers.new_supplier')->name('new_supplier');
 
         Route::post('/new', 'SuppliersController@add_supplier')->middleware('CheckSupplier')->name('add_supplier');
 
@@ -167,7 +167,7 @@ Route::middleware('CheckVerified')->group(function(){
     });
 
     //Products
-    Route::prefix('products')->group(function() {
+    Route::prefix('products')->middleware('CheckAdmin')->group(function() {
         
         Route::get('/', 'ProductsController@products')->name('products');
 
@@ -185,7 +185,7 @@ Route::middleware('CheckVerified')->group(function(){
     });
 
     //Orders
-    Route::prefix('orders')->group(function() {
+    Route::prefix('orders')->middleware('CheckAdmin')->group(function() {
         Route::get('/', 'OrdersController@orders')->name('orders');
 
         Route::get('/search', 'OrdersController@search')->name('orders_search');
@@ -250,7 +250,7 @@ Route::middleware('CheckVerified')->group(function(){
     });
 
     // Shops
-    Route::prefix('shops')->group(function() {
+    Route::prefix('shops')->middleware('CheckAdmin')->group(function() {
         Route::get('/', 'ShopsController@shops')->name('shops');
 
         Route::get('/search', 'ShopsController@search')->name('shops_search');

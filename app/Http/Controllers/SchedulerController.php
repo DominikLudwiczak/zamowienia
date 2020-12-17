@@ -14,7 +14,6 @@ class SchedulerController extends Controller
     // konstruktor
     public function __construct()
     {
-        $this->middleware('CheckActive');
         $this->miesiace=['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'];
     }
 
@@ -22,34 +21,49 @@ class SchedulerController extends Controller
     // scheduler_user
     public function scheduler_user($month=null, $year=null)
     {
-        if($month==null)
-            $month = date('m');
-        if($year==null)
-            $year = date('Y');
-        $month = str_pad($month, 2, 0, STR_PAD_LEFT);
-        $shops = shops::all();
-        $schedulers = scheduler::where('date', 'like', '%'.$year."-".$month.'%')->where('user_id', Auth::user()->id)->OrderBy('start')->get();
+        try
+        {
+            if($month==null)
+                $month = date('m');
+            if($year==null)
+                $year = date('Y');
+            $month = str_pad($month, 2, 0, STR_PAD_LEFT);
+            $shops = shops::all();
+            $schedulers = scheduler::where('date', 'like', '%'.$year."-".$month.'%')->where('user_id', Auth::user()->id)->OrderBy('start')->get();
+        }catch(\Illuminate\Database\QueryException $ex){
+            return redirect()->back()->withFailed('Wystąpił błąd');    
+        }
         return view('calendar.scheduler.scheduler_user')->withMonth($month)->withYear($year)->withMiesiace($this->miesiace)->withSchedulers($schedulers)->withShops($shops);
     }
 
     // scheduler_admin
     public function scheduler_admin()
     {
-        $shops = shops::all();
+        try
+        {
+            $shops = shops::all();
+        }catch(\Illuminate\Database\QueryException $ex){
+            return redirect()->back()->withFailed('Wystąpił błąd');    
+        }
         return view('calendar.scheduler.scheduler_admin')->withShops($shops);
     }
 
     // scheduler_shop
     public function scheduler_shop($id, $month=null, $year=null)
     {
-        if($month==null)
-            $month = date('m');
-        if($year==null)
-            $year = date('Y');
-        $month = str_pad($month, 2, 0, STR_PAD_LEFT);
-        $shop = shops::findOrFail($id);
-        $users = User::all();
-        $schedulers = scheduler::where('date', 'like', '%'.$year."-".$month.'%')->where('shop_id', $id)->OrderBy('start')->get();
+        try
+        {
+            if($month==null)
+                $month = date('m');
+            if($year==null)
+                $year = date('Y');
+            $month = str_pad($month, 2, 0, STR_PAD_LEFT);
+            $shop = shops::findOrFail($id);
+            $users = User::all();
+            $schedulers = scheduler::where('date', 'like', '%'.$year."-".$month.'%')->where('shop_id', $id)->OrderBy('start')->get();
+        }catch(\Illuminate\Database\QueryException $ex){
+            return redirect()->back()->withFailed('Wystąpił błąd');    
+        }
         return view('calendar.scheduler.scheduler_shop')->withMonth($month)->withYear($year)->withMiesiace($this->miesiace)->withShop($shop)->withSchedulers($schedulers)->withUsers($users);
     }
 
@@ -57,7 +71,12 @@ class SchedulerController extends Controller
     // scheduler add
     public function add($id)
     {
-        $users = User::whereActive(1)->get();
+        try
+        {
+            $users = User::whereActive(1)->get();
+        }catch(\Illuminate\Database\QueryException $ex){
+            return redirect()->back()->withFailed('Wystąpił błąd');    
+        }
         return view('calendar.scheduler.add')->withUsers($users)->withShopid($id);
     }
 
@@ -83,19 +102,34 @@ class SchedulerController extends Controller
     // scheduler view
     public function view($id)
     {
-        $work = scheduler::findOrFail($id);
-        $user = User::findOrFail($work->user_id);
-        $shop = shops::findOrFail($work->shop_id);
+        try
+        {
+            $work = scheduler::findOrFail($id);
+            if($work->user_id != Auth::id())
+                return redirect()->back()->withFailed('Nie masz dostępu do tego zasobu!');
+            else
+            {
+                $user = User::findOrFail($work->user_id);
+                $shop = shops::findOrFail($work->shop_id);
+            }
+        }catch(\Illuminate\Database\QueryException $ex){
+            return redirect()->back()->withFailed('Wystąpił błąd');
+        }
         return view('calendar.scheduler.view')->withWork($work)->withUser($user)->withShop($shop);
     }
 
     // scheduler edit
     public function edit($id)
     {
-        $work = scheduler::findOrFail($id);
-        $users = User::whereActive(1)->get();
-        $shop = shops::findOrFail($work->shop_id);
-        $user = User::findOrFail($work->user_id);
+        try
+        {
+            $work = scheduler::findOrFail($id);
+            $users = User::whereActive(1)->get();
+            $shop = shops::findOrFail($work->shop_id);
+            $user = User::findOrFail($work->user_id);
+        }catch(\Illuminate\Database\QueryException $ex){
+            return redirect()->back()->withFailed('Wystąpił błąd');    
+        }
         return view('calendar.scheduler.edit')->withWork($work)->withUsers($users)->withShop($shop)->with('user', $user);
     }
 

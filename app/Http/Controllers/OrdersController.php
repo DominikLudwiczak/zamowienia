@@ -18,13 +18,6 @@ use hash;
 
 class OrdersController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('CheckActive');
-        $this->middleware('CheckAdmin');
-    }
-
-
     public function orders()
     {
         $orders = orders::join('users', 'users.id', '=', 'orders.user_id')
