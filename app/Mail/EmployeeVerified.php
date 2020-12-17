@@ -30,6 +30,6 @@ class EmployeeVerified extends Mailable
     public function build()
     {
         $url = route('set_password', ['id' => $this->id, 'token' => $this->token]);
-        return $this->subject('Ustaw swoje hasło')->view('email.employeeVerified')->withUrl($url);
+        return $this->subject('Ustaw swoje hasło')->view('emails.employeeVerified')->withUrl($url);
     }
 }

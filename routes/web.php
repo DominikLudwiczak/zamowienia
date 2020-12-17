@@ -2,6 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 
+
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
+
+use App\User;
+use App\usersTokens;
+
+use App\Mail\EmployeeVerified;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,10 +29,112 @@ Route::get('/', function () {
 
 Auth::routes(['register' => false, 'reset' => false, 'confirm' => false, 'verify' => false]);
 
-Route::get('/verification/{id}/{token}', 'Auth\VerificationController@verification')->where(['id' => '[0-9]+', 'token' => '[a-zA-Z0-9]+'])->name('email_verify');
+// weryfikacja pracownika
+Route::get('/verification/{id}/{token}', function($id, $token){
+    $check = true;
+    try
+    {
+        $user = User::findOrFail($id);
+        if($user->email_verified_at == null)
+        {
+            $userToken = usersTokens::whereEmail($user->email)->OrderBy('expired_at', 'desc')->first();
 
-Route::get('/setPassword/{id}/{token}', 'Auth\VerificationController@setPassword')->where(['id' => '[0-9]+', 'token' => '[a-zA-Z0-9]+'])->name('set_password');
-Route::post('/setPassword/{id}/{token}', 'Auth\VerificationController@setPassword_store')->where(['id' => '[0-9]+', 'token' => '[a-zA-Z0-9]+']);
+            if($userToken->token === $token && Carbon::now()->lte($userToken->expired_at))
+            {
+                $user->email_verified_at = date("Y-m-d H:i:s");
+                $user->save();
+
+                $token = hash('sha512', Str::random(60));
+                $userToken->token = $token;
+                $userToken->expired_at = Carbon::now()->addDays(1);
+                $userToken->save();
+            }
+            else
+                $check = false;
+        }
+        else
+            $check = false;
+    }catch(\Illuminate\Database\QueryException $ex){
+        $check = false;
+    }catch(\Exception $ex){
+        $check = false;
+    }
+
+    if($check == true)
+    {
+        try
+        {
+            //wysyłanie maila
+            Mail::to($user->email)->send(new EmployeeVerified($user->id, $token));
+        }catch(\Exception $ex){
+            $check = false;
+        }
+        if($check == true)
+            return redirect(route('set_password', ['id' => $id, 'token' => $token]));
+    }
+
+    if($check != true)
+    {
+        Auth::logout();
+        return redirect(route('login'))->withFailed('wystapił błąd');
+    }
+})->where(['id' => '[0-9]+', 'token' => '[a-zA-Z0-9]+'])->name('email_verify');
+
+
+// ustawienie hasła
+Route::get('/setPassword/{id}/{token}', function($id, $token){
+    try
+    {
+        $user = User::findOrFail($id);
+        if($user->pass_changed == null)
+        {
+            $userToken = usersTokens::whereEmail($user->email)->OrderBy('expired_at', 'desc')->first();
+
+            if($userToken->token === $token && Carbon::now()->lte($userToken->expired_at))
+                return view('auth.passwords.set');
+        }
+    }catch(\Illuminate\Database\QueryException $ex){
+        return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
+    }catch(\Exception $ex){
+        return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');        
+    }
+    return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
+})->where(['id' => '[0-9]+', 'token' => '[a-zA-Z0-9]+'])->name('set_password');
+
+
+// zapisywanie nowego hasła
+Route::post('/setPassword/{id}/{token}', function(Request $request, $id, $token){
+    try
+    {
+        $check = true;
+        $user = User::findOrFail($id);
+        if($user->pass_changed == null)
+        {
+            $userToken = usersTokens::whereEmail($user->email)->OrderBy('expired_at', 'desc')->first();
+
+            if($userToken->token === $token && Carbon::now()->lte($userToken->expired_at))
+            {
+                $user->password = Hash::make($request->nowe_haslo);
+                $user->pass_changed = date("Y-m-d H:i:s");
+                $user->save();
+                Auth::logout();
+            }
+            else
+                $check = false;
+        }
+        else
+            $check = false;
+    }catch(\Illuminate\Database\QueryException $ex){
+        $check = false;
+    }catch(\Exception $ex){
+        $check = false;
+    }
+
+    if($check == true)
+        return redirect(route('login'))->withSuccess('Ustawienie hasła powiodło się!');
+    else
+        return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
+})->where(['id' => '[0-9]+', 'token' => '[a-zA-Z0-9]+']);
 
 
 Route::middleware('CheckVerified')->group(function(){

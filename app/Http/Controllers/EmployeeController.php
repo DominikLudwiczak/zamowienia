@@ -57,15 +57,20 @@ class EmployeeController extends Controller
             $usersToken->token = $token_hash;
             $usersToken->expired_at = Carbon::now()->addDays(1);
             $usersToken->save();
-
-            //wysyłanie maila
-            Mail::to($request->email)->send(new EmployeeRegister($user->id, $token_hash));
-
         }catch(\Illuminate\Database\QueryException $ex){
             return redirect()->back()->withFailed('Wystąpił błąd');
         }catch(\Exception $ex){
             return redirect()->back()->withFailed('Wystąpił błąd');
         }
+
+        try
+        {
+            //wysyłanie maila
+            Mail::to($request->email)->send(new EmployeeRegister($user->id, $token_hash));
+        }catch(\Exception $ex){
+            return redirect()->back()->withFailed('Wystąpił błąd');
+        }
+        
         return redirect()->back()->withSuccess('Dodano użytkownika');
     }
 
