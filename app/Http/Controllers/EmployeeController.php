@@ -7,9 +7,10 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Auth;
 
 use App\Mail\EmployeeRegister;
-// use Illuminate\Support\Facades\Password;
+use App\Mail\NewEmployee;
 
 use App\User;
 use App\usersTokens;
