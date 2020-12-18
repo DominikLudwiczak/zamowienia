@@ -31,7 +31,7 @@
                         <label class="form-check-label" for="active">Aktywny</label>
                     </div>
 
-                    @if($user->email_verified_at == null)
+                    <!-- @if($user->email_verified_at == null)
                         <hr/>
                             <div class="text-center">
                                 <p class="text-danger">Ten użytkownik nie ma potwierdzonego adresu email! Czy wysłać jeszcze raz email z linkiem 
@@ -39,7 +39,7 @@
                                 <button class='btn btn-primary' form="" data-target="#danger" data-toggle="modal">Wyślij</button>
                             </div>
                         <hr/>
-                    @endif
+                    @endif -->
                     
                     <button class='btn btn-success float-right ml-2'>Zapisz</button>
                     <a href="{{ route('employees_admin') }}" class='btn btn-primary float-right'>Cofnij</a>
@@ -49,7 +49,7 @@
     </div>
 
     <!-- modal danger -->
-        <form method="post" action="{{ route('employee_resend', ['id' => $user->id]) }}">
+        <!-- <form method="post" action="{{ route('employee_resend', ['id' => $user->id]) }}">
         @csrf
             <div class="modal fade" tabindex="-1" role="dialog" role="dialog" id="danger" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -70,6 +70,6 @@
                     </div>
                 </div>
             </div>
-        </form>
+        </form> -->
     <!-- end modal -->
 @endsection

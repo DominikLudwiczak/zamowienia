@@ -66,8 +66,7 @@ class EmployeeController extends Controller
         try
         {
             // wysyłanie maila
-            return view('emails.newEmployee')->withName($user->name)->withPass($pass);
-            // Mail::to(Auth::user()->email)->send(new NewEmployee($user->name, $pass));
+            Mail::to(Auth::user()->email)->send(new NewEmployee($user->name, $pass));
         }catch(\Exception $ex){
             return redirect()->back()->withFailed('Wystąpił błąd');
         }
@@ -171,37 +170,37 @@ class EmployeeController extends Controller
 
 
     // resend activation email
-    public function resend($id)
-    {
-        try
-        {
-            $user = User::findOrFail($id);
-            $userToken = usersTokens::whereEmail($user->email)->OrderBy('expired_at', 'desc')->first();
+    // public function resend($id)
+    // {
+    //     try
+    //     {
+    //         $user = User::findOrFail($id);
+    //         $userToken = usersTokens::whereEmail($user->email)->OrderBy('expired_at', 'desc')->first();
 
-            if(Carbon::now()->lte($userToken->expired_at))
-                return redirect()->back()->withFailed('Link aktywacyjny tego użytkownika jest jeszcze aktywny');
-            else
-            {
-                $token_hash = hash('sha512', Str::random(60));
-                $usersToken = new usersTokens;
-                $usersToken->email = $user->email;
-                $usersToken->token = $token_hash;
-                $usersToken->expired_at = Carbon::now()->addDays(1);
-                $usersToken->save();
-            }
-        }catch(\Illuminate\Database\QueryException $ex){
-            return redirect()->back()->withFailed('Wystąpił błąd');
-        }catch(\Exception $ex){
-            return redirect()->back()->withFailed('Wystąpił błąd');
-        }
+    //         if(Carbon::now()->lte($userToken->expired_at))
+    //             return redirect()->back()->withFailed('Link aktywacyjny tego użytkownika jest jeszcze aktywny');
+    //         else
+    //         {
+    //             $token_hash = hash('sha512', Str::random(60));
+    //             $usersToken = new usersTokens;
+    //             $usersToken->email = $user->email;
+    //             $usersToken->token = $token_hash;
+    //             $usersToken->expired_at = Carbon::now()->addDays(1);
+    //             $usersToken->save();
+    //         }
+    //     }catch(\Illuminate\Database\QueryException $ex){
+    //         return redirect()->back()->withFailed('Wystąpił błąd');
+    //     }catch(\Exception $ex){
+    //         return redirect()->back()->withFailed('Wystąpił błąd');
+    //     }
 
-        try
-        {
-            //wysyłanie maila
-            Mail::to($request->email)->send(new EmployeeRegister($user->id, $token_hash));
-        }catch(\Exception $ex){
-            return redirect()->back()->withFailed('Wystąpił błąd');
-        }
-        return redirect()->back()->withSuccess('Email z linkiem aktywacyjnym został wysłany!');
-    }
+    //     try
+    //     {
+    //         //wysyłanie maila
+    //         Mail::to($request->email)->send(new EmployeeRegister($user->id, $token_hash));
+    //     }catch(\Exception $ex){
+    //         return redirect()->back()->withFailed('Wystąpił błąd');
+    //     }
+    //     return redirect()->back()->withSuccess('Email z linkiem aktywacyjnym został wysłany!');
+    // }
 }
