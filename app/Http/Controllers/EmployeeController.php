@@ -36,7 +36,7 @@ class EmployeeController extends Controller
     {
         try
         {
-            $pass = Str::random(10);
+            $pass = Str::random(15);
 
             $active = false;
             if($request->active == 'on')
@@ -49,14 +49,14 @@ class EmployeeController extends Controller
             $user->active = $active;
             $user->save();
 
-            $token = Str::random(60);
-            $token_hash = hash('sha512', $token);
+            // $token = Str::random(60);
+            // $token_hash = hash('sha512', $token);
 
-            $usersToken = new usersTokens;
-            $usersToken->email = $request->email;
-            $usersToken->token = $token_hash;
-            $usersToken->expired_at = Carbon::now()->addDays(1);
-            $usersToken->save();
+            // $usersToken = new usersTokens;
+            // $usersToken->email = $request->email;
+            // $usersToken->token = $token_hash;
+            // $usersToken->expired_at = Carbon::now()->addDays(1);
+            // $usersToken->save();
         }catch(\Illuminate\Database\QueryException $ex){
             return redirect()->back()->withFailed('Wystąpił błąd');
         }catch(\Exception $ex){
@@ -65,11 +65,20 @@ class EmployeeController extends Controller
 
         try
         {
-            //wysyłanie maila
-            Mail::to($request->email)->send(new EmployeeRegister($user->id, $token_hash));
+            // wysyłanie maila
+            return view('emails.newEmployee')->withName($user->name)->withPass($pass);
+            // Mail::to(Auth::user()->email)->send(new NewEmployee($user->name, $pass));
         }catch(\Exception $ex){
             return redirect()->back()->withFailed('Wystąpił błąd');
         }
+
+        // try
+        // {
+        //     // wysyłanie maila
+        //     Mail::to($request->email)->send(new EmployeeRegister($user->id, $token_hash));
+        // }catch(\Exception $ex){
+        //     return redirect()->back()->withFailed('Wystąpił błąd');
+        // }
         
         return redirect()->back()->withSuccess('Dodano użytkownika');
     }
