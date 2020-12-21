@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Gate;
 
 use App\User;
 use App\shops;
@@ -105,7 +106,7 @@ class SchedulerController extends Controller
         try
         {
             $work = scheduler::findOrFail($id);
-            if($work->user_id != Auth::id())
+            if($work->user_id != Auth::id() && !Gate::allows('admin'))
                 return redirect()->back()->withFailed('Nie masz dostępu do tego zasobu!');
             else
             {

@@ -91,6 +91,19 @@ class CalendarController extends Controller
     }
 
 
+    public function delete(Request $request)
+    {
+        try
+        {
+            $vacation = vacations::findOrFail($request->id);
+            $vacation->delete();
+        }catch(\Illuminate\Database\QueryException $ex){
+            return redirect()->back()->withFailed('Wystąpił błąd');
+        }
+        return redirect(route('requests'))->with('success', 'Usunięto wniosek');
+    }
+
+
     // requests
     public function requests()
     {

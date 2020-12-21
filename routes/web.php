@@ -96,6 +96,8 @@ Route::middleware('CheckActive')->group(function(){
             Route::get('/add', 'CalendarController@add')->name('vacation_add');
             Route::post('/add', 'CalendarController@add_store')->middleware('CheckVacation');
 
+            Route::post('/delete', 'CalendarController@delete')->middleware('CheckAdmin')->name('vacation_delete');
+
             Route::get('/requests', 'CalendarController@requests')->name('requests');
             Route::get('/search', 'CalendarController@request_search')->name('requests_search');
 

@@ -17,17 +17,16 @@
                     <input type='hidden' name='url' value="{{URL::previous()}}"/>
                     <?php 
                         $min = date('Y-m-d', strtotime('+1 day'));
-                        $max = date('Y-m-d', strtotime('+1 month 1 day'));
                     ?>
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="start">Początek:</label>
-                            <input class="form-control" type="date" id="start" name='start' value="{{old('start') ?? $request->start}}" min="{{$min}}" max="{{$max ?? ''}}" <?php if($request->confirmed != 0){echo "readonly";}?>/>
+                            <input class="form-control" type="date" id="start" name='start' value="{{old('start') ?? $request->start}}" <?php if(!Gate::allows('admin')){ echo "min=$min";} if($request->confirmed != 0){echo "readonly";}?>/>
                         </div>
 
                         <div class="form-group col-md-6">
                             <label for="end">Koniec:</label>
-                            <input class="form-control" type="date" id="end" name='end' value="{{old('end') ?? $request->end}}" min="{{$min}}" max="{{$max ?? ''}}" <?php if($request->confirmed != 0){echo "readonly";}?>/>
+                            <input class="form-control" type="date" id="end" name='end' value="{{old('end') ?? $request->end}}" <?php if(!Gate::allows('admin')){ echo "min=$min";} if($request->confirmed != 0){echo "readonly";}?>/>
                         </div>
                     </div>
 
@@ -73,11 +72,36 @@
         </div>
         <div class="row col">
             <a href="{{ session('url') ?? URL::previous() }}" class="btn btn-primary mt-3">Cofnij</a>
+            @if(Gate::allows('admin'))
+                <button class='btn btn-danger ml-2 mt-3' data-target="#delete" data-toggle="modal" value="{{$request->id}}" onclick="modal_delete(this.value)">Usuń</button>
+            @endif
             @if($request->confirmed == 0)
-                    <button type='submit' class='btn btn-success ml-2 mt-3' form='form'>Zapisz</button>
+                <button type='submit' class='btn btn-success ml-2 mt-3' form='form'>Zapisz</button>
             @endif
         </div>
     </div>
+
+
+    <!-- delete modal -->
+    <form method="post" action="{{route('vacation_delete')}}">
+    @csrf
+        <div class="modal fade" tabindex="-1" role="dialog" role="dialog" id="delete" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Czy na pewno chcesz usunąć ten wniosek?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                    <button class="btn btn-danger" name='id' id='delete_button'>Usuń</button>
+                </div>
+                </div>
+            </div>
+        </div>
+    </form>
 
 
      <!-- deny modal -->
