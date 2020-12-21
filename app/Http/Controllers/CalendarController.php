@@ -149,12 +149,10 @@ class CalendarController extends Controller
                     if(!isset($request->double))
                         $double = $this->vacation_check($request->start, $request->end, $vacation->user_id, $id);
                         
-                    if($double === 'vacation')
-                        return redirect()->back()->withFailed('W tym okresie istnieje już urlop, popraw swój wniosek');
+                    if($double === 'vacation' || $double === 'proposal')
+                        return redirect()->back()->withInput()->withDouble('proposal');
                     elseif($double === 'double')
                         return redirect()->back()->withFailed('W tym okresie masz już złożony wniosek o urlop, popraw swój wniosek');
-                    elseif($double === 'proposal')
-                        return redirect()->back()->withInput()->withDouble('proposal');
                     else
                     {
                         $vacation->start = $request->start;
@@ -168,14 +166,13 @@ class CalendarController extends Controller
                         $vacation->confirmed = -1;
                     elseif($request->status === "allow")
                     {
+                        $double = false;
+                        if(!isset($request->double))
+                            $double = $this->vacation_check($request->start, $request->end, $vacation->user_id, $id);
+
+                        if($double === 'vacation' || $double === 'proposal')
+                            return redirect()->back()->withInput()->withDouble('proposal_save');
                         $vacation->confirmed = 1;
-                        $similar = vacations::where('start', '<=', $vacation->end)->where('end', '>=', $vacation->start)->where('id', '!=', $id)->get();
-                        foreach($similar as $row)
-                        {
-                            $row->confirmed = -1;
-                            $row->who_conf = Auth::user()->id;
-                            $row->save();
-                        }
                     }
                     $vacation->who_conf = Auth::user()->id;
                     $msg = 'Zmieniono status urlopu';

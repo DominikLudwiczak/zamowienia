@@ -137,8 +137,6 @@
             </div>
             <div class="modal-body text-center">
                 Czy na pewno chcesz przyjąć ten wniosek?<br/>
-                <span style='text-decoration: underline;'>UWAGA!</span><br/>
-                Spowoduje to usunięcie wszystkich pozostałych wniosków pokrywajacych się z tym terminem.
             </div>
             <div class="modal-footer">
                 <div class="row mr-1">
@@ -163,14 +161,19 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    @if(session('double') === 'proposal')
-                        <div class='alert alert-primary'>Istnieje wniosek o urlop, który się pokrywa z twoim, czy pomimo tego zmienić wniosek?</div>
+                    @if(session('double') === 'proposal' || session('double') === 'vacation' || session('double') === 'proposal_save')
+                        <div class='alert alert-primary'>Istnieje wniosek o urlop lub urlop, który się pokrywa z twoim wnioskiem, czy pomimo tego zmienić wniosek?</div>
                     @endif
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Popraw</button>
-                    @if(session('double') === 'proposal')
-                        <button type='submit' class='btn btn-success' form='form' name='double' value="true">Wyślij</button>
+                    @if(session('double') === 'proposal' || session('double') === 'vacation')
+                        <button type='submit' class='btn btn-success' form='form' name='double' value="true">Zapisz</button>
+                    @endif
+
+                    @if(session('double') === 'proposal_save')
+                        <input type='hidden' name='double' value='true' form='form'/>
+                        <button type='submit' class='btn btn-success' form='form' name='status' value="allow">Przyjmij</button>
                     @endif
                 </div>
                 </div>

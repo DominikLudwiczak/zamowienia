@@ -56,17 +56,15 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        @if(session('double') === 'vacation')
-                            <div class='alert alert-danger'>Istnieje urlop w tym terminie, popraw swój wniosek!</div>
-                        @elseif(session('double') === 'proposal')
-                            <div class='alert alert-primary'>Istnieje wniosek o urlop, który się pokrywa z twoim, czy pomimo tego wysłać wniosek?</div>
+                        @if(session('double') === 'proposal' || session('double') === 'vacation')
+                            <div class='alert alert-primary'>Istnieje wniosek o urlop lub urlop, który się pokrywa z twoim wnioskiem, czy pomimo tego wysłać wniosek?</div>
                         @elseif(session('double') === 'double')
                             <div class='alert alert-danger'>Masz już złożony wniosek o urlop w tym terminie, popraw swój wniosek!</div>
                         @endif
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Popraw</button>
-                        @if(session('double') === 'proposal')
+                        @if(session('double') === 'proposal' || session('double') === 'vacation')
                             <button class='btn btn-success' name='double' value='true'>Wyślij</button>
                         @endif
                     </div>
