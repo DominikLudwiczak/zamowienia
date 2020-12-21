@@ -6,7 +6,7 @@ use Closure;
 
 use App\User;
 use App\scheduler;
-use App\Vacations;
+use App\vacations;
 
 class CheckScheduler
 {
@@ -38,7 +38,7 @@ class CheckScheduler
         if($request->check === "true")
         {
             $schedulers = scheduler::where('date', $request->date)->where('end', '>', $request->start)->where('start', '<', $request->end)->where('id', '!=', $request->schedulerid)->get();
-            $vacations = Vacations::where('end', '>=', $request->date)->where('start', '<=', $request->date)->where('user_id', '=', $request->user)->where('confirmed', '>=', 0)->count();
+            $vacations = vacations::where('end', '>=', $request->date)->where('start', '<=', $request->date)->where('user_id', '=', $request->user)->where('confirmed', '>=', 0)->count();
 
             $check = false;
             if($schedulers->where('user_id', '=', $request->user)->count() > 0)
