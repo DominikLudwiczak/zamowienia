@@ -25,47 +25,6 @@ class ResetPasswordController extends Controller
     |
     */
 
-    // set password
-    public function set($id, $token)
-    {
-        try
-        {
-            $user = User::findOrFail($id);
-            $userToken = usersTokens::whereEmail($user->email)->OrderBy('expired_at', 'desc')->first();
-
-            if($userToken->token === $token && Carbon::now()->lte($userToken->expired_at))
-                return view('auth.passwords.set');
-        }catch(\Illuminate\Database\QueryException $ex){
-            return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
-        }catch(\Exception $ex){
-            return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');        
-        }
-        return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
-    }
-
-    // set password_store
-    public function set_store(Request $request, $id, $token)
-    {
-        try
-        {
-            $user = User::findOrFail($id);
-            $userToken = usersTokens::whereEmail($user->email)->OrderBy('expired_at', 'desc')->first();
-
-            if($userToken->token === $token && Carbon::now()->lte($userToken->expired_at))
-            {
-                $user->password = Hash::make($request->nowe_haslo);
-                $user->pass_changed = date("Y-m-d H:i:s");
-                $user->save();
-                Auth::logout();
-            }
-        }catch(\Illuminate\Database\QueryException $ex){
-            return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
-        }catch(\Exception $ex){
-            return redirect(route('login'))->withFailed('Ustawienie hasła nie powiodło się!');
-        }
-        return redirect(route('login'))->withSuccess('Ustawienie hasła powiodło się!');
-    }
-
     // change password
     public function change(Request $request)
     {
