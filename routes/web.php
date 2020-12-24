@@ -93,8 +93,8 @@ Route::middleware('CheckActive')->group(function(){
         Route::prefix('vacations')->group(function() {
             Route::get('/{month?}/{year?}', 'CalendarController@calendar')->where(['month' => '[0-9]+', 'year' => '[0-9]+'])->name('vacations');
 
-            Route::get('/add', 'CalendarController@add')->name('vacation_add');
-            Route::post('/add', 'CalendarController@add_store')->middleware('CheckVacation');
+            Route::get('/add', 'CalendarController@add')->middleware('CheckVacationActive')->name('vacation_add');
+            Route::post('/add', 'CalendarController@add_store')->middleware('CheckVacationActive')->middleware('CheckVacation');
 
             Route::post('/delete', 'CalendarController@delete')->middleware('CheckAdmin')->name('vacation_delete');
 
