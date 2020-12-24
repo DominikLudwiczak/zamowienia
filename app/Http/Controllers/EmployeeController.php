@@ -39,14 +39,20 @@ class EmployeeController extends Controller
         {
             $pass = Str::random(15);
 
+            $vacation_active = false;
+            if($request->vacation_active == 'on')
+                $vacation_active = true;
+
             $active = false;
             if($request->active == 'on')
                 $active = true;
+            
     
             $user = new User;
             $user->name = $request->nazwa;
             $user->email = $request->email;
             $user->password = Hash::make($pass);
+            $user->vacation_active = $vacation_active;
             $user->active = $active;
             $user->save();
 
@@ -96,6 +102,10 @@ class EmployeeController extends Controller
     {
         try
         {
+            $vacation_active = false;
+            if($request->vacation_active == 'on')
+                $vacation_active = true;
+
             $active = false;
             if($request->active == 'on')
                 $active = true;
@@ -103,6 +113,7 @@ class EmployeeController extends Controller
             $user = User::findOrFail($id);
             $user->name = $request->nazwa;
             $user->email = $request->email;
+            $user->vacation_active = $vacation_active;
             $user->active = $active;
             $user->save();
         }catch(\Illuminate\Database\QueryException $ex){

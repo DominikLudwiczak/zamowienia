@@ -27,6 +27,11 @@
                     </div>
 
                     <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="vaction_active" name="vacation_active" <?php if($user->vacation_active == 1){ echo "checked";} ?>>
+                        <label class="form-check-label" for="vacation_active">Urlopy</label>
+                    </div>
+
+                    <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="active" name="active" <?php if($user->active == 1){ echo "checked";} ?>>
                         <label class="form-check-label" for="active">Aktywny</label>
                     </div>
