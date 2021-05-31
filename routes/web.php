@@ -166,8 +166,18 @@ Route::middleware('CheckActive')->group(function(){
 
             Route::post('/resend/{id}', 'EmployeeController@resend')->where(['id' => '[0-9]+'])->name('employee_resend');
         });
+    });
+
+    // Summery
+    Route::prefix('summary')->group(function() {
+        // admin
+        Route::middleware('CheckAdmin')->group(function() {
+            Route::get('/all', 'SummaryController@summaries')->name('summaries');
+
+            Route::get('/{id}', 'SummaryController@summary')->name('summary');
+        });
 
         // user
-        Route::get('/user', 'EmployeeController@user')->name('employee_user');
+        Route::get('/', 'SummaryController@summary_user')->name('summary_user');
     });
 });

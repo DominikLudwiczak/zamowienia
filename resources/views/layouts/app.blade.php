@@ -122,6 +122,8 @@
                 route = 'scheduler';
             else if(route.includes('shop'))
                 route = 'shops';
+            else if(route.includes('summa'))
+                route = 'summary';
             else
                 route = 'dashboard';
 
