@@ -173,6 +173,7 @@ Route::middleware('CheckActive')->group(function(){
         // admin
         Route::middleware('CheckAdmin')->group(function() {
             Route::get('/all', 'SummaryController@summaries')->name('summaries');
+            Route::get('/search', 'SummaryController@summaries_search')->name('summaries_search');
 
             Route::get('/{id}', 'SummaryController@summary')->name('summary');
         });
