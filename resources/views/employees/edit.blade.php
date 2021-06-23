@@ -26,6 +26,20 @@
                         <input type="email" class="form-control" placeholder="E-mail pracownika" name="email" value="{{$user->email}}" required>
                     </div>
 
+                    <div class="input-group pt-3 pb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Stawka podstawowa</span>
+                        </div>
+                        <input type="number" class="form-control" name="base_sallary" placeholder="stawka" min="0" step="0.01" value="{{$user->base_sallary}}" required>
+                    </div>
+
+                    <div class="input-group pt-3 pb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Stawka dodatkowa</span>
+                        </div>
+                        <input type="number" class="form-control" name="extended_sallary" placeholder="stawka" min="0" step="0.01" value="{{$user->extended_sallary}}" required>
+                    </div>
+
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="vaction_active" name="vacation_active" <?php if($user->vacation_active == 1){ echo "checked";} ?>>
                         <label class="form-check-label" for="vacation_active">Urlopy</label>

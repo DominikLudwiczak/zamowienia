@@ -11,33 +11,38 @@
             <div class="card-header">Praca</div>
             <div class="card-body">
                 <div class="row">
-                    <select id="job_year" class="form-control col-md-6">
-                        @foreach($jobYears as $year)
-                            @if($year == date('Y', strtotime($job)))
-                                <option selected>{{$year}}</option>
-                            @else
-                                <option>{{$year}}</option>
-                            @endif
-                        @endforeach
-                    </select>
+                    <div class="col-md-5">
+                        <select id="job_year" class="form-control">
+                            @foreach($jobYears as $year)
+                                @if($year == date('Y', strtotime($job)))
+                                    <option selected>{{$year}}</option>
+                                @else
+                                    <option>{{$year}}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+                        @php
+                            $months = ['styczeń', 'luty', 'marzec', 'kwiecień', 'maj', 'czerwiec', 'lipiec', 'sierpień', 'wrzesień', 'październik', 'listopad', 'grudzień'];
+                        @endphp
+                    <div class="col-md-5">
+                        <select id="job_month" class="form-control">
+                            @foreach($months as $key => $month)
+                                @if(sprintf("%02d", $key+1) == date('m', strtotime($job)))
+                                    <option value="{{sprintf('%02d', $key+1)}}" selected>{{$month}}</option>
+                                @else
+                                    <option value="{{sprintf('%02d', $key+1)}}">{{$month}}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
 
-                    @php
-                        $months = ['styczeń', 'luty', 'marzec', 'kwiecień', 'maj', 'czerwiec', 'lipiec', 'sierpień', 'wrzesień', 'październik', 'listopad', 'grudzień'];
-                    @endphp
-
-                    <select id="job_month" class="form-control col-md-6">
-                        @foreach($months as $key => $month)
-                            @if(sprintf("%02d", $key+1) == date('m', strtotime($job)))
-                                <option value="{{sprintf('%02d', $key+1)}}" selected>{{$month}}</option>
-                            @else
-                                <option value="{{sprintf('%02d', $key+1)}}">{{$month}}</option>
-                            @endif
-                        @endforeach
-                    </select>
+                    <div class="col">
+                        <button type="button" class="btn btn-success" onclick="change('{{$user->id}}')">Zmień</button>
+                    </div>
                 </div>
-                <button type="button" class="btn btn-success" onclick="change('{{$user->id}}')">Zmień</button>
 
-                <input type="text" class="form-control mt-3" value="{{floor($jobTime/60) }} godzin {{ $jobTime - (floor($jobTime/60)*60)}} minut" readonly/> 
+                <input type="text" class="form-control text-center mt-3" value="{{floor($jobTime/60) }} godzin {{ $jobTime - (floor($jobTime/60)*60)}} minut" readonly/> 
             </div>
         </div>
 
@@ -45,19 +50,22 @@
             <div class="card-header">Urlopy</div>
             <div class="card-body">
                 <div class="row">
-                    <select id="vacation_year" class="form-control col-md-6">
-                        @foreach($vacationYears as $year)
-                            @if($year == $vacation)
-                                <option selected>{{$year}}</option>
-                            @else
-                                <option>{{$year}}</option>
-                            @endif
-                        @endforeach
-                    </select>
-
-                    <button type="button" class="btn btn-success" onclick="change('{{$user->id}}')">Zmień</button>
+                    <div class="col-md-5 offset-md-3">
+                        <select id="vacation_year" class="form-control">
+                            @foreach($vacationYears as $year)
+                                @if($year == $vacation)
+                                    <option selected>{{$year}}</option>
+                                @else
+                                    <option>{{$year}}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-success" onclick="change('{{$user->id}}')">Zmień</button>
+                    </div>
                 </div>
-                <input type="text" class="form-control mt-3" value="{{$vacationTime}} dni" readonly/>
+                <input type="text" class="form-control text-center mt-3" value="{{$vacationTime}} dni" readonly/>
             </div>
         </div>
 

@@ -23,6 +23,8 @@ class CreateUsersTable extends Migration
             $table->boolean('vacation_active')->default(1);
             $table->boolean('admin')->default(0);
             $table->timestamp('pass_changed')->default(null)->nullable();
+            $table->integer('base_sallary')->nullable();
+            $table->integer('extended_sallary')->nullable();
             $table->timestamps();
         });
     }

@@ -113,15 +113,24 @@ class SummaryController extends Controller
 
             $jobs = scheduler::select('date')->whereUser_id($user->id)->where('date', '<=', date('Y-m-d'))->distinct('date')->orderBy('date')->get();
             $job_years = [];
-            foreach($jobs as $row)
-                if(date('Y', strtotime($row->date)) != end($job_years))
-                    array_push($job_years, date('Y', strtotime($row->date)));
-
+            if(count($jobs) > 0)
+            {
+                foreach($jobs as $row)
+                    if(date('Y', strtotime($row->date)) != end($job_years))
+                        array_push($job_years, date('Y', strtotime($row->date)));
+            }
+            else
+                $job_years[0] =  date('Y');
+            
             $vacation_min = vacations::select('start')->whereUser_id($user->id)->min('start');
             $vacation_max = vacations::select('end')->whereUser_id($user->id)->max('end');
             $vacation_years = [];
-            for($i=date('Y', strtotime($vacation_min)); $i <= date('Y', strtotime($vacation_max)); $i++)
-                array_push($vacation_years, $i);
+
+            if($vacation_min)
+                for($i=date('Y', strtotime($vacation_min)); $i <= date('Y', strtotime($vacation_max)); $i++)
+                    array_push($vacation_years, $i);
+            else
+                $vacation_years[0] = date('Y');
 
             return view('summary.summary')->withUser($user)->withJobTime($job_time)->withVacationTime($vacation_time)->withJob($job)->withVacation($vacation)->withVacationYears($vacation_years)->withJobYears($job_years);
         }catch(\Illuminate\Database\QueryException $ex){

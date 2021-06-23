@@ -53,6 +53,8 @@ class EmployeeController extends Controller
             $user->email = $request->email;
             $user->password = Hash::make($pass);
             $user->vacation_active = $vacation_active;
+            $user->base_sallary = $request->base_sallary;
+            $user->extended_sallary = $request->extended_sallary;
             $user->active = $active;
             $user->save();
 
@@ -70,13 +72,13 @@ class EmployeeController extends Controller
             return redirect()->back()->withFailed('Wystąpił błąd');
         }
 
-        try
-        {
-            // wysyłanie maila
-            Mail::to(Auth::user()->email)->send(new NewEmployee($user->name, $pass));
-        }catch(\Exception $ex){
-            return redirect()->back()->withFailed('Wystąpił błąd');
-        }
+        // try
+        // {
+        //     // wysyłanie maila
+        //     Mail::to(Auth::user()->email)->send(new NewEmployee($user->name, $pass));
+        // }catch(\Exception $ex){
+        //     return redirect()->back()->withFailed('Wystąpił błąd');
+        // }
 
         // try
         // {
@@ -115,6 +117,9 @@ class EmployeeController extends Controller
             $user->email = $request->email;
             $user->vacation_active = $vacation_active;
             $user->active = $active;
+            $user->vacation_active = $vacation_active;
+            $user->base_sallary = $request->base_sallary;
+            $user->extended_sallary = $request->extended_sallary;
             $user->save();
         }catch(\Illuminate\Database\QueryException $ex){
             return redirect()->back()->withFailed('Wystąpił błąd');
