@@ -174,11 +174,9 @@ Route::middleware('CheckActive')->group(function(){
         Route::middleware('CheckAdmin')->group(function() {
             Route::get('/all', 'SummaryController@summaries')->name('summaries');
             Route::get('/search', 'SummaryController@summaries_search')->name('summaries_search');
-
-            Route::get('/{id}/{job?}/{vacation?}', 'SummaryController@summary')->name('summary');
         });
 
         // user
-        Route::get('/', 'SummaryController@summary_user')->name('summary_user');
+        Route::get('/{id?}/{job?}/{vacation?}', 'SummaryController@summary')->name('summary');
     });
 });

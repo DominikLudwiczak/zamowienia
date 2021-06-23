@@ -14,7 +14,7 @@
             <tr>
                 <th scope="row">Nazwa</th>
                 <th scope="row">Czas pracy (w tym miesiącu)</th>
-                <th scope="row">Wykorzystany urlop (w tym roku)</th>
+                <th scope="row">Wykorzystany urlop (w tym miesiącu)</th>
             </tr>
         </thead>
         <tbody>

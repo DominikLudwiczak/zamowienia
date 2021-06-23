@@ -9,6 +9,7 @@ use App\vacations;
 use App\scheduler;
 use App\User;
 use Auth;
+use Gate;
 
 class SummaryController extends Controller
 {
@@ -23,7 +24,7 @@ class SummaryController extends Controller
             {
                 $tab[$i][0] = $user->name;
                 $tab[$i][1] = $this->getJobTime($user->id, date('Y'), date('m'));
-                $tab[$i][2] = $this->getVacationTime($user->id, date('Y'));
+                $tab[$i][2] = $this->getVacationTime($user->id, date('Y'), date('m'));
                 $tab[$i][3] = $user->id;
                 $i++;
             }
@@ -52,7 +53,7 @@ class SummaryController extends Controller
                 foreach($users as $user)
                 {
                     $job = $this->getJobTime($user->id, date('Y'), date('m'));
-                    $vacation = $this->getVacationTime($user->id, date('Y'));
+                    $vacation = $this->getVacationTime($user->id, date('Y'), date('m'));
                     $output .= '
                         <tr>
                             <td class="align-middle">'.$user->name.'</td>
@@ -76,40 +77,27 @@ class SummaryController extends Controller
     }
 
 
-    public function summary_user()
+
+    public function summary($id = null, $job = null, $vacation = null)
     {
         try
         {
-            $user_id = Auth::id();
+            if(!$id)
+                $id = Auth::id();
 
-            $job_time = $this->getJobTime($user_id, date('Y'), date('m'));
+            if($id != Auth::id() && !Gate::allows('admin'))
+                return redirect()->back()->withFailed('Nie masz dostępu do tego zasobu');
 
-            $vacation_time = $this->getVacationTime($user_id, date('Y'));
-
-            return view('summary.summary_user')->withJob($job_time)->withVacation($vacation_time);
-        }catch(\Illuminate\Database\QueryException $ex){
-            return redirect()->back()->withFailed('Wystąpił błąd');
-        }catch(\Illuminate\Database\Exception $ex){
-            return redirect()->back()->withFailed('Wystąpił błąd');
-        }
-    }
-
-
-
-    public function summary($id, $job = null, $vacation = null)
-    {
-        try
-        {
             $user = User::findOrFail($id);
 
             if($job==null)
                 $job = date('Y-m');
 
             if($vacation==null)
-                $vacation = date('Y');
+                $vacation = date('Y-m');
 
             $job_time = $this->getJobTime($user->id, date('Y', strtotime($job)), date('m', strtotime($job)));
-            $vacation_time = $this->getVacationTime($user->id, $vacation);
+            $vacation_time = $this->getVacationTime($user->id, date('Y', strtotime($vacation)), date('m', strtotime($vacation)));
 
             $jobs = scheduler::select('date')->whereUser_id($user->id)->where('date', '<=', date('Y-m-d'))->distinct('date')->orderBy('date')->get();
             $job_years = [];
@@ -159,13 +147,13 @@ class SummaryController extends Controller
     }
 
 
-    private function getVacationTime($id, $year)
+    private function getVacationTime($id, $year, $month)
     {
         try
         {
             $vacations = vacations::whereUser_id($id)
                                     ->whereConfirmed(1)
-                                    ->where('start', 'like', $year.'%')
+                                    ->where('start', 'like', $year.'-'.$month.'%')
                                     ->orWhere(function($query) use ($id, $year){
                                         $query->whereUser_id($id)
                                             ->whereConfirmed(1)
