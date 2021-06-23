@@ -175,7 +175,7 @@ Route::middleware('CheckActive')->group(function(){
             Route::get('/all', 'SummaryController@summaries')->name('summaries');
             Route::get('/search', 'SummaryController@summaries_search')->name('summaries_search');
 
-            Route::get('/{id}', 'SummaryController@summary')->name('summary');
+            Route::get('/{id}/{job?}/{vacation?}', 'SummaryController@summary')->name('summary');
         });
 
         // user

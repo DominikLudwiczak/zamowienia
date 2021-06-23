@@ -96,12 +96,34 @@ class SummaryController extends Controller
 
 
 
-    public function summary($id)
+    public function summary($id, $job = null, $vacation = null)
     {
         try
         {
             $user = User::findOrFail($id);
-            return view('summary.summary')->withUser($user);
+
+            if($job==null)
+                $job = date('Y-m');
+
+            if($vacation==null)
+                $vacation = date('Y');
+
+            $job_time = $this->getJobTime($user->id, date('Y', strtotime($job)), date('m', strtotime($job)));
+            $vacation_time = $this->getVacationTime($user->id, $vacation);
+
+            $jobs = scheduler::select('date')->whereUser_id($user->id)->where('date', '<=', date('Y-m-d'))->distinct('date')->orderBy('date')->get();
+            $job_years = [];
+            foreach($jobs as $row)
+                if(date('Y', strtotime($row->date)) != end($job_years))
+                    array_push($job_years, date('Y', strtotime($row->date)));
+
+            $vacation_min = vacations::select('start')->whereUser_id($user->id)->min('start');
+            $vacation_max = vacations::select('end')->whereUser_id($user->id)->max('end');
+            $vacation_years = [];
+            for($i=date('Y', strtotime($vacation_min)); $i <= date('Y', strtotime($vacation_max)); $i++)
+                array_push($vacation_years, $i);
+
+            return view('summary.summary')->withUser($user)->withJobTime($job_time)->withVacationTime($vacation_time)->withJob($job)->withVacation($vacation)->withVacationYears($vacation_years)->withJobYears($job_years);
         }catch(\Illuminate\Database\QueryException $ex){
             return redirect()->back()->withFailed('Wystąpił błąd');
         }catch(\Illuminate\Database\Exception $ex){
