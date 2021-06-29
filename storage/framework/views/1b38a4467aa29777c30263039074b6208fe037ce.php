@@ -1,8 +1,6 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', '- podumowanie'); ?>
 
-@section('title', '- podumowanie')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class='row align-items-center pt-3'>
         <h1 style='text-decoration: underline;' class='col-md-7'>Podsumowania</h1>
         <div class='input-group col-md-5'>
@@ -18,13 +16,13 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($users as $user)
-                <tr class='table-row' data-href="{{ route('summary',['id' => $user[3]]) }}" style="cursor: pointer;">
-                    <td>{{$user[0]}}</td>
-                    <td>{{floor($user[1]/60) }} godzin {{ $user[1] - (floor($user[1]/60)*60)}} minut</td>
-                    <td>{{$user[2]}} dni</td>
+            <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <tr class='table-row' data-href="<?php echo e(route('summary',['id' => $user[3]])); ?>" style="cursor: pointer;">
+                    <td><?php echo e($user[0]); ?></td>
+                    <td><?php echo e(floor($user[1]/60)); ?> godzin <?php echo e($user[1] - (floor($user[1]/60)*60)); ?> minut</td>
+                    <td><?php echo e($user[2]); ?> dni</td>
                 </tr>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </tbody>
     </table>
 
@@ -33,7 +31,7 @@
             function fetch_search(query = '')
             {
                 $.ajax({
-                    url:"{{route('summaries_search')}}",
+                    url:"<?php echo e(route('summaries_search')); ?>",
                     method:'GET',
                     data:{query:query},
                     dataType: 'json',
@@ -46,10 +44,11 @@
 
             $(document).on('input', '#search', function(){
                 if($(this).val() == '')
-                    window.location.replace("{{route('summaries')}}");
+                    window.location.replace("<?php echo e(route('summaries')); ?>");
                 var query = $(this).val();
                 fetch_search(query);
             });
         });
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/zamowienia/laravel/resources/views/summary/summaries.blade.php ENDPATH**/ ?>
