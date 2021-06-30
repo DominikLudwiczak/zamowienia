@@ -23,7 +23,7 @@
         </thead>
         <tbody>
             <?php 
-                if($_REQUEST)
+                if(isset($_REQUEST['page']))
                     $x = $_REQUEST['page']*15-15; 
                 else
                     $x=0;

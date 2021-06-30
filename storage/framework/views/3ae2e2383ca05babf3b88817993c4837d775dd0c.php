@@ -1,15 +1,13 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', '- pracownicy'); ?>
 
-@section('title', '- pracownicy')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class='row align-items-center pt-3'>
         <h1 style='text-decoration: underline;' class='col-md-7'>Pracownicy</h1>
         <div class='input-group col-md-5'>
             <input class="form-control" type="search" placeholder="Szukaj" id='search' aria-label="Szukaj" autofocus>
         </div>
     </div>
-    <form action="{{ route('new_employee') }}" class='pt-3'>
+    <form action="<?php echo e(route('new_employee')); ?>" class='pt-3'>
         <button class='btn btn-success float-right'>Dodaj pracownika</button>
     </form>
     <table class="table table-striped table-responsive-sm text-center mt-4">
@@ -29,22 +27,22 @@
                 else
                     $x=0;
             ?>
-            @foreach($users as $user)
+            <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <?php $x++; ?>
                 <tr>
-                    <th class="align-middle" scope="row">{{$x}}</th>
-                    <td class="align-middle">{{$user->name}}</td>
-                    <td class="align-middle">{{$user->email}}</td>
-                    <td class="align-middle"><a href="{{route('edit_employee',['id' => $user->id])}}"><svg class="bi bi-pencil" width="1.5rem" height="1.5rem" viewBox="0 0 16 16" fill="#2842AB" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M11.293 1.293a1 1 0 011.414 0l2 2a1 1 0 010 1.414l-9 9a1 1 0 01-.39.242l-3 1a1 1 0 01-1.266-1.265l1-3a1 1 0 01.242-.391l9-9zM12 2l2 2-9 9-3 1 1-3 9-9z" clip-rule="evenodd"/><path fill-rule="evenodd" d="M12.146 6.354l-2.5-2.5.708-.708 2.5 2.5-.707.708zM3 10v.5a.5.5 0 00.5.5H4v.5a.5.5 0 00.5.5H5v.5a.5.5 0 00.5.5H6v-1.5a.5.5 0 00-.5-.5H5v-.5a.5.5 0 00-.5-.5H3z" clip-rule="evenodd"/></svg></a></td>
-                    <td class="align-middle"><button class='btn' data-target="#delete" data-toggle="modal" value="{{$user->id}}" onclick="modal_delete(this.value)"><svg class="bi bi-trash" width="1.5rem" height="1.5rem" viewBox="0 0 16 16" fill="red" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H6a1 1 0 011-1h2a1 1 0 011 1h3.5a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" clip-rule="evenodd"/></svg></button></td>
+                    <th class="align-middle" scope="row"><?php echo e($x); ?></th>
+                    <td class="align-middle"><?php echo e($user->name); ?></td>
+                    <td class="align-middle"><?php echo e($user->email); ?></td>
+                    <td class="align-middle"><a href="<?php echo e(route('edit_employee',['id' => $user->id])); ?>"><svg class="bi bi-pencil" width="1.5rem" height="1.5rem" viewBox="0 0 16 16" fill="#2842AB" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M11.293 1.293a1 1 0 011.414 0l2 2a1 1 0 010 1.414l-9 9a1 1 0 01-.39.242l-3 1a1 1 0 01-1.266-1.265l1-3a1 1 0 01.242-.391l9-9zM12 2l2 2-9 9-3 1 1-3 9-9z" clip-rule="evenodd"/><path fill-rule="evenodd" d="M12.146 6.354l-2.5-2.5.708-.708 2.5 2.5-.707.708zM3 10v.5a.5.5 0 00.5.5H4v.5a.5.5 0 00.5.5H5v.5a.5.5 0 00.5.5H6v-1.5a.5.5 0 00-.5-.5H5v-.5a.5.5 0 00-.5-.5H3z" clip-rule="evenodd"/></svg></a></td>
+                    <td class="align-middle"><button class='btn' data-target="#delete" data-toggle="modal" value="<?php echo e($user->id); ?>" onclick="modal_delete(this.value)"><svg class="bi bi-trash" width="1.5rem" height="1.5rem" viewBox="0 0 16 16" fill="red" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H6a1 1 0 011-1h2a1 1 0 011 1h3.5a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" clip-rule="evenodd"/></svg></button></td>
                 </tr>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </tbody>
     </table>
-    <div id="pagination">{{$users->render()}}</div>
+    <div id="pagination"><?php echo e($users->render()); ?></div>
     <!-- modal -->
-    <form method="post" action="{{route('delete_employee')}}">
-    @csrf
+    <form method="post" action="<?php echo e(route('delete_employee')); ?>">
+    <?php echo csrf_field(); ?>
         <div class="modal fade" tabindex="-1" role="dialog" role="dialog" id="delete" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -66,14 +64,14 @@
         </div>
     </form>
     <!-- end modal -->
-@endsection
+<?php $__env->stopSection(); ?>
 <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 <script>
     $(document).ready(function(){
         function fetch_search(query = '')
         {
             $.ajax({
-                url:"{{route('employees_search')}}",
+                url:"<?php echo e(route('employees_search')); ?>",
                 method:'GET',
                 data:{query:query},
                 dataType: 'json',
@@ -86,9 +84,10 @@
         }
         $(document).on('input', '#search', function(){
             if($(this).val() == '')
-                window.location.replace("{{route('employees_admin')}}");
+                window.location.replace("<?php echo e(route('employees_admin')); ?>");
             var query = $(this).val();
             fetch_search(query);
         });
     });
 </script>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/zamowienia/laravel/resources/views/employees/admin.blade.php ENDPATH**/ ?>
