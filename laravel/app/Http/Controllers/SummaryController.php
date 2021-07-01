@@ -154,10 +154,10 @@ class SummaryController extends Controller
             $vacations = vacations::whereUser_id($id)
                                     ->whereConfirmed(1)
                                     ->where('start', 'like', $year.'-'.$month.'%')
-                                    ->orWhere(function($query) use ($id, $year){
+                                    ->orWhere(function($query) use ($id, $year, $month){
                                         $query->whereUser_id($id)
                                             ->whereConfirmed(1)
-                                            ->where('end', 'like', $year.'%');
+                                            ->where('end', 'like', $year.'-'.$month.'%');
                                     })->get();
             $vacation_time = 0;
             foreach($vacations as $vacation)
