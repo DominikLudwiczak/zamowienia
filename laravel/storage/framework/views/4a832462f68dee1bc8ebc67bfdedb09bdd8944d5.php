@@ -136,6 +136,8 @@
                 route = 'shops';
             else if(route.includes('summa'))
                 route = 'summary';
+            else if(route.includes('holiday'))
+                route = 'holidays';
             else
                 route = 'dashboard';
 

@@ -179,4 +179,17 @@ Route::middleware('CheckActive')->group(function(){
         // user
         Route::get('/{id?}/{job?}/{vacation?}', 'SummaryController@summary')->name('summary');
     });
+
+    // Holidays
+    Route::prefix('holidays')->middleware('CheckAdmin')->group(function() {
+        Route::get('/all/{year?}', 'HolidayController@holidays')->name('holidays');
+
+        Route::get('/{id}', 'HolidayController@holiday')->where('id', '[0-9]+')->name('holiday');
+        Route::post('/{id}', 'HolidayController@holiday_store')->where('id', '[0-9]+')->middleware('CheckHoliday');
+
+        Route::post('/delete', 'HolidayController@delete_holiday')->name('delete_holiday');
+
+        Route::view('/new', 'holidays.new')->name('new_holiday');
+        Route::post('/new', 'HolidayController@new_holiday_store')->middleware('CheckHoliday');
+    });
 });

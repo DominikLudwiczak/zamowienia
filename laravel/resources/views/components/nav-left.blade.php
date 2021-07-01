@@ -50,6 +50,12 @@
                         Grafik
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" id='holidays' href="{{ route('holidays') }}">
+                        <img src="{{ asset('img/calendar.svg') }}"/>
+                        Święta
+                    </a>
+                </li>
             @else
                 <li class="nav-item">
                     <a class="nav-link text-white" id='summary' href="{{ route('summary') }}">

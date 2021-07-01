@@ -50,6 +50,12 @@
                         Grafik
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" id='holidays' href="<?php echo e(route('holidays')); ?>">
+                        <img src="<?php echo e(asset('img/calendar.svg')); ?>"/>
+                        Święta
+                    </a>
+                </li>
             <?php else: ?>
                 <li class="nav-item">
                     <a class="nav-link text-white" id='summary' href="<?php echo e(route('summary')); ?>">
