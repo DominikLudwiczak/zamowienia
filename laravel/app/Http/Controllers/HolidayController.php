@@ -7,7 +7,13 @@ use App\holidays;
 
 class HolidayController extends Controller
 {
-    public function holidays($year = null)
+    // konstruktor
+    public function __construct()
+    {
+        $this->miesiace=['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'];
+    }
+
+    public function holidays($month=null, $year = null)
     {
         try
         {
@@ -17,11 +23,15 @@ class HolidayController extends Controller
                 if(date('Y', strtotime($holiday->date)) != end($years))
                     array_push($years, date('Y', strtotime($holiday->date)));
 
-            if($year == null)
+            session(['url' => null]);
+            if($month==null)
+                $month = date('m');
+            if($year==null)
                 $year = date('Y');
+            $month = str_pad($month, 2, 0, STR_PAD_LEFT);
 
-            $holidays = holidays::where('date', 'like', $year.'-%')->paginate(15);
-            return view('holidays.holidays')->withHolidays($holidays)->withYear($year)->withYears($years);
+            $holidays = holidays::where('date', 'like', $year.'-'.$month.'-%')->get();
+            return view('calendar.holidays.holidays')->withHolidays($holidays)->withMonth($month)->withYear($year)->withMiesiace($this->miesiace)->withYears($years);
         }catch(\Illuminate\Database\QueryException $ex){
             return redirect()->back()->withFailed('Wystąpił błąd');
         }catch(Exception $ex){
@@ -35,7 +45,7 @@ class HolidayController extends Controller
         try
         {
             $holiday = holidays::findOrFail($id);
-            return view('holidays.holiday')->withHoliday($holiday);
+            return view('calendar.holidays.holiday')->withHoliday($holiday);
         }catch(\Illuminate\Database\QueryException $ex){
             return redirect()->back()->withFailed('Wystąpił błąd');
         }catch(Exception $ex){
@@ -48,6 +58,8 @@ class HolidayController extends Controller
     {
         try
         {
+            session(['url' => $request->url]);
+            
             $holiday = holidays::findOrFail($id);
             $holiday->name = $request->name;
             $holiday->date = $request->date;

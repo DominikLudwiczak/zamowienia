@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="mt-3">
-                <a href="{{route('holidays')}}" class="btn btn-primary">Cofnij</a>
+                <a href="{{ session('url') ?? URL::previous() }}" class="btn btn-primary">Cofnij</a>
                 <button type="submit" class="btn btn-success">Zapisz</button>
                 <button type="button" class="btn btn-danger" data-target="#delete" data-toggle="modal">Usuń</button>
             </div>
