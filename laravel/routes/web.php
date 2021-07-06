@@ -190,6 +190,6 @@ Route::middleware('CheckActive')->group(function(){
         });
 
         // user
-        Route::get('/{id?}/{job?}/{vacation?}', 'SummaryController@summary')->name('summary');
+        Route::get('/{id?}/{time?}', 'SummaryController@summary')->name('summary');
     });
 });

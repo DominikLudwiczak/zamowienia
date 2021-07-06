@@ -2,7 +2,7 @@
 
 <?php $__env->startSection('content'); ?>
 <div class='row align-items-center pt-3'>
-    <h1 style='text-decoration: underline;' class='col-md-7'>Święta w <?php echo e($year); ?> roku</h1>
+    <h1 style='text-decoration: underline;' class='col-md-7'>Święta</h1>
 
     <div class='input-group col-md-5' style="justify-content: flex-end;">
         <a href="<?php echo e(route('new_holiday')); ?>" class='btn btn-success mb-2'>Dodaj święto</a>

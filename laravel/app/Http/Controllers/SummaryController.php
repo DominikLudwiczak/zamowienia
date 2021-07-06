@@ -7,6 +7,7 @@ use Carbon\Carbon;
 
 use App\vacations;
 use App\scheduler;
+use App\holidays;
 use App\User;
 use Auth;
 use Gate;
@@ -78,7 +79,7 @@ class SummaryController extends Controller
 
 
 
-    public function summary($id = null, $job = null, $vacation = null)
+    public function summary($id = null, $time = null)
     {
         try
         {
@@ -90,37 +91,47 @@ class SummaryController extends Controller
 
             $user = User::findOrFail($id);
 
-            if($job==null)
-                $job = date('Y-m');
+            if($time==null)
+                $time = date('Y-m');
 
-            if($vacation==null)
-                $vacation = date('Y-m');
-
-            $job_time = $this->getJobTime($user->id, date('Y', strtotime($job)), date('m', strtotime($job)));
-            $vacation_time = $this->getVacationTime($user->id, date('Y', strtotime($vacation)), date('m', strtotime($vacation)));
+            $job_time = $this->getJobTime($user->id, date('Y', strtotime($time)), date('m', strtotime($time)));
+            $vacation_time = $this->getVacationTime($user->id, date('Y', strtotime($time)), date('m', strtotime($time)));
 
             $jobs = scheduler::select('date')->whereUser_id($user->id)->where('date', '<=', date('Y-m-d'))->distinct('date')->orderBy('date')->get();
-            $job_years = [];
+            $time_years = [];
             if(count($jobs) > 0)
             {
                 foreach($jobs as $row)
-                    if(date('Y', strtotime($row->date)) != end($job_years))
-                        array_push($job_years, date('Y', strtotime($row->date)));
+                    if(date('Y', strtotime($row->date)) != end($time_years))
+                        array_push($time_years, date('Y', strtotime($row->date)));
             }
             else
-                $job_years[0] =  date('Y');
+                $time_years[0] =  date('Y');
             
             $vacation_min = vacations::select('start')->whereUser_id($user->id)->min('start');
             $vacation_max = vacations::select('end')->whereUser_id($user->id)->max('end');
-            $vacation_years = [];
 
             if($vacation_min)
                 for($i=date('Y', strtotime($vacation_min)); $i <= date('Y', strtotime($vacation_max)); $i++)
-                    array_push($vacation_years, $i);
-            else
+                    if(!in_array($i, $time_years))
+                        array_push($time_years, $i);
+            else if(!in_array(date('Y'), $time_years))
                 $vacation_years[0] = date('Y');
 
-            return view('summary.summary')->withUser($user)->withJobTime($job_time)->withVacationTime($vacation_time)->withJob($job)->withVacation($vacation)->withVacationYears($vacation_years)->withJobYears($job_years);
+            $workingHours = $this->getWorkingDays(date('Y', strtotime($time)), date('m', strtotime($time)))*8;
+
+            if($job_time > $workingHours*60)
+            {
+                $salary_base = $workingHours * $user->base_sallary;
+                $pom = $job_time-($workingHours*60);
+                $salary_extended = (floor($pom/60) * $user->extended_sallary) + ((($pom - (floor($pom/60)*60))/60)*$user->extended_sallary);
+            }
+            else
+            {
+                $salary_base = (floor($job_time/60) * $user->base_sallary) + ((($job_time - (floor($job_time/60)*60))/60)*$user->base_sallary);
+                $salary_extended = 0;
+            }
+            return view('summary.summary')->withUser($user)->withJobTime($job_time)->withVacationTime($vacation_time)->withTime($time)->withTimeYears($time_years)->withWorkingHours($workingHours)->withBaseSalary($salary_base)->withExtendedSalary($salary_extended);
         }catch(\Illuminate\Database\QueryException $ex){
             return redirect()->back()->withFailed('Wystąpił błąd');
         }catch(\Illuminate\Database\Exception $ex){
@@ -134,7 +145,7 @@ class SummaryController extends Controller
         try
         {
             $date = "$year-$month";
-            $schedulers = scheduler::whereUser_id($id)->where('date', 'like', $date.'%')->where('date', '<=', date('Y-m-d'))->get();
+            $schedulers = scheduler::whereUser_id($id)->where('date', 'like', $date.'-%')->where('date', '<=', date('Y-m-d'))->get();
             $job_time = 0;
             foreach($schedulers as $job)
                 $job_time += (strtotime($job->end) - strtotime($job->start))/60;
@@ -170,8 +181,36 @@ class SummaryController extends Controller
                 $vacation_time += $days->format("%a")+1;
             }
             return $vacation_time;
+        }catch(\Illuminate\Database\QueryException $ex){
+            return false;
+        }catch(\Illuminate\Database\Exception $ex){
+            return false;
         }
-        catch(\Illuminate\Database\QueryException $ex){
+    }
+
+    private function getWorkingDays($year, $month)
+    {
+        try
+        {
+            $days = 0;
+            for($i=0; $i < ceil((cal_days_in_month(CAL_GREGORIAN, $month, $year) + date('N', strtotime($year."-".$month."-1")))/7)*7; $i++)
+            {
+                $z = str_pad($i-(date('N', strtotime($year."-".$month."-1"))-1)+1, 2, 0, STR_PAD_LEFT);
+
+                if($z > 0 && $z <= cal_days_in_month(CAL_GREGORIAN, $month, $year))
+                {
+                    $holiday = holidays::where('date', '=', $year.'-'.$month.'-'.$z)->first();
+                    if($holiday)
+                        continue;
+
+                    if(date("N", strtotime($year."-".$month."-".$z)) == 7)
+                        continue;
+
+                    $days++;
+                }
+            }
+            return $days;
+        }catch(\Illuminate\Database\QueryException $ex){
             return false;
         }catch(\Illuminate\Database\Exception $ex){
             return false;

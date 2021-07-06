@@ -4,7 +4,7 @@
 
 @section('content')
 <div class='row align-items-center pt-3'>
-    <h1 style='text-decoration: underline;' class='col-md-7'>Święta w {{$year}} roku</h1>
+    <h1 style='text-decoration: underline;' class='col-md-7'>Święta</h1>
 
     <div class='input-group col-md-5' style="justify-content: flex-end;">
         <a href="{{ route('new_holiday') }}" class='btn btn-success mb-2'>Dodaj święto</a>
