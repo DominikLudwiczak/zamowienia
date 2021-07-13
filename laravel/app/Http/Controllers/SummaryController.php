@@ -120,15 +120,16 @@ class SummaryController extends Controller
 
             $workingHours = $this->getWorkingDays(date('Y', strtotime($time)), date('m', strtotime($time)))*8;
 
-            if($job_time > $workingHours*60)
+            $pom = $job_time + ($vacation_time * 480);
+            if($pom > $workingHours*60)
             {
                 $salary_base = $workingHours * $user->base_sallary;
-                $pom = $job_time-($workingHours*60);
+                $pom -= $workingHours*60;
                 $salary_extended = (floor($pom/60) * $user->extended_sallary) + ((($pom - (floor($pom/60)*60))/60)*$user->extended_sallary);
             }
             else
             {
-                $salary_base = (floor($job_time/60) * $user->base_sallary) + ((($job_time - (floor($job_time/60)*60))/60)*$user->base_sallary);
+                $salary_base = (floor($pom/60) * $user->base_sallary) + ((($pom - (floor($pom/60)*60))/60)*$user->base_sallary);
                 $salary_extended = 0;
             }
             return view('summary.summary')->withUser($user)->withJobTime($job_time)->withVacationTime($vacation_time)->withTime($time)->withTimeYears($time_years)->withWorkingHours($workingHours)->withBaseSalary($salary_base)->withExtendedSalary($salary_extended);
@@ -177,8 +178,14 @@ class SummaryController extends Controller
                     $vacation->end = "$year-12-31";
                 if(date("Y", strtotime($vacation->start)) != $year)
                     $vacation->start = "$year-01-01";
-                $days = date_diff(date_create($vacation->start), date_create($vacation->end));
-                $vacation_time += $days->format("%a")+1;
+
+                $start = strtotime($vacation->start);
+                $end = strtotime($vacation->end);
+                while(date('Y-m-d', $start) <= date('Y-m-d', $end))
+                {
+                    $vacation_time += date('N', $start) < 6 ? 1 : 0;
+                    $start = strtotime("+1 day", $start);
+                }
             }
             return $vacation_time;
         }catch(\Illuminate\Database\QueryException $ex){
@@ -203,7 +210,7 @@ class SummaryController extends Controller
                     if($holiday)
                         continue;
 
-                    if(date("N", strtotime($year."-".$month."-".$z)) == 7)
+                    if(date("N", strtotime($year."-".$month."-".$z)) == 7 || date("N", strtotime($year."-".$month."-".$z)) == 6)
                         continue;
 
                     $days++;
